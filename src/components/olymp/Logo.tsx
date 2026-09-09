@@ -1,9 +1,10 @@
 import { cn } from "@/lib/utils";
 
 /**
- * Olymp Ex brand mark — summit ("Olymp") rendered as a solid slate-blue peak
- * with an inner light cleft, a purple crescent cresting the summit, and a
- * curved brush stroke at the base representing the Nile / cultivated land.
+ * Olymp Ex brand mark — modelled on the supplied brand asset: a solid
+ * slate-blue peak (reads as a capital "Α") with a notch rising from the base,
+ * a violet pennant cresting the summit toward the upper right, and a curved
+ * stroke beneath representing the Nile / cultivated land.
  */
 export function LogoMark({ className }: { className?: string }) {
   return (
@@ -20,16 +21,13 @@ export function LogoMark({ className }: { className?: string }) {
         </linearGradient>
       </defs>
 
-      {/* summit */}
-      <path d="M31 6 L55 52 H7 Z" fill="url(#olymp-peak)" />
-      {/* inner cleft */}
-      <path d="M31 20 L40 45 H22 Z" fill="var(--background)" fillOpacity="0.92" />
+      {/* peak */}
+      <path d="M32 5 L55 52 H9 Z" fill="url(#olymp-peak)" />
+      {/* notch rising from the base — reads as a capital Α */}
+      <path d="M32 31 L44 52 H20 Z" fill="var(--background)" fillOpacity="0.92" />
 
-      {/* crescent cresting the peak */}
-      <path
-        d="M31.5 5.5 a7.5 7.5 0 1 0 7.2 9.4 a6 6 0 1 1 -7.2 -9.4 Z"
-        fill="var(--brand-violet)"
-      />
+      {/* violet pennant cresting the summit */}
+      <path d="M33 8 C 39 1 49 2 55 9 C 49 15 39 14 33 8 Z" fill="var(--brand-violet)" />
 
       {/* base stroke */}
       <path
@@ -43,6 +41,11 @@ export function LogoMark({ className }: { className?: string }) {
   );
 }
 
+/**
+ * Full lock-up. The wordmark is set in Greek letterforms — ΩΛΥΜΠ ΕΞ — in
+ * classical Greek Didot, the brand's Greek-style signature, with the
+ * "Egyptian Agritrade" descriptor kept in the site's Latin face.
+ */
 export function Logo({
   className,
   inverted = false,
@@ -54,15 +57,18 @@ export function Logo({
     <span className={cn("inline-flex items-center gap-3", className)}>
       <LogoMark className="h-10 w-10 shrink-0" />
       <span className="flex flex-col leading-none">
+        <span className="sr-only">Olymp Ex</span>
         <span
+          aria-hidden
           className={cn(
-            "text-[1.3rem] font-extrabold tracking-[0.02em] uppercase",
+            "font-[family-name:var(--font-greek)] text-[1.5rem] tracking-[0.02em]",
             inverted ? "text-primary-foreground" : "text-brand-ink",
           )}
         >
-          Olymp <span className="text-gradient-brand">Ex</span>
+          ΩΛΥΜΠ <span className={inverted ? "text-primary-foreground/60" : "text-brand-slate"}>ΕΞ</span>
         </span>
         <span
+          aria-hidden
           className={cn(
             "mt-1.5 text-[0.58rem] font-medium tracking-[0.42em] uppercase",
             inverted ? "text-primary-foreground/70" : "text-brand-slate",

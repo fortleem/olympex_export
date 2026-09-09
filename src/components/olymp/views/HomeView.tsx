@@ -4,19 +4,14 @@ import {
   ArrowRight,
   Snowflake,
   Leaf,
-  ShieldCheck,
-  Ship,
-  Thermometer,
-  FileCheck2,
-  Globe2,
-  Sprout,
   Quote,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Section, SectionHeader, Eyebrow } from "@/components/olymp/Section";
 import { Reveal } from "@/components/olymp/Reveal";
 import { ProductCard } from "@/components/olymp/ProductCard";
-import { ExportDiagram, FinalCta } from "@/components/olymp/CTA";
+import { JourneyTimeline, LaneGrid } from "@/components/olymp/Logistics";
+import { FinalCta } from "@/components/olymp/CTA";
 import { ALink } from "@/lib/router";
 import { products } from "@/data/products";
 
@@ -25,15 +20,6 @@ const trust = [
   { label: "Capability", value: "Fresh & IQF frozen" },
   { label: "Chain", value: "Temperature controlled" },
   { label: "Buyers", value: "Import · retail · food service" },
-];
-
-const processSteps = [
-  { icon: Sprout, title: "Sourcing", text: "Grower selection aligned to variety, calibre and destination programme." },
-  { icon: ShieldCheck, title: "Inspection", text: "Incoming lots assessed on condition, maturity and defect tolerance." },
-  { icon: Leaf, title: "Grading", text: "Size, colour and quality grading against the agreed buyer specification." },
-  { icon: FileCheck2, title: "Packing", text: "Packing to retail, wholesale or industrial format with lot identification." },
-  { icon: Thermometer, title: "Cold chain", text: "Pre-cooling and temperature control maintained through to loading." },
-  { icon: Ship, title: "Shipment", text: "Documentation coordinated and consignments dispatched to destination." },
 ];
 
 export default function HomeView() {
@@ -200,41 +186,9 @@ export default function HomeView() {
         </div>
       </Section>
 
-      {/* QUALITY PROCESS */}
+      {/* FARM TO PORT JOURNEY */}
       <Section>
-        <SectionHeader
-          eyebrow="Quality & traceability"
-          title="Controlled at every handover, from field to destination"
-          description="Food safety and quality are treated as operating principles, not marketing claims. Each consignment is identified, inspected and documented as it moves through the chain."
-        />
-        <ol className="mt-14 grid gap-px overflow-hidden border border-border bg-border md:grid-cols-2 xl:grid-cols-3">
-          {processSteps.map((s, i) => (
-            <Reveal
-              key={s.title}
-              as="li"
-              delay={i * 60}
-              className="group bg-card p-8 transition-colors hover:bg-surface"
-            >
-              <div className="flex items-center justify-between">
-                <span className="inline-flex h-11 w-11 items-center justify-center border border-primary/25 bg-primary/5 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
-                  <s.icon className="size-5" aria-hidden />
-                </span>
-                <span className="font-[family-name:var(--font-display)] text-3xl text-border">
-                  {String(i + 1).padStart(2, "0")}
-                </span>
-              </div>
-              <h3 className="mt-6 text-lg font-bold">{s.title}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{s.text}</p>
-            </Reveal>
-          ))}
-        </ol>
-        <Reveal className="mt-10">
-          <Button asChild variant="outline">
-            <ALink to="/quality">
-              See the full process <ArrowRight aria-hidden />
-            </ALink>
-          </Button>
-        </Reveal>
+        <JourneyTimeline />
       </Section>
 
       {/* FRESH VS FROZEN */}
@@ -305,37 +259,20 @@ export default function HomeView() {
 
       {/* MARKETS */}
       <Section>
-        <div className="grid items-center gap-14 lg:grid-cols-2">
-          <div>
-            <SectionHeader
-              eyebrow="Global markets"
-              title="Built to serve buyers across regions"
-              description="Destination regions below are editable placeholders for presentation. Actual routing, lead time and market coverage are confirmed per enquiry."
-            />
-            <div className="mt-10 grid grid-cols-2 gap-px border border-border bg-border sm:grid-cols-3">
-              {["Europe", "Gulf & Middle East", "Africa", "Asia", "United Kingdom", "Americas"].map(
-                (m, i) => (
-                  <Reveal key={m} delay={i * 50} className="bg-card p-5">
-                    <Globe2 className="size-4 text-accent" aria-hidden />
-                    <p className="mt-3 text-sm font-semibold">{m}</p>
-                    <p className="mt-1 text-xs text-muted-foreground">Placeholder region</p>
-                  </Reveal>
-                ),
-              )}
-            </div>
-            <Reveal className="mt-10">
-              <Button asChild variant="outline">
-                <ALink to="/global-markets">
-                  Export capability <ArrowRight aria-hidden />
-                </ALink>
-              </Button>
-            </Reveal>
-          </div>
-          <Reveal className="relative aspect-square overflow-hidden border border-border bg-surface">
-            <div className="grid-motif absolute inset-0 opacity-70" aria-hidden />
-            <ExportDiagram />
-          </Reveal>
-        </div>
+        <SectionHeader
+          eyebrow="Global markets"
+          title="Built to serve buyers across regions"
+          description="Core destination lanes with gateway ports and indicative transit windows. Actual routing, lead time and market coverage are confirmed per enquiry."
+          align="center"
+        />
+        <LaneGrid className="mt-14" />
+        <Reveal className="mt-12 text-center">
+          <Button asChild variant="outline">
+            <ALink to="/global-markets">
+              Export capability <ArrowRight aria-hidden />
+            </ALink>
+          </Button>
+        </Reveal>
       </Section>
 
       {/* SUSTAINABILITY */}

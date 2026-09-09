@@ -47,11 +47,11 @@ export default function FrozenView() {
           <Reveal className="overflow-hidden rounded-2xl border border-border shadow-soft">
             <img
               src="/images/frozen-produce.jpg"
-              alt="Individually quick frozen Egyptian fruit and vegetables"
-              width={1280}
-              height={960}
+              alt="Individually quick frozen mixed berries covered in frost"
+              width={800}
+              height={1200}
               loading="lazy"
-              className="h-full w-full object-cover"
+              className="aspect-[4/3] h-full w-full object-cover"
             />
           </Reveal>
         </div>

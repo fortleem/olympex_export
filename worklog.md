@@ -53,3 +53,24 @@ Stage Summary:
 - Full site ported and running on Next.js dev server (port 3000): HTTP 200, no console/runtime errors, lint clean
 - New: Contact/RFQ flow end-to-end (form → /api/quote → Prisma/SQLite), dark mode, English-only content
 - Both servers running: Next.js on 3000 (preview), Vite original on 8080
+
+---
+Task ID: 4
+Agent: Z.ai Code (main)
+Task: Use the user's attached logo with a Greek-style font, implement the attached section screenshots on the homepage, use other/real pictures, keep everything English-only (no Chinese)
+
+Work Log:
+- VLM-analyzed the 3 uploaded screenshots: shot1 = Olymp Ex logo (slate "A"/peak mark, purple pennant at summit, smile base stroke, OLYMP EX + EGYPTIAN AGRITRADE); shot2 = "Farm to Port in 5 Precision Steps" JourneyTimeline; shot3 = 4-region LaneGrid with transit times
+- Pixel-sampled the attached logo colors and zoom-analyzed the mark geometry (peak + base notch + violet pennant cresting to upper right + round-capped smile stroke)
+- Logo: rewrote src/components/olymp/Logo.tsx — mark remodelled on the attached asset; wordmark now ΩΛΥΜΠ ΕΞ in Greek letterforms via GFS_Didot (next/font/google, --font-greek, greek subset); "Egyptian Agritrade" tagline kept in Manrope; sr-only "Olymp Ex" for screen readers; inverted variant kept
+- Note: this Next version exports multi-word Google fonts with underscores (GFS_Didot, not GFSDidot — first attempt failed with "Unknown font")
+- layout.tsx: added GFS_Didot font; metadata icons now [/logo.svg (SVG), /favicon.ico]; public/logo.svg replaced (was a leftover Z.ai icon) with the new Olymp mark
+- HomeView: replaced the 6-step quality process grid with <JourneyTimeline /> (matches shot2) and the 6 "Placeholder region" cards + ExportDiagram with centered header + <LaneGrid /> + CTA (matches shot3); pruned unused icon imports (ExportDiagram still used on GlobalMarkets view)
+- Image: replaced public/images/frozen-produce.jpg (was AI-looking, VLM-rated 4/10) with a real frost-covered IQF mixed-berries photo from image-search (Crop's Fruits, VLM-rated 9/10, no watermark); fixed containers to aspect-[4/3] in FrozenView + ProductDetailView since the new photo is 800x1200 portrait; updated alt text
+- CJK grep over src/ + public: no Chinese characters anywhere; all content English
+- Verification: bun run lint clean; agent-browser e2e — Greek logo renders in light/dark/mobile (VLM confirmed ΩΛΥΜΠ ΕΞ in GFS Didot serif, ΕΞ = Epsilon+Xi, no tofu/overlap), mark matches attached logo side-by-side; Journey + Lane sections confirmed on homepage; frozen image renders realistic; mobile hamburger menu + hash nav work; RFQ submit → 201 → success panel → test record cleaned from SQLite; favicon.svg serves 200; no page/console errors
+
+Stage Summary:
+- Logo now uses the attached brand asset's mark with a Greek-style wordmark: ΩΛΥΜΠ ΕΞ set in GFS Didot (applies site-wide: header, footer, favicon)
+- Homepage implements both attached section screenshots (JourneyTimeline + LaneGrid); weak AI-looking frozen image replaced with a real IQF photo
+- Site remains 100% English (no Chinese), lint clean, all flows verified in browser

@@ -78,7 +78,7 @@ export default function ProductDetailView({ slug }: { slug: string }) {
                 width={1280}
                 height={960}
                 loading="lazy"
-                className="h-full w-full object-cover"
+                className="aspect-[4/3] h-full w-full object-cover"
               />
             </Reveal>
           </div>

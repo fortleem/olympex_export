@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Manrope, Fraunces } from "next/font/google";
+import { Manrope, Fraunces, GFS_Didot } from "next/font/google";
 import { ThemeProvider } from "next-themes";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
@@ -19,6 +19,14 @@ const fraunces = Fraunces({
   display: "swap",
 });
 
+// Classical Greek Didot — used for the ΩΛΥΜΠ ΕΞ wordmark in the brand logo.
+const gfsDidot = GFS_Didot({
+  variable: "--font-greek",
+  subsets: ["greek"],
+  weight: "400",
+  display: "swap",
+});
+
 export const metadata: Metadata = {
   title: "Olymp Ex — Egyptian Fresh & Frozen Produce Exporter",
   description:
@@ -34,7 +42,10 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: "Olymp Ex" }],
   icons: {
-    icon: "/favicon.ico",
+    icon: [
+      { url: "/logo.svg", type: "image/svg+xml" },
+      { url: "/favicon.ico", sizes: "48x48", type: "image/x-icon" },
+    ],
   },
   openGraph: {
     title: "Olymp Ex — Egypt's Harvest, Delivered to the World",
@@ -65,7 +76,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${manrope.variable} ${fraunces.variable} antialiased bg-background text-foreground`}
+        className={`${manrope.variable} ${fraunces.variable} ${gfsDidot.variable} antialiased bg-background text-foreground`}
       >
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
           {children}
