@@ -1,51 +1,46 @@
 import { cn } from "@/lib/utils";
 
 /**
- * Olymp Ex wordmark.
- * Mark concept: a geometric summit (Olymp) formed from two stacked chevrons —
- * the lower one in agricultural green (provenance), the upper in purple
- * (global trade) — inside a precise square field motif representing export grids.
+ * Olymp Ex brand mark — summit ("Olymp") rendered as a solid slate-blue peak
+ * with an inner light cleft, a purple crescent cresting the summit, and a
+ * curved brush stroke at the base representing the Nile / cultivated land.
  */
 export function LogoMark({ className }: { className?: string }) {
   return (
     <svg
-      viewBox="0 0 40 40"
+      viewBox="0 0 64 64"
       role="img"
       aria-label="Olymp Ex mark"
       className={cn("h-9 w-9", className)}
     >
       <defs>
-        <linearGradient id="olymp-mark" x1="0" y1="40" x2="40" y2="0">
-          <stop offset="0%" stopColor="oklch(0.35 0.093 152)" />
-          <stop offset="55%" stopColor="oklch(0.53 0.132 148)" />
-          <stop offset="100%" stopColor="oklch(0.46 0.166 300)" />
+        <linearGradient id="olymp-peak" x1="6" y1="56" x2="52" y2="8" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stopColor="var(--brand-slate-deep)" />
+          <stop offset="100%" stopColor="var(--brand-slate)" />
         </linearGradient>
       </defs>
-      <rect
-        x="0.75"
-        y="0.75"
-        width="38.5"
-        height="38.5"
-        rx="3"
-        fill="none"
-        stroke="url(#olymp-mark)"
-        strokeOpacity="0.35"
-        strokeWidth="1.5"
-      />
+
+      {/* summit */}
       <path
-        d="M8 27.5 20 12l12 15.5"
-        fill="none"
-        stroke="url(#olymp-mark)"
-        strokeWidth="3"
-        strokeLinecap="square"
+        d="M31 6 L55 52 H7 Z"
+        fill="url(#olymp-peak)"
       />
+      {/* inner cleft */}
+      <path d="M31 20 L40 45 H22 Z" fill="var(--background)" fillOpacity="0.92" />
+
+      {/* crescent cresting the peak */}
       <path
-        d="M13.5 30.5 20 22l6.5 8.5"
+        d="M31.5 5.5 a7.5 7.5 0 1 0 7.2 9.4 a6 6 0 1 1 -7.2 -9.4 Z"
+        fill="var(--brand-violet)"
+      />
+
+      {/* base stroke */}
+      <path
+        d="M6 58 C 18 50, 46 50, 58 58"
         fill="none"
-        stroke="oklch(0.46 0.166 300)"
-        strokeWidth="2"
-        strokeLinecap="square"
-        opacity="0.75"
+        stroke="var(--brand-slate)"
+        strokeWidth="4"
+        strokeLinecap="round"
       />
     </svg>
   );
@@ -59,21 +54,21 @@ export function Logo({
   inverted?: boolean;
 }) {
   return (
-    <span className={cn("inline-flex items-center gap-2.5", className)}>
-      <LogoMark className="h-8 w-8 shrink-0" />
+    <span className={cn("inline-flex items-center gap-3", className)}>
+      <LogoMark className="h-10 w-10 shrink-0" />
       <span className="flex flex-col leading-none">
         <span
           className={cn(
-            "text-[1.15rem] font-extrabold tracking-[0.16em] uppercase",
-            inverted ? "text-primary-foreground" : "text-foreground",
+            "text-[1.3rem] font-extrabold tracking-[0.02em] uppercase",
+            inverted ? "text-primary-foreground" : "text-brand-ink",
           )}
         >
-          Olymp<span className="text-primary"> Ex</span>
+          Olymp <span className="text-gradient-brand">Ex</span>
         </span>
         <span
           className={cn(
-            "mt-1 text-[0.55rem] font-medium tracking-[0.34em] uppercase",
-            inverted ? "text-primary-foreground/70" : "text-muted-foreground",
+            "mt-1.5 text-[0.58rem] font-medium tracking-[0.42em] uppercase",
+            inverted ? "text-primary-foreground/70" : "text-brand-slate",
           )}
         >
           Egyptian Agritrade

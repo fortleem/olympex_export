@@ -11,6 +11,11 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AboutRouteImport } from './routes/about'
+import { Route as FreshProduceRouteImport } from './routes/fresh-produce'
+import { Route as FrozenProduceRouteImport } from './routes/frozen-produce'
+import { Route as GlobalMarketsRouteImport } from './routes/global-markets'
+import { Route as QualityRouteImport } from './routes/quality'
+import { Route as SustainabilityRouteImport } from './routes/sustainability'
 import { Route as ProductsIndexRouteImport } from './routes/products.index'
 import { Route as ProductsSlugRouteImport } from './routes/products.$slug'
 
@@ -22,6 +27,31 @@ const IndexRoute = IndexRouteImport.update({
 const AboutRoute = AboutRouteImport.update({
   id: '/about',
   path: '/about',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FreshProduceRoute = FreshProduceRouteImport.update({
+  id: '/fresh-produce',
+  path: '/fresh-produce',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FrozenProduceRoute = FrozenProduceRouteImport.update({
+  id: '/frozen-produce',
+  path: '/frozen-produce',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GlobalMarketsRoute = GlobalMarketsRouteImport.update({
+  id: '/global-markets',
+  path: '/global-markets',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const QualityRoute = QualityRouteImport.update({
+  id: '/quality',
+  path: '/quality',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SustainabilityRoute = SustainabilityRouteImport.update({
+  id: '/sustainability',
+  path: '/sustainability',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ProductsIndexRoute = ProductsIndexRouteImport.update({
@@ -38,12 +68,22 @@ const ProductsSlugRoute = ProductsSlugRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/fresh-produce': typeof FreshProduceRoute
+  '/frozen-produce': typeof FrozenProduceRoute
+  '/global-markets': typeof GlobalMarketsRoute
+  '/quality': typeof QualityRoute
+  '/sustainability': typeof SustainabilityRoute
   '/products/$slug': typeof ProductsSlugRoute
   '/products/': typeof ProductsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/fresh-produce': typeof FreshProduceRoute
+  '/frozen-produce': typeof FrozenProduceRoute
+  '/global-markets': typeof GlobalMarketsRoute
+  '/quality': typeof QualityRoute
+  '/sustainability': typeof SustainabilityRoute
   '/products/$slug': typeof ProductsSlugRoute
   '/products': typeof ProductsIndexRoute
 }
@@ -51,20 +91,58 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/fresh-produce': typeof FreshProduceRoute
+  '/frozen-produce': typeof FrozenProduceRoute
+  '/global-markets': typeof GlobalMarketsRoute
+  '/quality': typeof QualityRoute
+  '/sustainability': typeof SustainabilityRoute
   '/products/$slug': typeof ProductsSlugRoute
   '/products/': typeof ProductsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about' | '/products/$slug' | '/products/'
+  fullPaths:
+    | '/'
+    | '/about'
+    | '/fresh-produce'
+    | '/frozen-produce'
+    | '/global-markets'
+    | '/quality'
+    | '/sustainability'
+    | '/products/$slug'
+    | '/products/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about' | '/products/$slug' | '/products'
-  id: '__root__' | '/' | '/about' | '/products/$slug' | '/products/'
+  to:
+    | '/'
+    | '/about'
+    | '/fresh-produce'
+    | '/frozen-produce'
+    | '/global-markets'
+    | '/quality'
+    | '/sustainability'
+    | '/products/$slug'
+    | '/products'
+  id:
+    | '__root__'
+    | '/'
+    | '/about'
+    | '/fresh-produce'
+    | '/frozen-produce'
+    | '/global-markets'
+    | '/quality'
+    | '/sustainability'
+    | '/products/$slug'
+    | '/products/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
+  FreshProduceRoute: typeof FreshProduceRoute
+  FrozenProduceRoute: typeof FrozenProduceRoute
+  GlobalMarketsRoute: typeof GlobalMarketsRoute
+  QualityRoute: typeof QualityRoute
+  SustainabilityRoute: typeof SustainabilityRoute
   ProductsSlugRoute: typeof ProductsSlugRoute
   ProductsIndexRoute: typeof ProductsIndexRoute
 }
@@ -83,6 +161,41 @@ declare module '@tanstack/react-router' {
       path: '/about'
       fullPath: '/about'
       preLoaderRoute: typeof AboutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/fresh-produce': {
+      id: '/fresh-produce'
+      path: '/fresh-produce'
+      fullPath: '/fresh-produce'
+      preLoaderRoute: typeof FreshProduceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/frozen-produce': {
+      id: '/frozen-produce'
+      path: '/frozen-produce'
+      fullPath: '/frozen-produce'
+      preLoaderRoute: typeof FrozenProduceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/global-markets': {
+      id: '/global-markets'
+      path: '/global-markets'
+      fullPath: '/global-markets'
+      preLoaderRoute: typeof GlobalMarketsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/quality': {
+      id: '/quality'
+      path: '/quality'
+      fullPath: '/quality'
+      preLoaderRoute: typeof QualityRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sustainability': {
+      id: '/sustainability'
+      path: '/sustainability'
+      fullPath: '/sustainability'
+      preLoaderRoute: typeof SustainabilityRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/products/': {
@@ -105,6 +218,11 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
+  FreshProduceRoute: FreshProduceRoute,
+  FrozenProduceRoute: FrozenProduceRoute,
+  GlobalMarketsRoute: GlobalMarketsRoute,
+  QualityRoute: QualityRoute,
+  SustainabilityRoute: SustainabilityRoute,
   ProductsSlugRoute: ProductsSlugRoute,
   ProductsIndexRoute: ProductsIndexRoute,
 }

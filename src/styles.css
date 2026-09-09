@@ -46,6 +46,11 @@
   --color-ring: var(--ring);
   --color-surface: var(--surface);
   --color-surface-2: var(--surface-2);
+  --color-brand-ink: var(--brand-ink);
+  --color-brand-slate: var(--brand-slate);
+  --color-brand-slate-deep: var(--brand-slate-deep);
+  --color-brand-violet: var(--brand-violet);
+
   --color-ring-offset-background: var(--background);
   --color-chart-1: var(--chart-1);
   --color-chart-2: var(--chart-2);
@@ -97,6 +102,14 @@
 
   --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: oklch(0.99 0 0);
+
+  /* Logo palette — ink navy, slate blue, violet */
+  --brand-ink: oklch(0.22 0.035 265);
+  --brand-slate: oklch(0.52 0.06 265);
+  --brand-slate-deep: oklch(0.42 0.07 265);
+  --brand-violet: oklch(0.55 0.24 292);
+
+
 
   --border: oklch(0.918 0.006 150);
   --input: oklch(0.9 0.006 150);
