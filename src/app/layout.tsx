@@ -1,38 +1,60 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import type { Metadata, Viewport } from "next";
+import { Manrope, Fraunces } from "next/font/google";
+import { ThemeProvider } from "next-themes";
 import "./globals.css";
-import { Toaster } from "@/components/ui/toaster";
+import { Toaster } from "@/components/ui/sonner";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const manrope = Manrope({
+  variable: "--font-manrope",
   subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800"],
+  display: "swap",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const fraunces = Fraunces({
+  variable: "--font-fraunces",
   subsets: ["latin"],
+  weight: ["400", "600"],
+  style: ["normal", "italic"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: "Z.ai Code Scaffold - AI-Powered Development",
-  description: "Modern Next.js scaffold optimized for AI-powered development with Z.ai. Built with TypeScript, Tailwind CSS, and shadcn/ui.",
-  keywords: ["Z.ai", "Next.js", "TypeScript", "Tailwind CSS", "shadcn/ui", "AI development", "React"],
-  authors: [{ name: "Z.ai Team" }],
+  title: "Olymp Ex — Egyptian Fresh & Frozen Produce Exporter",
+  description:
+    "Olymp Ex exports premium Egyptian fresh and frozen fruits and vegetables to importers, distributors and food-service partners worldwide.",
+  keywords: [
+    "Olymp Ex",
+    "Egypt export",
+    "fresh produce",
+    "IQF frozen",
+    "agritrade",
+    "Egyptian fruits",
+    "Egyptian vegetables",
+  ],
+  authors: [{ name: "Olymp Ex" }],
   icons: {
-    icon: "https://z-cdn.chatglm.cn/z-ai/static/logo.svg",
+    icon: "/favicon.ico",
   },
   openGraph: {
-    title: "Z.ai Code Scaffold",
-    description: "AI-powered development with modern React stack",
-    url: "https://chat.z.ai",
-    siteName: "Z.ai",
+    title: "Olymp Ex — Egypt's Harvest, Delivered to the World",
+    description:
+      "Premium Egyptian fresh and frozen produce for importers, distributors and food-service partners worldwide.",
+    siteName: "Olymp Ex",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Z.ai Code Scaffold",
-    description: "AI-powered development with modern React stack",
+    title: "Olymp Ex — Egyptian Fresh & Frozen Produce Exporter",
+    description:
+      "Premium Egyptian fresh and frozen produce for importers, distributors and food-service partners worldwide.",
   },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#2F7D32",
+  width: "device-width",
+  initialScale: 1,
 };
 
 export default function RootLayout({
@@ -43,10 +65,12 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground`}
+        className={`${manrope.variable} ${fraunces.variable} antialiased bg-background text-foreground`}
       >
-        {children}
-        <Toaster />
+        <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
+          {children}
+          <Toaster position="bottom-right" />
+        </ThemeProvider>
       </body>
     </html>
   );

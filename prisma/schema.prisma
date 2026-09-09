@@ -30,3 +30,21 @@ model Post {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+// Olymp Ex — Request-a-Quote (RFQ) submissions from the contact form.
+model QuoteRequest {
+  id           String   @id @default(cuid())
+  company      String
+  contactName  String
+  email        String
+  phone        String?
+  product      String
+  format       String
+  volume       String
+  destination  String
+  packaging    String?
+  shipmentDate String?
+  message      String?
+  status       String   @default("new")
+  createdAt    DateTime @default(now())
+}
