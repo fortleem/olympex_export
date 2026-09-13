@@ -47,6 +47,7 @@ export default function ContactView() {
       packaging: "",
       shipmentDate: "",
       message: "",
+      website: "",
     },
   });
 
@@ -171,6 +172,16 @@ export default function ContactView() {
                 </div>
               ) : (
                 <form onSubmit={handleSubmit(onSubmit)} className="mt-10 space-y-6" noValidate>
+                  {/* Honeypot — hidden from humans; bots that fill it are discarded server-side */}
+                  <div className="hidden" aria-hidden="true">
+                    <Label htmlFor="website">Website</Label>
+                    <Input
+                      id="website"
+                      tabIndex={-1}
+                      autoComplete="off"
+                      {...register("website")}
+                    />
+                  </div>
                   <div className="grid gap-6 md:grid-cols-2">
                     <div className="space-y-2">
                       <Label htmlFor="company">Company *</Label>

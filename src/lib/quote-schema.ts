@@ -5,17 +5,23 @@ import { z } from "zod";
  * All fields are plain strings so records remain easy to edit/replace later.
  */
 export const quoteSchema = z.object({
-  company: z.string().trim().min(2, "Company name is required"),
-  contactName: z.string().trim().min(2, "Contact name is required"),
-  email: z.email("Enter a valid email address"),
+  company: z.string().trim().min(2, "Company name is required").max(120),
+  contactName: z.string().trim().min(2, "Contact name is required").max(80),
+  email: z.email("Enter a valid email address").max(120),
   phone: z.string().trim().max(40).optional().or(z.literal("")),
-  product: z.string().trim().min(1, "Select a product or line"),
+  product: z.string().trim().min(1, "Select a product or line").max(80),
   format: z.enum(["fresh", "frozen", "both"]),
-  volume: z.string().trim().min(1, "Estimated volume is required"),
-  destination: z.string().trim().min(1, "Destination market is required"),
+  volume: z.string().trim().min(1, "Estimated volume is required").max(60),
+  destination: z.string().trim().min(1, "Destination market is required").max(80),
   packaging: z.string().trim().max(200).optional().or(z.literal("")),
   shipmentDate: z.string().trim().max(40).optional().or(z.literal("")),
   message: z.string().trim().max(2000).optional().or(z.literal("")),
+  /**
+   * Honeypot — a hidden field humans never see or fill.
+   * If it arrives non-empty the submitter is a bot; the API accepts the
+   * request silently but discards it.
+   */
+  website: z.string().trim().max(200).optional().or(z.literal("")),
 });
 
 export type QuoteInput = z.infer<typeof quoteSchema>;

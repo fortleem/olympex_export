@@ -52,3 +52,17 @@ prompt
 server.log
 # Skills directory
 /skills/
+
+# --- local-only & sensitive artifacts (never push) ---
+# user uploads (may contain private documents / recovery codes)
+/upload/
+# runtime SQLite database (schema lives in prisma/)
+/db/*.db
+# local backups written to download/
+/download/*.db
+/download/*.bundle
+/download/*.tar.gz
+# original Vite export (reference copy; canonical version on GitHub main)
+/olympex_export/
+# runtime pid files
+*.pid
