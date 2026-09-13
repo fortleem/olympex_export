@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Manrope, Fraunces, GFS_Didot } from "next/font/google";
+import { Manrope, Fraunces, Cinzel } from "next/font/google";
 import { ThemeProvider } from "next-themes";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
@@ -19,11 +19,12 @@ const fraunces = Fraunces({
   display: "swap",
 });
 
-// Classical Greek Didot — used for the ΩΛΥΜΠ ΕΞ wordmark in the brand logo.
-const gfsDidot = GFS_Didot({
-  variable: "--font-greek",
-  subsets: ["greek"],
-  weight: "400",
+// Cinzel — classical inscriptional (Trajan-style) capitals. Gives the Olymp Ex
+// wordmark its Greek-antiquity character while reading in English.
+const cinzel = Cinzel({
+  variable: "--font-logo",
+  subsets: ["latin"],
+  weight: "700",
   display: "swap",
 });
 
@@ -76,7 +77,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${manrope.variable} ${fraunces.variable} ${gfsDidot.variable} antialiased bg-background text-foreground`}
+        className={`${manrope.variable} ${fraunces.variable} ${cinzel.variable} antialiased bg-background text-foreground`}
       >
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
           {children}

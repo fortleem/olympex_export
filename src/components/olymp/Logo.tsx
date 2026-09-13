@@ -1,9 +1,9 @@
 import { cn } from "@/lib/utils";
 
 /**
- * Olymp Ex brand mark — modelled on the supplied brand asset: a solid
- * slate-blue peak (reads as a capital "Α") with a notch rising from the base,
- * a violet pennant cresting the summit toward the upper right, and a curved
+ * Olymp Ex brand mark — three mountain peaks rendered as overlapping
+ * pyramids: a dominant centre summit in solid slate flanked by two lighter
+ * receding peaks, a violet pennant cresting the main summit, and a curved
  * stroke beneath representing the Nile / cultivated land.
  */
 export function LogoMark({ className }: { className?: string }) {
@@ -15,19 +15,21 @@ export function LogoMark({ className }: { className?: string }) {
       className={cn("h-9 w-9", className)}
     >
       <defs>
-        <linearGradient id="olymp-peak" x1="6" y1="56" x2="52" y2="8" gradientUnits="userSpaceOnUse">
+        <linearGradient id="olymp-peak" x1="12" y1="52" x2="52" y2="4" gradientUnits="userSpaceOnUse">
           <stop offset="0%" stopColor="var(--brand-slate-deep)" />
           <stop offset="100%" stopColor="var(--brand-slate)" />
         </linearGradient>
       </defs>
 
-      {/* peak */}
-      <path d="M32 5 L55 52 H9 Z" fill="url(#olymp-peak)" />
-      {/* notch rising from the base — reads as a capital Α */}
-      <path d="M32 31 L44 52 H20 Z" fill="var(--background)" fillOpacity="0.92" />
+      {/* receding left pyramid */}
+      <path d="M4 52 L22 16 L40 52 Z" fill="var(--brand-slate)" fillOpacity="0.38" />
+      {/* receding right pyramid */}
+      <path d="M26 52 L44 14 L60 52 Z" fill="var(--brand-slate)" fillOpacity="0.62" />
+      {/* dominant centre pyramid */}
+      <path d="M12 52 L32 4 L52 52 Z" fill="url(#olymp-peak)" />
 
       {/* violet pennant cresting the summit */}
-      <path d="M33 8 C 39 1 49 2 55 9 C 49 15 39 14 33 8 Z" fill="var(--brand-violet)" />
+      <path d="M33 5 C 38 0 47 0 53 7 C 47 12 38 11 33 5 Z" fill="var(--brand-violet)" />
 
       {/* base stroke */}
       <path
@@ -42,9 +44,10 @@ export function LogoMark({ className }: { className?: string }) {
 }
 
 /**
- * Full lock-up. The wordmark is set in Greek letterforms — ΩΛΥΜΠ ΕΞ — in
- * classical Greek Didot, the brand's Greek-style signature, with the
- * "Egyptian Agritrade" descriptor kept in the site's Latin face.
+ * Full lock-up. The wordmark reads "OLYMP EX" in English, set in Cinzel —
+ * classical inscriptional capitals that give the logo its Greek-antiquity
+ * character — with the "Egyptian Agritrade" descriptor in the site's Latin
+ * face.
  */
 export function Logo({
   className,
@@ -57,18 +60,15 @@ export function Logo({
     <span className={cn("inline-flex items-center gap-3", className)}>
       <LogoMark className="h-10 w-10 shrink-0" />
       <span className="flex flex-col leading-none">
-        <span className="sr-only">Olymp Ex</span>
         <span
-          aria-hidden
           className={cn(
-            "font-[family-name:var(--font-greek)] text-[1.5rem] tracking-[0.02em]",
+            "font-[family-name:var(--font-logo)] text-[1.4rem] tracking-[0.04em] uppercase",
             inverted ? "text-primary-foreground" : "text-brand-ink",
           )}
         >
-          ΩΛΥΜΠ <span className={inverted ? "text-primary-foreground/60" : "text-brand-slate"}>ΕΞ</span>
+          Olymp <span className={inverted ? "" : "text-brand-slate"}>Ex</span>
         </span>
         <span
-          aria-hidden
           className={cn(
             "mt-1.5 text-[0.58rem] font-medium tracking-[0.42em] uppercase",
             inverted ? "text-primary-foreground/70" : "text-brand-slate",

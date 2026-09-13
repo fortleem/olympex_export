@@ -74,3 +74,21 @@ Stage Summary:
 - Logo now uses the attached brand asset's mark with a Greek-style wordmark: ΩΛΥΜΠ ΕΞ set in GFS Didot (applies site-wide: header, footer, favicon)
 - Homepage implements both attached section screenshots (JourneyTimeline + LaneGrid); weak AI-looking frozen image replaced with a real IQF photo
 - Site remains 100% English (no Chinese), lint clean, all flows verified in browser
+
+---
+Task ID: 5
+Agent: Z.ai Code (main)
+Task: Rework logo per user follow-up — Greek STYLE but ENGLISH language wordmark; change the single triangle mark into three mountain/pyramid triangles overlapping each other
+
+Work Log:
+- User correction: previous ΩΛΥΜΠ ΕΞ Greek-letter wordmark replaced — keep English letters, Greek/classical styling only
+- Font: swapped GFS_Didot → Cinzel (next/font/google, weight 700, latin subset, --font-logo) — classical inscriptional Trajan-style capitals that read "OLYMP EX" in English with Greek-antiquity character; removed GFS_Didot from layout.tsx
+- Logo.tsx mark redesigned: three overlapping pyramid triangles — receding left peak (brand-slate @ 38% opacity), receding right peak (@ 62%), dominant centre pyramid (slate-deep→slate gradient) — keeping the violet pennant cresting the centre summit and the round-capped smile base stroke; dropped the old inner notch
+- Wordmark: "OLYMP EX" in Cinzel uppercase (Olymp in brand-ink, Ex in brand-slate, mirroring the attached logo's black/grey split), "Egyptian Agritrade" tagline unchanged in Manrope; removed the now-unneeded sr-only
+- public/logo.svg favicon rewritten with the same three-pyramid geometry using solid tints (#BDC6D3 / #94A1B6 / gradient #3D5170→#52688A, pennant #7A43C9) so it reads on light and dark browser toolbars
+- Verification: lint clean; HTTP 200; agent-browser + VLM — desktop light (three overlapping pyramids clearly distinguishable, OLYMP EX in inscriptional serif capitals, EGYPTIAN AGRITRADE tagline, no rendering issues), mobile 390px (fits on one line, no wrap/clip), true dark mode (dark class active, logo clearly visible, white-on-black contrast), footer lock-up correct, favicon.svg serves 200 image/svg+xml, no console/page errors
+
+Stage Summary:
+- Wordmark now reads OLYMP EX in English, set in Cinzel (Greek-classical inscriptional style)
+- Mark is now three overlapping pyramid/mountain triangles (centre dominant, two receding) + violet pennant + smile base — applied to header, footer and favicon
+- Everything else (Journey/Lane sections, images, RFQ flow, English-only content) unchanged and still verified
