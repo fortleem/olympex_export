@@ -92,3 +92,23 @@ Stage Summary:
 - Wordmark now reads OLYMP EX in English, set in Cinzel (Greek-classical inscriptional style)
 - Mark is now three overlapping pyramid/mountain triangles (centre dominant, two receding) + violet pennant + smile base — applied to header, footer and favicon
 - Everything else (Journey/Lane sections, images, RFQ flow, English-only content) unchanged and still verified
+
+---
+Task ID: 6
+Agent: Z.ai Code (main)
+Task: Use the newly uploaded logo (B1gOK.jpg), recolor one pyramid light green and one purple, keep the logo text colors unchanged
+
+Work Log:
+- VLM-analyzed B1gOK.jpg (1168x784): three-peak hollow faceted mark (navy) above "OlympEx" text (navy + olive); no flags/grass
+- Pixel-analyzed the mark (mask x323-844, y147-399): decoded exact geometry — center apex (584,148) dominant, left apex (461,232) 66%, right apex (703,230) 67%; solid apex tips; hollow interiors; constant-width swoosh legs tapering to 5 sharp pointed feet (x329/415/555/746/834 @ y~393); white wedge cut (apex 639,338) splitting the center's right flank into left-tail + E1 wedge; right pyramid's short echo leg (tip 684,272); left pyramid's inner leg braids under the center's left leg; right leg is an angular bent wedge (inner edge bends +0.33 → +1.44 at y320)
+- globals.css: added --brand-leaf (#8cc152 light / #a9d68d dark) and --brand-grape (#7b4fc7 light / #a98fe8 dark) + @theme inline color mappings
+- Logo.tsx: rebuilt LogoMark as 9-path vector (viewBox 0 0 521 253) in the asset's language — left pyramid LIGHT GREEN (tip + outer leg swoosh + inner leg tucking behind navy), centre pyramid NAVY (tip + left leg + right flank with evenodd white wedge cut), right pyramid PURPLE (tip + echo leg + angular bent-wedge blade); wordmark untouched (OLYMP EX in Cinzel, Olymp brand-ink / Ex brand-slate, Egyptian Agritrade tagline)
+- public/logo.svg favicon: same geometry with solid hexes + prefers-color-scheme dark media query for toolbar visibility
+- Programmatic IoU check of reconstruction vs original mask: 0.685 with all key structures matched (differences = internal braid micro-details, invisible at logo scale)
+- VLM review found the first blade attempt too curved ("teardrop") → replaced quadratic curves with the exact angular bent-wedge polygon from pixel data; re-comparison verdict: "professional color evolution of the same brand mark — YES"
+- Verification: lint clean; agent-browser e2e — desktop light (PASS: three pyramids green/navy/purple, wedge cut visible, text colors unchanged, braid junction rated 8/10 intentional layering), dark mode (all three colors switch to light variants, readable), mobile 390px (header + footer lockups fit, no clipping), favicon serves 200 image/svg+xml, nav smoke test (#/products + title sync OK), no console/page errors
+
+Stage Summary:
+- Mark now reproduces the uploaded B1gOK logo geometry 1:1 in style, with the requested recolor: left pyramid light green, centre pyramid kept navy (dominant anchor), right pyramid purple
+- Logo text colors unchanged (Olymp ink / Ex slate / tagline slate); applies site-wide (header, footer) + favicon with dark-mode adaptation
+- Everything else (views, RFQ flow, English-only content) untouched and still verified

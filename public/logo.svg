@@ -1,13 +1,27 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <defs>
-    <linearGradient id="peak" x1="12" y1="52" x2="52" y2="4" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#3D5170"/>
-      <stop offset="1" stop-color="#52688A"/>
-    </linearGradient>
-  </defs>
-  <path d="M4 52 L22 16 L40 52 Z" fill="#BDC6D3"/>
-  <path d="M26 52 L44 14 L60 52 Z" fill="#94A1B6"/>
-  <path d="M12 52 L32 4 L52 52 Z" fill="url(#peak)"/>
-  <path d="M33 5 C 38 0 47 0 53 7 C 47 12 38 11 33 5 Z" fill="#7A43C9"/>
-  <path d="M6 58 C 18 50, 46 50, 58 58" fill="none" stroke="#52688A" stroke-width="4" stroke-linecap="round"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 521 253">
+  <style>
+    @media (prefers-color-scheme: dark) {
+      .py-navy { fill: #8fa9de; }
+      .py-leaf { fill: #a9d68d; }
+      .py-grape { fill: #a98fe8; }
+    }
+  </style>
+  <!-- left pyramid — light green -->
+  <g class="py-leaf" fill="#8cc152">
+    <path d="M138 85L123 103L153 103Z"/>
+    <path d="M123 103L140 103L34 232L6 246Z"/>
+    <path d="M145 103L162 103L152 170Z"/>
+  </g>
+  <!-- centre pyramid — navy -->
+  <g class="py-navy" fill="#012b60">
+    <path d="M261 1L245 28L277 28Z"/>
+    <path d="M245 28L261 28L125 220L92 243Z"/>
+    <path fill-rule="evenodd" d="M261 28L277 28L424 248L232 246L297 134L269 98ZM316 190L240 243L391 243Z"/>
+  </g>
+  <!-- right pyramid — purple -->
+  <g class="py-grape" fill="#7b4fc7">
+    <path d="M380 83L365 103L395 103Z"/>
+    <path d="M359 105L378 105L361 125Z"/>
+    <path d="M388 106L406 106L515 243L511 243L410 173Z"/>
+  </g>
 </svg>
