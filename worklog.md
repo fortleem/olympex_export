@@ -135,3 +135,21 @@ Stage Summary:
 - App hardened end-to-end (headers, rate limiting, honeypot, payload caps, error boundaries) and fully re-verified in browser
 - GitHub recovery codes and all private uploads removed from version control before any push
 - Triple backup on disk; project lives on GitHub at fortleem/olympex_export branch `nextjs` (merge/PR into main available at /pull/new/nextjs)
+
+---
+Task ID: 8
+Agent: Z.ai Code (main)
+Task: Merge the nextjs branch into main on GitHub (user-confirmed repo + token)
+
+Work Log:
+- Verified remote state: fortleem/olympex_export main = 4d9a99a (Vite), nextjs = 8000a59 (Next.js port)
+- Fetched remote main into local branch vite-main; confirmed unrelated histories (no merge-base)
+- Merged with --allow-unrelated-histories -s ours from the Next.js side: merge commit 75651cb has parent 1 = 8000a59 (Next.js, canonical tree — verified empty diff vs first parent) and parent 2 = 4d9a99a (Vite), so the original 10-commit Vite history is preserved and reachable while main's content is 100% the Next.js port
+- Because remote main (4d9a99a) is an ancestor of the merge commit, the push to main is a normal fast-forward — no force needed
+- Added README.md (stack, getting started, scripts, structure, API hardening docs) since main is now the canonical project
+- Pushed main to GitHub; verified with ls-remote
+
+Stage Summary:
+- GitHub main now carries the merged history: Vite lineage + Next.js port, Next.js content canonical
+- nextjs branch kept at 8000a59 as the pre-merge pointer (deletable via git push origin --delete nextjs)
+- README added; worklog updated and pushed
