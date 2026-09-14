@@ -62,6 +62,10 @@ server.log
 /download/*.db
 /download/*.bundle
 /download/*.tar.gz
+/download/*.jpeg
+/download/*.png
+# logo rasterization scratch (fonts + intermediate renders)
+/.logo-gen/
 # original Vite export (reference copy; canonical version on GitHub main)
 /olympex_export/
 # runtime pid files

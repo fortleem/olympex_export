@@ -153,3 +153,23 @@ Stage Summary:
 - GitHub main now carries the merged history: Vite lineage + Next.js port, Next.js content canonical
 - nextjs branch kept at 8000a59 as the pre-merge pointer (deletable via git push origin --delete nextjs)
 - README added; worklog updated and pushed
+
+---
+Task ID: 9
+Agent: Z.ai Code (main)
+Task: Generate .jpeg version of the logo for download
+
+Work Log:
+- Extracted the exact logo definition: SVG geometry from src/components/olymp/Logo.tsx (9-path three-pyramid mark, light green #8cc152 / navy #012b60 / purple #7b4fc7) + lock-up typography (Cinzel Bold wordmark 1.4rem tracking 0.04em, Manrope 500 tagline 0.58rem tracking 0.42em, ink/slate oklch colors)
+- Located the actual site font files in .next/dev/static/media/ (fontTools-identified: fd5073be... = Cinzel Bold full caps coverage; a343f882... = Manrope variable wght 200-800 full coverage)
+- Built .logo-gen/lockup.html — pixel-faithful replica of the header lock-up at zoom:8 (high-res), with @font-face pointing at the copied woff2 files and the browser resolving the oklch() colors natively; .logo-gen/mark.html for the mark-only variant
+- agent-browser rasterization: opened file:// pages, awaited document.fonts.ready (both fonts confirmed loaded via document.fonts.check), measured exact rendered sizes (2264×468 lock-up, 1133×624 mark), set viewport to match, screenshotted PNG
+- PIL conversion: content-crop (threshold <250 → bbox) to remove viewport rounding slivers, re-padded uniformly, saved baseline JPEG quality 95, subsampling 0, optimize
+- Deliverables in download/: olympex-logo.jpeg (2190×473, 105KB — full lock-up with wordmark + tagline) and olympex-logo-mark.jpeg (1094×597, 62KB — pyramids only)
+- VLM quality control on both: PASS — three pyramids correctly green/navy/purple, OLYMP EX in inscriptional serif with ink/slate split, EGYPTIAN AGRITRADE tagline present, sharp edges, no artifacts/clipping, even margins
+- Verified file integrity (JFIF baseline JPEG, 3-component RGB)
+- .gitignore: added /.logo-gen/ and download image patterns (JPEGs are local deliverables; vector sources remain canonical in the repo)
+
+Stage Summary:
+- Two high-res JPEG logo exports available for download: full lock-up + mark-only, both VLM-verified faithful to the site brand
+- Rasterized from the real vector geometry + real Cinzel/Manrope fonts in a real browser — not an AI redraw
