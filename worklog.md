@@ -215,3 +215,30 @@ Stage Summary:
 - Header lock-up is now stacked: rainbow-arc pyramid mark on top, OLYMPEX wordmark centered beneath it, in both expanded (88px) and scrolled (80px) header states, on desktop/mobile/light/dark
 - Dev server re-daemonized via .zscripts/daemon-dev.py after clearing a frozen Tailwind CSS cache
 - Change committed locally (2e435b4); GitHub push awaits a fresh token
+
+---
+Task ID: 12
+Agent: Z.ai Code (main)
+Task: Animate the logo — brightness sweep through it + state-of-the-art cinematic entrance
+
+Work Log:
+- globals.css: new "OlympEx logo" motion section — 5 keyframe animations + 2 overlay classes:
+  · ox-focus-pull (whole lock-up racks into focus: blur(10px)→0, brightness 0.3→1.95 flare→1, scale 1.08→1, 1.05s)
+  · ox-arc-in (rainbow arc traces in from the left: scaleX 0→1 with hot brightness-3 leading edge, 0.95s @ 0.12s)
+  · ox-peak-rise (pyramids grow up from their baseline with overshoot bounce + brightness flash; staggered green 0.5s / purple 0.66s / dominant centre 0.84s, transform-box fill-box)
+  · ox-letter-in (OLYMPEX letters rise + brighten; per-letter inline delays 0.98s + i·55ms = left-to-right cascade)
+  · ox-sweep / ox-sweep-band (recurring light pass: skewed white-green-violet gradient band, mix-blend-mode screen, crosses the lock-up in 1.56s every 6.5s, first pass at 2.25s)
+- Screen-blend insight: on the light theme the band only brightens the coloured glyph strokes (screen over white bg = invisible spill) so brightness literally reads as passing THROUGH the logo; on dark it also leaves a soft glow across the lock-up
+- Logo.tsx: animation classes on the 4 mark paths (ox-arc, ox-peak-g/r/c) + ox-letter with inline animationDelay per letter; stacked lock-up restructured with .ox-entrance wrapper (focus-pull target) + aria-hidden .ox-sweep overlay; horizontal variant untouched
+- Reduced motion: extended the existing prefers-reduced-motion block with animation-delay: 0s !important for all ox-* classes (the universal 0.001ms-duration rule alone would have left staggered letters waiting hidden during their delays)
+- Entrance choreography (SVG transforms use viewBox user units → motion scales proportionally header 94px vs footer 220px): focus pull 0–1.05s → arc trace 0.12–1.07s → peaks 0.5–1.79s → letters 0.98–1.96s → first sweep 2.25–3.81s → recurring every 6.5s
+- Verification: 27 live animations confirmed via document.getAnimations() (2 focus-pulls, 2 arcs, 6 peaks, 14 letters, 2 sweeps = header + footer instances); froze exact frames by pausing + seeking the Web Animations API (t=350/950/1550/2200/3000ms) — VLM strict review of all 7 frames PASS (hazy emergence, staggered peak rise, left-to-right letter cascade, clean assembly, visible sweep band light+dark+footer)
+- Motion verification: recorded 6.9s webm→mp4 of the live animation; SDK video_url analysis confirms smooth cinematic sequencing, no glitches/jank; pixel-measured the sweep in the recording (glyph brightness 162.4→166.2→162.4 at t≈4.5–4.8s) and in lossless frames (up to 300 RGB-unit local delta, 26% of glyph pixels brightened at mid-pass; 13% of region glowing in dark) — subtle in compressed video only, clearly visible live
+- prefers-reduced-motion emulation (agent-browser set media reduced-motion): 26 ox-* animations collapsed to 0.001ms, logo renders instantly fully assembled, opacity 1
+- Regression checks: mobile 390px stacked lock-up + sweep overlay + no hamburger overlap; mobile menu opens/navigates; #/quality and #/contact titles sync; RFQ form present; zero console/page errors; lint clean
+- Committed e85f7eb (2 files, +217/−17); still no GitHub token on disk, push pending with 2e435b4
+
+Stage Summary:
+- Logo now has a full cinematic identity: focus-pull emergence → arc trace-in → staggered pyramid rise → letter cascade → recurring brightness sweep through the lock-up (every ~6.5s), fully responsive to reduced-motion
+- Pure CSS (no JS runtime cost), scales proportionally at header and footer sizes, works in light (brightness through glyphs) and dark (glow) themes
+- Applied to both header and footer lock-ups; all flows re-verified, lint clean
