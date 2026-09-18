@@ -425,6 +425,169 @@
   animation: olymp-reveal 0.85s var(--ease-brand) forwards;
 }
 
+/* ---------- OlympEx logo: cinematic entrance + light sweep ----------
+   Sequence (once per page load):
+     0.00s  focus pull — the lock-up racks into focus with a lens flare
+     0.12s  the rainbow arc traces in from the left, hot leading edge
+     0.50s  peaks grow up from the baseline: left, right, then the
+            dominant centre pyramid as the climax
+     0.98s  OLYMPEX letters cascade up left-to-right
+     2.25s  a band of light sweeps through the assembled lock-up,
+            then keeps recurring every ~6.5s (brightness pass)
+   All units inside SVG use viewBox user units, so motion scales
+   proportionally with the rendered logo size (header vs footer).
+-------------------------------------------------------------------- */
+
+@keyframes ox-focus-pull {
+  0% {
+    opacity: 0;
+    filter: blur(10px) brightness(0.3) saturate(0.6);
+    transform: scale(1.08);
+  }
+  45% {
+    opacity: 1;
+    filter: blur(2.5px) brightness(1.55);
+    transform: scale(1.03);
+  }
+  72% {
+    filter: blur(0px) brightness(1.95) saturate(1.05);
+    transform: scale(1.008);
+  }
+  100% {
+    opacity: 1;
+    filter: blur(0px) brightness(1) saturate(1);
+    transform: scale(1);
+  }
+}
+
+.ox-entrance {
+  animation: ox-focus-pull 1.05s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes ox-arc-in {
+  0% {
+    opacity: 0;
+    transform: scaleX(0);
+    filter: brightness(3);
+  }
+  30% {
+    opacity: 1;
+  }
+  100% {
+    transform: scaleX(1);
+    filter: brightness(1);
+  }
+}
+
+.ox-arc {
+  transform-box: fill-box;
+  transform-origin: left center;
+  animation: ox-arc-in 0.95s cubic-bezier(0.16, 1, 0.3, 1) 0.12s both;
+}
+
+@keyframes ox-peak-rise {
+  0% {
+    opacity: 0;
+    transform: scaleY(0.1);
+    filter: brightness(1.7);
+  }
+  45% {
+    opacity: 1;
+  }
+  72% {
+    transform: scaleY(1.06);
+    filter: brightness(1.4);
+  }
+  100% {
+    transform: scaleY(1);
+    filter: brightness(1);
+  }
+}
+
+.ox-peak-g,
+.ox-peak-r,
+.ox-peak-c {
+  transform-box: fill-box;
+  transform-origin: bottom center;
+  animation: ox-peak-rise 0.85s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.ox-peak-g {
+  animation-delay: 0.5s;
+}
+
+.ox-peak-r {
+  animation-delay: 0.66s;
+}
+
+.ox-peak-c {
+  animation-delay: 0.84s;
+  animation-duration: 0.95s;
+}
+
+@keyframes ox-letter-in {
+  0% {
+    opacity: 0;
+    transform: translateY(160px);
+    filter: brightness(1.9);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+    filter: brightness(1);
+  }
+}
+
+/* per-letter delays are set inline (staggered left-to-right) */
+.ox-letter {
+  transform-box: fill-box;
+  animation: ox-letter-in 0.65s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* Recurring light sweep. The band uses `screen` blending, so on the
+   light theme the brightness reads as passing THROUGH the coloured
+   glyph strokes (white areas stay clean); on dark it also leaves a
+   soft glow across the lock-up. */
+.ox-sweep {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.ox-sweep-band {
+  position: absolute;
+  top: -25%;
+  bottom: -25%;
+  left: 0;
+  width: 55%;
+  transform: translateX(-140%) skewX(-14deg);
+  background: linear-gradient(
+    100deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0) 30%,
+    rgba(187, 255, 214, 0.3) 44%,
+    rgba(255, 255, 255, 0.7) 50%,
+    rgba(214, 190, 255, 0.32) 58%,
+    rgba(255, 255, 255, 0) 72%
+  );
+  mix-blend-mode: screen;
+  animation: ox-sweep-move 6.5s cubic-bezier(0.55, 0.05, 0.4, 0.95) 2.25s infinite
+    both;
+}
+
+@keyframes ox-sweep-move {
+  0% {
+    transform: translateX(-140%) skewX(-14deg);
+  }
+  24% {
+    transform: translateX(255%) skewX(-14deg);
+  }
+  100% {
+    transform: translateX(255%) skewX(-14deg);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -437,5 +600,17 @@
 
   .reveal {
     opacity: 1 !important;
+  }
+
+  /* logo sequence: skip straight to the fully-assembled state
+     (zero the stagger delays so nothing waits hidden) */
+  .ox-entrance,
+  .ox-arc,
+  .ox-peak-g,
+  .ox-peak-r,
+  .ox-peak-c,
+  .ox-letter,
+  .ox-sweep-band {
+    animation-delay: 0s !important;
   }
 }

@@ -14,6 +14,11 @@ import { cn } from "@/lib/utils";
  *
  * Colours switch for dark mode via the --ox-* custom properties
  * defined in globals.css (each gradient stop reads a CSS variable).
+ *
+ * Motion (see globals.css “OlympEx logo” section): a cinematic entrance
+ * — focus pull, arc trace-in, peaks rising from the baseline, letter
+ * cascade — followed by a recurring band of light sweeping through the
+ * lock-up. Fully disabled under prefers-reduced-motion.
  */
 
 const D_ARC =
@@ -108,13 +113,13 @@ export function LogoMark({ className }: { className?: string }) {
         </linearGradient>
       </defs>
       {/* rainbow arc — also carries the left peak's blue leg and the right peak's apex */}
-      <path fill="url(#ox-arcg)" d={D_ARC} />
+      <path className="ox-arc" fill="url(#ox-arcg)" d={D_ARC} />
       {/* left peak green swoosh leg */}
-      <path fill="url(#ox-grg)" d={D_GREEN} />
+      <path className="ox-peak-g" fill="url(#ox-grg)" d={D_GREEN} />
       {/* right peak (purple) */}
-      <path fill="url(#ox-rpg)" d={D_RIGHT} />
+      <path className="ox-peak-r" fill="url(#ox-rpg)" d={D_RIGHT} />
       {/* centre peak (dominant, hollow) */}
-      <path fill="url(#ox-cpg)" fillRule="evenodd" d={D_CENTER} />
+      <path className="ox-peak-c" fill="url(#ox-cpg)" fillRule="evenodd" d={D_CENTER} />
     </svg>
   );
 }
@@ -135,7 +140,14 @@ export function LogoWordmark({ className }: { className?: string }) {
         </linearGradient>
       </defs>
       {D_LETTERS.map((d, i) => (
-        <path key={i} fill="url(#ox-wmg)" fillRule="evenodd" d={d} />
+        <path
+          key={i}
+          className="ox-letter"
+          style={{ animationDelay: `${(0.98 + i * 0.055).toFixed(3)}s` }}
+          fill="url(#ox-wmg)"
+          fillRule="evenodd"
+          d={d}
+        />
       ))}
     </svg>
   );
@@ -145,7 +157,9 @@ export function LogoWordmark({ className }: { className?: string }) {
  * Brand lock-up. `stacked` renders the official aligned composition from
  * the source asset — mark centred above the wordmark at matching widths.
  * `size="sm"` is the compact stacked lock-up used in the header; the
- * default "md" is the large footer lock-up.
+ * default "md" is the large footer lock-up. The stacked lock-up plays the
+ * cinematic entrance (focus pull → arc trace → peaks rise → letter
+ * cascade) and carries the recurring light-sweep overlay.
  */
 export function Logo({
   className,
@@ -157,18 +171,29 @@ export function Logo({
   size?: "sm" | "md";
 }) {
   if (stacked) {
-    const markW = size === "sm" ? "w-[94px]" : "w-[220px]";
-    const wordW = size === "sm" ? "w-[94px]" : "w-[224px]";
+    const sm = size === "sm";
     return (
-      <span
-        className={cn(
-          "inline-flex flex-col items-center",
-          size === "sm" ? "gap-1" : "gap-2",
-          className,
-        )}
-      >
-        <LogoMark className={cn(markW, "max-w-full h-auto shrink-0")} />
-        <LogoWordmark className={cn(wordW, "max-w-full h-auto")} />
+      <span className={cn("relative inline-flex flex-col items-center", className)}>
+        <span
+          className={cn(
+            "ox-entrance inline-flex flex-col items-center",
+            sm ? "gap-1" : "gap-2",
+          )}
+        >
+          <LogoMark
+            className={cn(
+              sm ? "w-[94px]" : "w-[220px]",
+              "max-w-full h-auto shrink-0",
+            )}
+          />
+          <LogoWordmark
+            className={cn(sm ? "w-[94px]" : "w-[224px]", "max-w-full h-auto")}
+          />
+        </span>
+        {/* recurring light sweep — brightness travels through the lock-up */}
+        <span className="ox-sweep" aria-hidden>
+          <span className="ox-sweep-band" />
+        </span>
       </span>
     );
   }
