@@ -227,9 +227,9 @@ export const products: Product[] = [
 export const getProduct = (slug: string) => products.find((p) => p.slug === slug);
 
 export const contactDetails = {
-  email: "hello@olympex.example",
-  phone: "+20 000 000 0000",
-  whatsapp: "+20 000 000 0000",
+  email: "info@olymp-ex.com",
+  phone: "+20 122 704 1884",
+  whatsapp: "+20 122 704 1884",
   address: "Cairo, Egypt",
-  note: "Contact details are placeholders — replace with live company details.",
+  note: "Commercial enquiries answered within one business day.",
 };

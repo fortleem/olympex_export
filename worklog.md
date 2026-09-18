@@ -173,3 +173,26 @@ Work Log:
 Stage Summary:
 - Two high-res JPEG logo exports available for download: full lock-up + mark-only, both VLM-verified faithful to the site brand
 - Rasterized from the real vector geometry + real Cinzel/Manrope fonts in a real browser — not an AI redraw
+
+---
+Task ID: 10
+Agent: Z.ai Code (main)
+Task: Implement the newly uploaded logo (OlympEx_Logo_Aligned_HighRes.pdf) and update contact details (info@olymp-ex.com, +20 122 704 1884, Cairo, Egypt)
+
+Work Log:
+- Extracted the embedded 4000×2460 JPEG from the PDF (single image, no vector/text objects) via PyMuPDF
+- Structure analysis: connected-components + radial/angular scans around fitted circle center (1895,1513) revealed the composition — a rainbow arc (half-annulus, R 1220→1299, spanning 9 to 3 o'clock, gradient cyan→blue→violet→purple), three pyramid peaks (left peak's blue leg and right peak's apex ride ON the arc, left peak's green swoosh leg, right purple peak, dominant hollow centre pyramid), and the OLYMPEX wordmark (bespoke geometric capitals, ~600px tall, diamond hollow O, green→purple gradient, one connected component per letter)
+- First attempt (k-means posterize trace, K=12-16) hit IoU 0.93-0.94 but VLM rejected it twice for "cracked" inter-cluster textures
+- Final approach (shape-first): traced the 4 mark components + 7 letters as clean polygons (approxPolyDP, holes preserved via evenodd), filled with measured gradients (13-stop arc gradient, 20-stop wordmark gradient, per-peak vertical gradients) — IoU 0.980 vs original, VLM verdict PASS ("high-fidelity, professional-grade")
+- Logo.tsx rewritten: LogoMark (arc + peaks), LogoWordmark (letters), Logo lock-up with horizontal (header) + stacked (official aligned) variants; all gradient stops read --ox-* CSS variables — 43 vars defined in globals.css with light + dark (OKLab-lightened) values
+- public/logo.svg favicon: mark-only with prefers-color-scheme dark media query; favicon.ico regenerated (16/32/48px) from a 1024px render
+- Footer switched to <Logo stacked /> (official aligned composition); header keeps compact horizontal lock-up
+- Contact details updated in products.ts: info@olymp-ex.com, +20 122 704 1884 (phone + WhatsApp), Cairo, Egypt; note updated
+- JPEG deliverables regenerated in download/: olympex-logo.jpeg (2600px full lock-up) + olympex-logo-mark.jpeg (2200px mark)
+- Verification: lint clean; agent-browser e2e — header logo crisp (light PASS, dark PASS with lightened palette, mobile 390px PASS no clipping), footer stacked logo PASS, contact page shows all new details, RFQ form submits 201 → success panel (test record cleaned), favicon.svg 200 image/svg+xml, no console errors
+
+Stage Summary:
+- New official logo implemented site-wide as clean vectors (header horizontal, footer stacked, favicon) with automatic dark-mode adaptation
+- IoU 0.980 fidelity to the uploaded asset; the wordmark "OLYMPEX" (diamond O) replaces the old "OLYMP EX" + tagline lock-up
+- Contact details live: info@olymp-ex.com / +20 122 704 1884 / Cairo, Egypt
+- Fresh JPEG exports in download/

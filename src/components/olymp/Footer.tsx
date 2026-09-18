@@ -19,7 +19,7 @@ export function Footer() {
       <div className="container-x py-16 md:py-20">
         <div className="grid gap-12 lg:grid-cols-12">
           <div className="lg:col-span-4">
-            <Logo />
+            <Logo stacked className="items-start" />
             <p className="mt-6 max-w-sm text-sm leading-relaxed text-muted-foreground">
               Olymp Ex is an Egyptian agritrade export company connecting disciplined sourcing and
               cold-chain execution with importers, distributors and food-service partners worldwide.
