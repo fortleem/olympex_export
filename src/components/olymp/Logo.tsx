@@ -142,22 +142,33 @@ export function LogoWordmark({ className }: { className?: string }) {
 }
 
 /**
- * Brand lock-up. Default: horizontal (header-friendly). `stacked` renders
- * the official aligned composition from the source asset — mark centred
- * above the wordmark at matching widths.
+ * Brand lock-up. `stacked` renders the official aligned composition from
+ * the source asset — mark centred above the wordmark at matching widths.
+ * `size="sm"` is the compact stacked lock-up used in the header; the
+ * default "md" is the large footer lock-up.
  */
 export function Logo({
   className,
   stacked = false,
+  size = "md",
 }: {
   className?: string;
   stacked?: boolean;
+  size?: "sm" | "md";
 }) {
   if (stacked) {
+    const markW = size === "sm" ? "w-[94px]" : "w-[220px]";
+    const wordW = size === "sm" ? "w-[94px]" : "w-[224px]";
     return (
-      <span className={cn("inline-flex flex-col items-center gap-2", className)}>
-        <LogoMark className="w-[220px] max-w-full h-auto shrink-0" />
-        <LogoWordmark className="w-[224px] max-w-full h-auto" />
+      <span
+        className={cn(
+          "inline-flex flex-col items-center",
+          size === "sm" ? "gap-1" : "gap-2",
+          className,
+        )}
+      >
+        <LogoMark className={cn(markW, "max-w-full h-auto shrink-0")} />
+        <LogoWordmark className={cn(wordW, "max-w-full h-auto")} />
       </span>
     );
   }

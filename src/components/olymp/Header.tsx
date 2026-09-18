@@ -49,11 +49,11 @@ export function Header() {
         <div
           className={cn(
             "flex items-center justify-between transition-all duration-300",
-            scrolled ? "h-16" : "h-20",
+            scrolled ? "h-20" : "h-22",
           )}
         >
           <ALink to="/" aria-label="Olymp Ex home" className="shrink-0">
-            <Logo />
+            <Logo stacked size="sm" />
           </ALink>
 
           <nav aria-label="Primary" className="hidden items-center gap-1 xl:flex">
