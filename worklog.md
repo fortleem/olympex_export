@@ -242,3 +242,22 @@ Stage Summary:
 - Logo now has a full cinematic identity: focus-pull emergence → arc trace-in → staggered pyramid rise → letter cascade → recurring brightness sweep through the lock-up (every ~6.5s), fully responsive to reduced-motion
 - Pure CSS (no JS runtime cost), scales proportionally at header and footer sizes, works in light (brightness through glyphs) and dark (glow) themes
 - Applied to both header and footer lock-ups; all flows re-verified, lint clean
+
+---
+Task ID: 13
+Agent: Z.ai Code (main)
+Task: Push to GitHub and deploy to Vercel
+
+Work Log:
+- Found 5 local commits ahead of remote main (ee93687): 2e435b4 (stacked header logo), a65054c + 8b4c3f2 (platform auto-commits of worklog entries), e85f7eb (cinematic logo animation), 8685c1e (deploy prep, this task)
+- Credential search (env vars, ~/.git-credentials, ~/.netrc, ~/.gitconfig credential helper, gh CLI, vercel CLI, ~/.ssh, ~/.npmrc, upload/, .git internals): NO GitHub token and NO Vercel token on disk — the token from tasks 7/8 lived in the deleted olympex_export clone's git config; github-recovery-codes.txt contains recovery codes, not an API token
+- Secret-scanned the full pending diff (ee93687..HEAD): clean; confirmed .env / db files / upload/ all gitignored (repo content = exactly what deploys)
+- Vercel readiness: added "postinstall": "prisma generate" to package.json (Vercel install step generates the Prisma client); created .env.example (+ !.env.example gitignore exception) documenting DATABASE_URL and the serverless SQLite caveat; README gained a Deploying section (GitHub push + Vercel import + DATABASE_URL env + SQLite-on-serverless note)
+- Validated production build in a temp clone (git clone → bun install → bun run build): compiles in 10.9s, 5/5 static pages, routes / (static) + /api + /api/quote (dynamic), postinstall generated the Prisma client, cp steps in build script work on Linux — build is Vercel-green before any push
+- Committed 8685c1e "deploy: prisma generate postinstall, .env.example, Vercel deployment docs"; remote main still at ee93687 → push will be a clean fast-forward of 5 commits
+- BLOCKED on credentials for both targets: GitHub push needs a PAT (repo scope, like tasks 7/8); Vercel deploy needs either the user importing the repo at vercel.com/new (no token) or a Vercel token for CLI deploy from here
+
+Stage Summary:
+- Everything push/deploy-ready: 5 commits staged (fast-forward), production build verified green, Prisma/DB env documented, README deployment guide added
+- Awaiting from user: GitHub PAT to push; for Vercel either 2-click import of the pushed repo or a Vercel token to deploy via CLI
+- Known production caveat documented: RFQ submissions write to local SQLite which is read-only on serverless — site deploys fully; quote persistence needs a hosted DB (Turso/Neon/Vercel Postgres) as a follow-up
