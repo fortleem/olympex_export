@@ -70,3 +70,4 @@ server.log
 /olympex_export/
 # runtime pid files
 *.pid
+!.env.example

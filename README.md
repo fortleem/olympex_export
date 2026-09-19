@@ -74,8 +74,36 @@ Responses: `201 {ok, id}` · `400 {ok:false, errors[]}` · `429` · `413` · `50
 
 ## Content
 
-All copy is English-only. Brand mark: three overlapping pyramids — light green,
-navy (dominant centre), purple — with a Cinzel inscriptional wordmark.
+All copy is English-only. Brand mark: rainbow arc over three pyramid peaks
+with a geometric `OLYMPEX` wordmark (diamond O), animated with a cinematic
+entrance + recurring light sweep (respects `prefers-reduced-motion`).
+
+## Deploying
+
+### GitHub
+
+`main` is the canonical branch:
+
+```bash
+git push github main
+```
+
+### Vercel
+
+The repo deploys on Vercel with zero config (Next.js auto-detected):
+
+1. Push to GitHub (above), then import the repo at
+   [vercel.com/new](https://vercel.com/new) — or run `vercel --prod` with the
+   Vercel CLI.
+2. Set the **`DATABASE_URL`** environment variable in the project settings
+   (any `file:` URL works for the build; see note below).
+3. Deploy. `postinstall` runs `prisma generate` automatically.
+
+> **SQLite note** — the RFQ endpoint writes to a local SQLite file, which
+> works in dev but **not on serverless** (read-only filesystem). The site
+> itself deploys and runs fully; to make quote submissions persist in
+> production, point `DATABASE_URL` at a hosted database (Turso, Vercel
+> Postgres, Neon, …) — the Prisma schema is one model and ports in minutes.
 
 ## License
 
