@@ -10,8 +10,11 @@ import { SeasonCalendar, inSeason, useCurrentMonth } from "@/components/olymp/Se
 import { FinalCta } from "@/components/olymp/CTA";
 import { getProduct, products } from "@/data/products";
 import { ALink } from "@/lib/router";
+import { useI18n } from "@/i18n";
+import { localizedName } from "@/i18n/product-names";
 
 export default function ProductDetailView({ slug }: { slug: string }) {
+  const { t, locale } = useI18n();
   const product = getProduct(slug);
   const currentMonth = useCurrentMonth();
 
@@ -20,13 +23,11 @@ export default function ProductDetailView({ slug }: { slug: string }) {
       <div className="flex min-h-[70vh] items-center justify-center bg-background px-4">
         <div className="max-w-md text-center">
           <h1 className="text-7xl font-extrabold text-gradient-brand">404</h1>
-          <h2 className="mt-4 text-xl font-semibold text-foreground">Product not found</h2>
-          <p className="mt-2 text-sm text-muted-foreground">
-            The product you&apos;re looking for doesn&apos;t exist or has been moved.
-          </p>
+          <h2 className="mt-4 text-xl font-semibold text-foreground">{t("detail.notFoundTitle")}</h2>
+          <p className="mt-2 text-sm text-muted-foreground">{t("detail.notFoundText")}</p>
           <div className="mt-6">
             <Button asChild variant="hero">
-              <ALink to="/products">Browse all products</ALink>
+              <ALink to="/products">{t("detail.browseAll")}</ALink>
             </Button>
           </div>
         </div>
@@ -34,6 +35,7 @@ export default function ProductDetailView({ slug }: { slug: string }) {
     );
   }
 
+  const name = localizedName(product.slug, product.name, locale);
   const related = products
     .filter((p) => p.slug !== product.slug && p.category === product.category)
     .slice(0, 3);
@@ -50,12 +52,14 @@ export default function ProductDetailView({ slug }: { slug: string }) {
             to="/products"
             className="inline-flex items-center gap-2 text-sm font-semibold text-muted-foreground transition-colors hover:text-primary"
           >
-            <ArrowLeft className="size-4" aria-hidden /> All products
+            <ArrowLeft className="size-4 rtl:-scale-x-100" aria-hidden /> {t("detail.backToAll")}
           </ALink>
           <div className="mt-10 grid items-center gap-12 lg:grid-cols-2">
             <div>
-              <Eyebrow>{product.category === "fruit" ? "Fruit" : "Vegetable"}</Eyebrow>
-              <h1 className="mt-6 text-4xl font-extrabold md:text-6xl">{product.name}</h1>
+              <Eyebrow>
+                {product.category === "fruit" ? t("common.fruit") : t("common.vegetable")}
+              </Eyebrow>
+              <h1 className="mt-6 text-4xl font-extrabold md:text-6xl">{name}</h1>
               {product.latin ? (
                 <p className="mt-3 font-[family-name:var(--font-display)] text-lg italic text-muted-foreground">
                   {product.latin}
@@ -73,7 +77,7 @@ export default function ProductDetailView({ slug }: { slug: string }) {
               <div className="mt-9 flex flex-wrap gap-3">
                 <Button asChild variant="hero" size="lg">
                   <ALink to="/contact">
-                    Request a Quote <ArrowRight aria-hidden />
+                    {t("common.requestQuote")} <ArrowRight aria-hidden />
                   </ALink>
                 </Button>
               </div>
@@ -81,7 +85,7 @@ export default function ProductDetailView({ slug }: { slug: string }) {
             <Reveal className="overflow-hidden border border-border shadow-soft">
               <img
                 src={img}
-                alt={`${product.name} handling at export standard`}
+                alt={t("detail.imgAlt", { name })}
                 width={1280}
                 height={960}
                 loading="lazy"
@@ -95,10 +99,10 @@ export default function ProductDetailView({ slug }: { slug: string }) {
       <Section>
         <div className="grid gap-px border border-border bg-border md:grid-cols-2 xl:grid-cols-4">
           {[
-            { label: "Seasonality", value: product.season },
-            { label: "Growing regions", value: product.regions },
-            { label: "Varieties", value: product.varieties.join(", ") },
-            { label: "Origin", value: "Egypt — Nile Delta & Valley" },
+            { label: t("detail.statSeasonality"), value: product.season },
+            { label: t("detail.statRegions"), value: product.regions },
+            { label: t("detail.statVarieties"), value: product.varieties.join(", ") },
+            { label: t("detail.statOrigin"), value: t("common.egyptOrigin") },
           ].map((s) => (
             <div key={s.label} className="bg-card p-7">
               <p className="text-[0.65rem] font-semibold tracking-[0.2em] uppercase text-muted-foreground">
@@ -114,21 +118,23 @@ export default function ProductDetailView({ slug }: { slug: string }) {
           <div className="mt-14 border border-border bg-surface p-8 md:p-10">
             <div className="flex items-center gap-3">
               <Globe className="size-5 text-primary" aria-hidden />
-              <h2 className="text-xl font-bold">Egypt&apos;s trade in this line</h2>
+              <h2 className="text-xl font-bold">{t("detail.tradeTitle")}</h2>
             </div>
             <div className="mt-8 grid gap-10 lg:grid-cols-3">
               <div>
                 <p className="text-[0.65rem] font-semibold tracking-[0.2em] uppercase text-muted-foreground">
-                  Egyptian export volume
+                  {t("detail.tradeVolume")}
                 </p>
                 <p className="mt-3 text-2xl font-extrabold text-gradient-brand">
                   {product.trade.volume}
                 </p>
-                <p className="mt-1 text-xs text-muted-foreground">per year — {product.trade.year}</p>
+                <p className="mt-1 text-xs text-muted-foreground">
+                  {t("detail.tradeYear", { year: product.trade.year })}
+                </p>
               </div>
               <div>
                 <p className="text-[0.65rem] font-semibold tracking-[0.2em] uppercase text-muted-foreground">
-                  Standing in world trade
+                  {t("detail.tradeStanding")}
                 </p>
                 <p className="mt-3 text-base font-bold">{product.trade.headline}</p>
                 <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
@@ -137,7 +143,7 @@ export default function ProductDetailView({ slug }: { slug: string }) {
               </div>
               <div>
                 <p className="text-[0.65rem] font-semibold tracking-[0.2em] uppercase text-muted-foreground">
-                  Biggest importing countries
+                  {t("detail.tradeImporters")}
                 </p>
                 <ul className="mt-3 flex flex-wrap gap-2">
                   {product.trade.topImporters.map((c, i) => (
@@ -157,8 +163,7 @@ export default function ProductDetailView({ slug }: { slug: string }) {
               </div>
             </div>
             <p className="mt-8 border-t border-border pt-4 text-xs text-muted-foreground/80">
-              Volumes and shares compiled from CAPMAS/SIS releases, USDA FAS reports and WITS/OEC
-              trade data; ranges denote season volatility.
+              {t("detail.tradeSource")}
             </p>
           </div>
         ) : null}
@@ -166,21 +171,14 @@ export default function ProductDetailView({ slug }: { slug: string }) {
         {/* Availability calendar + cold chain */}
         <div className="mt-14 grid gap-10 lg:grid-cols-2">
           <div className="border border-border p-8">
-            <h2 className="text-xl font-bold">Availability calendar</h2>
-            <p className="mt-2 text-sm text-muted-foreground">
-              Egyptian export window by month — the current month is outlined.
-            </p>
+            <h2 className="text-xl font-bold">{t("detail.calendarTitle")}</h2>
+            <p className="mt-2 text-sm text-muted-foreground">{t("detail.calendarDesc")}</p>
             <SeasonCalendar product={product} detailed className="mt-6" />
-            <p className="mt-6 text-xs text-muted-foreground/80">
-              Windows reflect Egyptian export practice; exact shipments are confirmed per
-              programme and destination.
-            </p>
+            <p className="mt-6 text-xs text-muted-foreground/80">{t("detail.calendarNote")}</p>
           </div>
           <div className="border border-border p-8">
-            <h2 className="text-xl font-bold">Cold-chain specification</h2>
-            <p className="mt-2 text-sm text-muted-foreground">
-              Temperature, ventilation and humidity per format.
-            </p>
+            <h2 className="text-xl font-bold">{t("detail.coldTitle")}</h2>
+            <p className="mt-2 text-sm text-muted-foreground">{t("detail.coldDesc")}</p>
             <div className="mt-6 space-y-4">
               {product.formats.map((f) => {
                 const info = product.calendar[f];
@@ -194,42 +192,42 @@ export default function ProductDetailView({ slug }: { slug: string }) {
                         ) : (
                           <Snowflake className="size-4 text-accent" aria-hidden />
                         )}
-                        {f === "fresh" ? "Fresh" : "Frozen / IQF"}
+                        {f === "fresh" ? t("common.fresh") : t("common.frozenIqf")}
                       </span>
                       <span className="text-lg font-extrabold">{info.tempC}</span>
                     </div>
                     <dl className="mt-4 grid grid-cols-2 gap-x-4 gap-y-3 text-xs sm:grid-cols-3">
                       <div>
-                        <dt className="text-muted-foreground">Fahrenheit</dt>
+                        <dt className="text-muted-foreground">{t("detail.fahrenheit")}</dt>
                         <dd className="mt-0.5 font-semibold">{info.tempF}</dd>
                       </div>
                       {info.ventilation ? (
                         <div>
-                          <dt className="text-muted-foreground">Ventilation</dt>
+                          <dt className="text-muted-foreground">{t("detail.ventilation")}</dt>
                           <dd className="mt-0.5 font-semibold">{info.ventilation}</dd>
                         </div>
                       ) : null}
                       {info.rh ? (
                         <div>
-                          <dt className="text-muted-foreground">Humidity</dt>
+                          <dt className="text-muted-foreground">{t("detail.humidity")}</dt>
                           <dd className="mt-0.5 font-semibold">{info.rh}</dd>
                         </div>
                       ) : null}
                       {info.shelfLife ? (
                         <div>
-                          <dt className="text-muted-foreground">Shelf life</dt>
+                          <dt className="text-muted-foreground">{t("detail.shelfLife")}</dt>
                           <dd className="mt-0.5 font-semibold">{info.shelfLife}</dd>
                         </div>
                       ) : null}
                       {product.trade?.transit[f] ? (
                         <div className="col-span-2 sm:col-span-3">
-                          <dt className="text-muted-foreground">Max transit to avoid spoilage</dt>
+                          <dt className="text-muted-foreground">{t("detail.maxTransit")}</dt>
                           <dd className="mt-0.5 font-semibold">{product.trade.transit[f]}</dd>
                         </div>
                       ) : null}
                       {info.transport ? (
                         <div className="col-span-2 sm:col-span-3">
-                          <dt className="text-muted-foreground">Transport</dt>
+                          <dt className="text-muted-foreground">{t("detail.transport")}</dt>
                           <dd className="mt-0.5 font-semibold">{info.transport}</dd>
                         </div>
                       ) : null}
@@ -249,7 +247,7 @@ export default function ProductDetailView({ slug }: { slug: string }) {
 
         <div className="mt-10 grid gap-10 lg:grid-cols-2">
           <div className="border border-border p-8">
-            <h2 className="text-xl font-bold">Packaging options</h2>
+            <h2 className="text-xl font-bold">{t("detail.packagingTitle")}</h2>
             <ul className="mt-5 space-y-3 text-sm text-muted-foreground">
               {product.packaging.map((p) => (
                 <li key={p} className="flex items-center gap-3">
@@ -258,16 +256,13 @@ export default function ProductDetailView({ slug }: { slug: string }) {
                 </li>
               ))}
             </ul>
-            <p className="mt-6 text-xs text-muted-foreground/80">
-              Packaging shown is representative; private-label and buyer-specific formats are
-              available on request.
-            </p>
+            <p className="mt-6 text-xs text-muted-foreground/80">{t("detail.packagingNote")}</p>
           </div>
         </div>
       </Section>
 
       <Section tone="surface">
-        <h2 className="text-2xl font-extrabold md:text-3xl">Related lines</h2>
+        <h2 className="text-2xl font-extrabold md:text-3xl">{t("detail.related")}</h2>
         <ProductGrid products={related} className="mt-10" />
       </Section>
 

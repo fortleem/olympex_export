@@ -1,11 +1,6 @@
 "use client";
 
-import {
-  ArrowRight,
-  Snowflake,
-  Leaf,
-  Quote,
-} from "lucide-react";
+import { ArrowRight, Snowflake, Leaf, Quote } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Section, SectionHeader, Eyebrow } from "@/components/olymp/Section";
 import { Reveal } from "@/components/olymp/Reveal";
@@ -14,15 +9,19 @@ import { JourneyTimeline, LaneGrid } from "@/components/olymp/Logistics";
 import { FinalCta } from "@/components/olymp/CTA";
 import { ALink } from "@/lib/router";
 import { featuredProducts } from "@/data/products";
+import { useI18n } from "@/i18n";
+import type { DictKey } from "@/i18n/locales/en";
 
-const trust = [
-  { label: "Origin", value: "Egypt" },
-  { label: "Capability", value: "Fresh & IQF frozen" },
-  { label: "Chain", value: "Temperature controlled" },
-  { label: "Buyers", value: "Import · retail · food service" },
+const trustKeys: DictKey[] = [
+  "home.trust1",
+  "home.trust2",
+  "home.trust3",
+  "home.trust4",
+  "home.trust5",
 ];
 
 export default function HomeView() {
+  const { t } = useI18n();
   const featured = featuredProducts;
 
   return (
@@ -31,42 +30,47 @@ export default function HomeView() {
       <section className="relative overflow-hidden bg-background">
         <div className="grid-motif pointer-events-none absolute inset-0 opacity-60" aria-hidden />
         <div
-          className="pointer-events-none absolute top-1/3 -left-40 h-[32rem] w-[32rem] rounded-full opacity-[0.12] blur-3xl"
+          className="pointer-events-none absolute top-1/3 -left-40 h-[32rem] w-[32rem] rounded-full opacity-[0.12] blur-3xl rtl:-right-40 rtl:-left-auto"
           style={{ background: "var(--gradient-brand)" }}
           aria-hidden
         />
         <div className="container-x relative grid items-center gap-14 py-16 lg:grid-cols-2 lg:gap-8 lg:py-24">
           <Reveal className="is-revealed max-w-2xl">
-            <Eyebrow>Egyptian Agritrade · Fresh &amp; Frozen</Eyebrow>
+            <Eyebrow>{t("home.heroEyebrow")}</Eyebrow>
             <h1 className="mt-7 text-[2.6rem] leading-[1.02] font-extrabold sm:text-6xl xl:text-7xl">
-              Egypt&apos;s Harvest.
+              {t("home.heroTitle1")}
               <br />
-              <span className="text-gradient-brand">Delivered to the World.</span>
+              <span className="text-gradient-brand">{t("home.heroTitle2")}</span>
             </h1>
             <p className="mt-7 max-w-xl text-lg leading-relaxed text-muted-foreground">
-              We source from Egyptian growing regions, control quality at every handover, hold the
-              cold chain from field to vessel, and deliver fresh and IQF frozen produce to
-              international buyers with the paperwork and predictability trade demands.
+              {t("home.heroLead")}
             </p>
             <div className="mt-10 flex flex-wrap gap-3">
               <Button asChild variant="hero" size="lg">
                 <ALink to="/contact">
-                  Request a Quote
+                  {t("common.requestQuote")}
                   <ArrowRight aria-hidden />
                 </ALink>
               </Button>
               <Button asChild variant="outline" size="lg">
-                <ALink to="/products">Explore Products</ALink>
+                <ALink to="/products">{t("common.exploreProducts")}</ALink>
               </Button>
             </div>
 
             <dl className="mt-14 grid max-w-xl grid-cols-2 gap-x-8 gap-y-6 border-t border-border pt-8 sm:grid-cols-4">
-              {trust.map((t) => (
-                <div key={t.label}>
+              {(
+                [
+                  ["home.stat1l", "home.stat1v"],
+                  ["home.stat2l", "home.stat2v"],
+                  ["home.stat3l", "home.stat3v"],
+                  ["home.stat4l", "home.stat4v"],
+                ] as const
+              ).map(([lk, vk]) => (
+                <div key={lk}>
                   <dt className="text-[0.65rem] font-semibold tracking-[0.18em] uppercase text-muted-foreground">
-                    {t.label}
+                    {t(lk)}
                   </dt>
-                  <dd className="mt-1.5 text-sm font-bold">{t.value}</dd>
+                  <dd className="mt-1.5 text-sm font-bold">{t(vk)}</dd>
                 </div>
               ))}
             </dl>
@@ -76,18 +80,18 @@ export default function HomeView() {
             <div className="relative overflow-hidden border border-border bg-surface shadow-elevated">
               <img
                 src="/images/hero-produce.jpg"
-                alt="Fresh Egyptian strawberries, grapes, oranges and pomegranates arranged on a white surface"
+                alt={t("alt.hero")}
                 width={1920}
                 height={1280}
                 className="h-full w-full object-cover"
               />
             </div>
-            <div className="absolute -bottom-6 -left-4 hidden w-64 border border-border bg-background/90 p-5 shadow-soft backdrop-blur-md sm:block lg:-left-10">
+            <div className="absolute -bottom-6 -left-4 hidden w-64 border border-border bg-background/90 p-5 shadow-soft backdrop-blur-md sm:block lg:-left-10 rtl:-right-4 rtl:left-auto rtl:lg:-right-10 rtl:lg:left-auto">
               <p className="text-[0.65rem] font-semibold tracking-[0.2em] uppercase text-accent">
-                From Egypt to the world
+                {t("home.cardEyebrow")}
               </p>
               <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                Programme-based supply built around your season, format and destination.
+                {t("home.cardText")}
               </p>
             </div>
           </div>
@@ -97,19 +101,13 @@ export default function HomeView() {
       {/* TRUST STRIP */}
       <div className="border-y border-border bg-surface">
         <div className="container-x flex flex-wrap items-center justify-between gap-6 py-6">
-          {[
-            "Programme-based supply",
-            "Specification-led grading",
-            "Temperature-controlled handling",
-            "Export documentation support",
-            "Private-label packing",
-          ].map((item) => (
+          {trustKeys.map((key) => (
             <span
-              key={item}
+              key={key}
               className="inline-flex items-center gap-2.5 text-xs font-semibold tracking-[0.12em] uppercase text-muted-foreground"
             >
               <span className="inline-block h-1.5 w-1.5 rounded-full bg-primary" aria-hidden />
-              {item}
+              {t(key)}
             </span>
           ))}
         </div>
@@ -119,13 +117,13 @@ export default function HomeView() {
       <Section>
         <div className="flex flex-wrap items-end justify-between gap-6">
           <SectionHeader
-            eyebrow="Product portfolio"
-            title="Premium Egyptian lines, packed to your specification"
-            description="Our core export lines with their Egyptian availability windows and cold-chain setpoints. Confirmed calibre, volume and packing are agreed per programme."
+            eyebrow={t("home.portfolioEyebrow")}
+            title={t("home.portfolioTitle")}
+            description={t("home.portfolioDesc")}
           />
           <Button asChild variant="outline">
             <ALink to="/products">
-              All products <ArrowRight aria-hidden />
+              {t("common.allProducts")} <ArrowRight aria-hidden />
             </ALink>
           </Button>
         </div>
@@ -138,7 +136,7 @@ export default function HomeView() {
           <Reveal className="relative overflow-hidden border border-border shadow-soft">
             <img
               src="/images/egypt-fields.jpg"
-              alt="Geometric rows of irrigated crops in an Egyptian growing region at golden hour"
+              alt={t("alt.egyptFields")}
               width={1600}
               height={900}
               loading="lazy"
@@ -147,32 +145,22 @@ export default function HomeView() {
           </Reveal>
           <div>
             <SectionHeader
-              eyebrow="From Egypt to the world"
-              title="An origin advantage, run with export discipline"
-              description="Egypt's climate delivers early windows, long seasons and consistent volume. Olymp Ex converts that natural advantage into dependable commercial supply — planned by programme, verified at each stage and shipped against agreed documentation."
+              eyebrow={t("home.originEyebrow")}
+              title={t("home.originTitle")}
+              description={t("home.originDesc")}
             />
             <div className="mt-10 grid gap-8 sm:grid-cols-2">
-              {[
-                {
-                  title: "Season planning",
-                  text: "Windows mapped ahead of harvest so volume, format and pricing are agreed early.",
-                },
-                {
-                  title: "Single point of contact",
-                  text: "One commercial team across sourcing, quality, logistics and documentation.",
-                },
-                {
-                  title: "Format flexibility",
-                  text: "Fresh export packs and IQF frozen formats from the same sourcing base.",
-                },
-                {
-                  title: "Buyer-ready presentation",
-                  text: "Retail, wholesale, food-service and private-label packing options.",
-                },
-              ].map((b, i) => (
-                <Reveal key={b.title} delay={i * 80}>
-                  <h3 className="text-base font-bold">{b.title}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{b.text}</p>
+              {(
+                [
+                  ["home.op1t", "home.op1d"],
+                  ["home.op2t", "home.op2d"],
+                  ["home.op3t", "home.op3d"],
+                  ["home.op4t", "home.op4d"],
+                ] as const
+              ).map(([tk, dk], i) => (
+                <Reveal key={tk} delay={i * 80}>
+                  <h3 className="text-base font-bold">{t(tk)}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{t(dk)}</p>
                 </Reveal>
               ))}
             </div>
@@ -188,8 +176,8 @@ export default function HomeView() {
       {/* FRESH VS FROZEN */}
       <Section tone="surface">
         <SectionHeader
-          eyebrow="Two capabilities, one origin"
-          title="Fresh export packs and IQF frozen programmes"
+          eyebrow={t("home.capsEyebrow")}
+          title={t("home.capsTitle")}
           align="center"
         />
         <div className="mt-14 grid gap-6 lg:grid-cols-2">
@@ -197,18 +185,20 @@ export default function HomeView() {
             {
               img: "/images/fresh-produce.jpg",
               icon: Leaf,
-              title: "Fresh Produce",
-              text: "Rapid pre-cooling, calibre grading and destination-specific packing for retail and wholesale programmes.",
+              title: t("home.freshTitle"),
+              alt: t("alt.freshImg"),
+              text: t("home.freshText"),
               to: "/fresh-produce",
-              points: ["Pre-cooling after harvest", "Calibre & colour grading", "Air and reefer options"],
+              points: [t("home.freshP1"), t("home.freshP2"), t("home.freshP3")],
             },
             {
               img: "/images/frozen-produce.jpg",
               icon: Snowflake,
-              title: "Frozen Produce",
-              text: "IQF fruits and vegetables in whole, sliced, diced and blended formats for industry and food service.",
+              title: t("home.frozenTitle"),
+              alt: t("alt.frozenImg"),
+              text: t("home.frozenText"),
               to: "/frozen-produce",
-              points: ["IQF whole, sliced, diced", "Retail and bulk packing", "−18°C chain maintained"],
+              points: [t("home.frozenP1"), t("home.frozenP2"), t("home.frozenP3")],
             },
           ].map((c, i) => (
             <Reveal key={c.title} delay={i * 100}>
@@ -240,7 +230,7 @@ export default function HomeView() {
                   <div className="mt-8 pt-2">
                     <Button asChild variant="outline">
                       <ALink to={c.to}>
-                        Learn more <ArrowRight aria-hidden />
+                        {t("common.learnMore")} <ArrowRight aria-hidden />
                       </ALink>
                     </Button>
                   </div>
@@ -254,16 +244,16 @@ export default function HomeView() {
       {/* MARKETS */}
       <Section>
         <SectionHeader
-          eyebrow="Global markets"
-          title="Built to serve buyers across regions"
-          description="Core destination lanes with gateway ports and indicative transit windows. Actual routing, lead time and market coverage are confirmed per enquiry."
+          eyebrow={t("home.marketsEyebrow")}
+          title={t("home.marketsTitle")}
+          description={t("home.marketsDesc")}
           align="center"
         />
         <LaneGrid className="mt-14" />
         <Reveal className="mt-12 text-center">
           <Button asChild variant="outline">
             <ALink to="/global-markets">
-              Export capability <ArrowRight aria-hidden />
+              {t("home.exportCapability")} <ArrowRight aria-hidden />
             </ALink>
           </Button>
         </Reveal>
@@ -274,21 +264,23 @@ export default function HomeView() {
         <div className="grid gap-14 lg:grid-cols-12">
           <div className="lg:col-span-5">
             <SectionHeader
-              eyebrow="Sustainability"
-              title="Responsible sourcing as a long-term commercial position"
-              description="Working with growers over multiple seasons, reducing waste through accurate grading and planning, and handling water, packaging and energy with intent."
+              eyebrow={t("home.sustainEyebrow")}
+              title={t("home.sustainTitle")}
+              description={t("home.sustainDesc")}
             />
           </div>
           <div className="grid gap-6 sm:grid-cols-2 lg:col-span-7">
-            {[
-              { title: "Grower partnerships", text: "Long-horizon relationships instead of spot-market churn." },
-              { title: "Waste reduction", text: "Accurate grading and planning to minimise rejected volume." },
-              { title: "Water awareness", text: "Preference for growers applying efficient irrigation practice." },
-              { title: "Packaging review", text: "Continuous review of recyclable and reduced-material formats." },
-            ].map((s, i) => (
-              <Reveal key={s.title} delay={i * 70} className="border border-border bg-card p-7">
-                <h3 className="text-base font-bold">{s.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{s.text}</p>
+            {(
+              [
+                ["home.sp1t", "home.sp1d"],
+                ["home.sp2t", "home.sp2d"],
+                ["home.sp3t", "home.sp3d"],
+                ["home.sp4t", "home.sp4d"],
+              ] as const
+            ).map(([tk, dk], i) => (
+              <Reveal key={tk} delay={i * 70} className="border border-border bg-card p-7">
+                <h3 className="text-base font-bold">{t(tk)}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{t(dk)}</p>
               </Reveal>
             ))}
           </div>
@@ -298,38 +290,25 @@ export default function HomeView() {
       {/* TESTIMONIALS */}
       <Section>
         <SectionHeader
-          eyebrow="Partner voices"
-          title="What buyers expect from a serious origin partner"
-          description="Illustrative statements shown as placeholders until approved partner references are supplied."
+          eyebrow={t("home.voicesEyebrow")}
+          title={t("home.voicesTitle")}
+          description={t("home.voicesDesc")}
           align="center"
         />
         <div className="mt-14 grid gap-6 md:grid-cols-3">
-          {[
-            {
-              quote:
-                "Clear specifications, honest availability and consistent presentation matter more than headline pricing.",
-              who: "Importer",
-              where: "Placeholder reference",
-            },
-            {
-              quote:
-                "A single contact who owns quality, logistics and paperwork removes most of the friction in origin trade.",
-              who: "Distributor",
-              where: "Placeholder reference",
-            },
-            {
-              quote:
-                "Frozen programmes only work when the cold chain is treated as non-negotiable from the first hour.",
-              who: "Food-service buyer",
-              where: "Placeholder reference",
-            },
-          ].map((t, i) => (
-            <Reveal key={t.who} delay={i * 80} className="border border-border bg-card p-8">
+          {(
+            [
+              ["home.v1q", "home.v1w"],
+              ["home.v2q", "home.v2w"],
+              ["home.v3q", "home.v3w"],
+            ] as const
+          ).map(([qk, wk], i) => (
+            <Reveal key={wk} delay={i * 80} className="border border-border bg-card p-8">
               <Quote className="size-6 text-accent" aria-hidden />
-              <blockquote className="mt-5 text-base leading-relaxed">{t.quote}</blockquote>
+              <blockquote className="mt-5 text-base leading-relaxed">{t(qk)}</blockquote>
               <footer className="mt-6 border-t border-border pt-5 text-xs">
-                <p className="font-semibold">{t.who}</p>
-                <p className="mt-1 text-muted-foreground">{t.where}</p>
+                <p className="font-semibold">{t(wk)}</p>
+                <p className="mt-1 text-muted-foreground">{t("home.vWhere")}</p>
               </footer>
             </Reveal>
           ))}

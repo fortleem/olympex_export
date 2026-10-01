@@ -7,6 +7,7 @@ export interface Lane {
   flag: string;
   region: string;
   ports: string;
+  /** Transit range, e.g. "7–10" — the "days transit" unit is localized in the UI. */
   transit: string;
 }
 
@@ -15,25 +16,25 @@ export const lanes: Lane[] = [
     flag: "🇪🇺",
     region: "European Union",
     ports: "Rotterdam · Hamburg · Marseille",
-    transit: "7–10 days transit",
+    transit: "7–10",
   },
   {
     flag: "🇸🇦",
     region: "Gulf & MENA",
     ports: "Jeddah · Dubai · Kuwait",
-    transit: "3–5 days transit",
+    transit: "3–5",
   },
   {
     flag: "🇬🇧",
     region: "United Kingdom",
     ports: "Felixstowe · London Gateway",
-    transit: "9–11 days transit",
+    transit: "9–11",
   },
   {
     flag: "🌏",
     region: "Asia & Americas",
     ports: "Singapore · Shanghai · NY",
-    transit: "14–21 days transit",
+    transit: "14–21",
   },
 ];
 

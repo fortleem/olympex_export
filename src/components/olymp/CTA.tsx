@@ -3,8 +3,10 @@
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ALink } from "@/lib/router";
+import { useI18n } from "@/i18n";
 
 export function ExportDiagram() {
+  const { t } = useI18n();
   const arcs = [
     { d: "M50 62 C 32 40, 26 26, 22 18", label: "Europe" },
     { d: "M50 62 C 66 46, 76 34, 84 24", label: "Asia" },
@@ -16,7 +18,7 @@ export function ExportDiagram() {
       viewBox="0 0 100 100"
       className="relative h-full w-full"
       role="img"
-      aria-label="Abstract export routes from Egypt to destination regions"
+      aria-label={t("alt.diagram")}
     >
       <defs>
         <linearGradient id="arc" x1="0" y1="1" x2="1" y2="0">
@@ -60,26 +62,26 @@ export function ExportDiagram() {
 }
 
 export function FinalCta() {
+  const { t } = useI18n();
   return (
     <section className="relative overflow-hidden" style={{ background: "var(--gradient-brand)" }}>
       <div className="grid-motif absolute inset-0 opacity-10" aria-hidden />
       <div className="container-x relative py-20 text-primary-foreground md:py-28">
         <div className="max-w-3xl">
           <h2 className="text-3xl leading-[1.06] font-extrabold md:text-5xl">
-            Tell us the specification. We&apos;ll confirm the season, the format and the route.
+            {t("contact.heroTitle")}
           </h2>
           <p className="mt-6 max-w-2xl text-lg text-primary-foreground/85">
-            Share your product, volume, packaging and destination — our commercial team responds
-            with an availability position and an indicative offer.
+            {t("contact.heroDesc")}
           </p>
           <div className="mt-10 flex flex-wrap gap-3">
             <Button asChild size="lg" variant="onBrand">
               <ALink to="/contact">
-                Request a Quote <ArrowRight aria-hidden />
+                {t("common.requestQuote")} <ArrowRight aria-hidden />
               </ALink>
             </Button>
             <Button asChild size="lg" variant="onBrand">
-              <ALink to="/products">Explore Products</ALink>
+              <ALink to="/products">{t("common.exploreProducts")}</ALink>
             </Button>
           </div>
         </div>

@@ -2,18 +2,19 @@
 
 import { Mail, Phone, MapPin, Linkedin, Instagram, Facebook } from "lucide-react";
 import { Logo } from "@/components/olymp/Logo";
-import { contactDetails, featuredProducts } from "@/data/products";
+import { contactDetails } from "@/data/products";
 import { ALink } from "@/lib/router";
+import { useI18n } from "@/i18n";
 
-const company = [
-  { to: "/about", label: "About Olymp Ex" },
-  { to: "/quality", label: "Quality & Traceability" },
-  { to: "/global-markets", label: "Global Markets" },
-  { to: "/sustainability", label: "Sustainability" },
-  { to: "/contact", label: "Request a Quote" },
-] as const;
-
+/**
+ * Site footer. Product *listings* deliberately do not appear here — the
+ * footer links to the catalogue sections instead of re-listing individual
+ * products (they already live on the homepage and products pages).
+ */
 export function Footer() {
+  const { t } = useI18n();
+  const year = new Date().getFullYear();
+
   return (
     <footer className="mt-auto border-t border-border bg-surface">
       <div className="container-x py-16 md:py-20">
@@ -21,8 +22,7 @@ export function Footer() {
           <div className="lg:col-span-4">
             <Logo size="md" />
             <p className="mt-6 max-w-sm text-sm leading-relaxed text-muted-foreground">
-              Olymp Ex is an Egyptian agritrade export company connecting disciplined sourcing and
-              cold-chain execution with importers, distributors and food-service partners worldwide.
+              {t("footer.tagline")}
             </p>
             <div className="mt-6 flex gap-2">
               {[
@@ -43,15 +43,24 @@ export function Footer() {
           </div>
 
           <div className="lg:col-span-2">
-            <h2 className="text-xs font-semibold tracking-[0.2em] uppercase">Company</h2>
+            <h2 className="text-xs font-semibold tracking-[0.2em] uppercase">
+              {t("footer.colCompany")}
+            </h2>
             <ul className="mt-5 space-y-3 text-sm">
-              {company.map((l) => (
+              {(
+                [
+                  { to: "/about", key: "footer.about" },
+                  { to: "/quality", key: "footer.quality" },
+                  { to: "/global-markets", key: "footer.markets" },
+                  { to: "/sustainability", key: "footer.sustainability" },
+                ] as const
+              ).map((l) => (
                 <li key={l.to}>
                   <ALink
                     to={l.to}
                     className="text-muted-foreground transition-colors hover:text-primary"
                   >
-                    {l.label}
+                    {t(l.key)}
                   </ALink>
                 </li>
               ))}
@@ -59,16 +68,24 @@ export function Footer() {
           </div>
 
           <div className="lg:col-span-3">
-            <h2 className="text-xs font-semibold tracking-[0.2em] uppercase">Products</h2>
-            <ul className="mt-5 grid grid-cols-2 gap-x-4 gap-y-3 text-sm lg:grid-cols-1">
-              {featuredProducts.map((p) => (
-                <li key={p.slug}>
+            <h2 className="text-xs font-semibold tracking-[0.2em] uppercase">
+              {t("footer.colProducts")}
+            </h2>
+            <ul className="mt-5 space-y-3 text-sm">
+              {(
+                [
+                  { to: "/products", key: "footer.allProducts" },
+                  { to: "/fresh-produce", key: "footer.fresh" },
+                  { to: "/frozen-produce", key: "footer.frozen" },
+                  { to: "/contact", key: "footer.requestQuote" },
+                ] as const
+              ).map((l) => (
+                <li key={l.to + l.key}>
                   <ALink
-                    to="/products/$slug"
-                    params={{ slug: p.slug }}
+                    to={l.to}
                     className="text-muted-foreground transition-colors hover:text-primary"
                   >
-                    {p.name}
+                    {t(l.key)}
                   </ALink>
                 </li>
               ))}
@@ -76,7 +93,9 @@ export function Footer() {
           </div>
 
           <div className="lg:col-span-3">
-            <h2 className="text-xs font-semibold tracking-[0.2em] uppercase">Contact</h2>
+            <h2 className="text-xs font-semibold tracking-[0.2em] uppercase">
+              {t("footer.colContact")}
+            </h2>
             <ul className="mt-5 space-y-3 text-sm text-muted-foreground">
               <li className="flex items-start gap-3">
                 <Mail className="mt-0.5 size-4 text-primary" aria-hidden />
@@ -100,20 +119,20 @@ export function Footer() {
         </div>
 
         <div className="mt-14 flex flex-col gap-4 border-t border-border pt-8 text-xs text-muted-foreground md:flex-row md:items-center md:justify-between">
-          <p>© {new Date().getFullYear()} Olymp Ex. All rights reserved.</p>
+          <p>{t("footer.rights", { year })}</p>
           <p className="inline-flex items-center gap-2">
             <span className="inline-block h-1.5 w-1.5 rounded-full bg-primary" aria-hidden />
-            Proudly sourced and shipped from Egypt.
+            {t("footer.sourced")}
           </p>
           <ul className="flex gap-5">
             <li>
               <a href="#" className="hover:text-primary">
-                Privacy
+                {t("footer.privacy")}
               </a>
             </li>
             <li>
               <a href="#" className="hover:text-primary">
-                Terms
+                {t("footer.terms")}
               </a>
             </li>
           </ul>

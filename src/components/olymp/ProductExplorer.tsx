@@ -3,8 +3,6 @@
 import { useMemo, useState } from "react";
 import { Download } from "lucide-react";
 import {
-  MONTH_LETTER,
-  MONTH_SHORT,
   monthsLabel,
   products,
   freshProducts,
@@ -15,6 +13,8 @@ import {
 } from "@/data/products";
 import { ProductGrid } from "@/components/olymp/ProductGrid";
 import { cn } from "@/lib/utils";
+import { useI18n } from "@/i18n";
+import type { DictKey } from "@/i18n/locales/en";
 
 /**
  * The single product-listing experience for the whole site.
@@ -24,26 +24,28 @@ import { cn } from "@/lib/utils";
  * same month-of-availability filter, live count and full-column CSV export,
  * so product data is never fragmented across sections with different
  * capabilities.
+ *
+ * The CSV export intentionally stays in English: it is a data deliverable
+ * for trade use, not part of the localized page chrome.
  */
 
 export type ExplorerScope = "all" | "fresh" | "frozen";
 
-const categoryFilters = [
-  { id: "all", label: "All products" },
-  { id: "fruit", label: "Fruits" },
-  { id: "vegetable", label: "Vegetables" },
-] as const;
+type CatalogueFilter = "all" | "fresh" | "frozen" | "fruit" | "vegetable";
 
-const catalogueFilters = [
-  { id: "all", label: "All products" },
-  { id: "fresh", label: "Fresh" },
-  { id: "frozen", label: "Frozen / IQF" },
-  { id: "fruit", label: "Fruits" },
-  { id: "vegetable", label: "Vegetables" },
-] as const;
+const catalogueFilters: { id: CatalogueFilter; key: DictKey }[] = [
+  { id: "all", key: "explorer.fAll" },
+  { id: "fresh", key: "explorer.fFresh" },
+  { id: "frozen", key: "explorer.fFrozen" },
+  { id: "fruit", key: "explorer.fFruit" },
+  { id: "vegetable", key: "explorer.fVegetable" },
+];
 
-type CatalogueFilter = (typeof catalogueFilters)[number]["id"];
-type CategoryFilter = (typeof categoryFilters)[number]["id"];
+const categoryFilters: { id: CatalogueFilter; key: DictKey }[] = [
+  { id: "all", key: "explorer.fAll" },
+  { id: "fruit", key: "explorer.fFruit" },
+  { id: "vegetable", key: "explorer.fVegetable" },
+];
 
 const csvScopeName: Record<ExplorerScope, string> = {
   all: "catalogue",
@@ -143,7 +145,8 @@ export function downloadCatalogueCsv(list: Product[], scope: ExplorerScope) {
 }
 
 export function ProductExplorer({ scope = "all" }: { scope?: ExplorerScope }) {
-  const [active, setActive] = useState<string>("all");
+  const { t, monthShort } = useI18n();
+  const [active, setActive] = useState<CatalogueFilter>("all");
   const [month, setMonth] = useState<number | null>(null);
 
   /** Base list: everything, or just the lines of the scoped format. */
@@ -193,8 +196,10 @@ export function ProductExplorer({ scope = "all" }: { scope?: ExplorerScope }) {
           role="group"
           aria-label={
             scope === "all"
-              ? "Filter products by format and category"
-              : `Filter ${scope} lines by category`
+              ? t("explorer.filterAria")
+              : t("explorer.filterAriaScope", {
+                  scope: scope === "fresh" ? t("explorer.scopeFresh") : t("explorer.scopeFrozen"),
+                })
           }
           className="flex flex-wrap gap-2"
         >
@@ -211,29 +216,37 @@ export function ProductExplorer({ scope = "all" }: { scope?: ExplorerScope }) {
                   : "border-border text-muted-foreground hover:border-primary hover:text-primary",
               )}
             >
-              {f.label}
+              {t(f.key)}
             </button>
           ))}
         </div>
         <button
           type="button"
           onClick={() => downloadCatalogueCsv(base, scope)}
-          title={`Exports all ${base.length} ${scope === "all" ? "catalogue" : scope} lines with availability, temperatures, ventilation, humidity, shelf life, export volumes, world shares, top importers and max transit`}
+          title={t("explorer.downloadTitle", {
+            count: base.length,
+            scope:
+              scope === "all"
+                ? t("explorer.downloadScopeAll")
+                : scope === "fresh"
+                  ? t("explorer.downloadScopeFresh")
+                  : t("explorer.downloadScopeFrozen"),
+          })}
           className="inline-flex shrink-0 items-center gap-2 self-start rounded-md border border-border px-4 py-2 text-sm font-semibold text-muted-foreground transition-colors hover:border-primary hover:text-primary lg:self-auto"
         >
           <Download className="size-4" aria-hidden />
-          Download catalogue (CSV)
+          {t("explorer.download")}
         </button>
       </div>
 
       {/* Month-of-availability filter */}
       <div
         role="group"
-        aria-label="Filter products by availability month"
+        aria-label={t("explorer.availableIn")}
         className="mt-6 flex flex-wrap items-center gap-2"
       >
-        <span className="mr-1 text-xs font-semibold tracking-[0.14em] text-muted-foreground uppercase">
-          Available in
+        <span className="me-1 text-xs font-semibold tracking-[0.14em] text-muted-foreground uppercase">
+          {t("explorer.availableIn")}
         </span>
         <button
           type="button"
@@ -246,18 +259,18 @@ export function ProductExplorer({ scope = "all" }: { scope?: ExplorerScope }) {
               : "border-border text-muted-foreground hover:border-foreground hover:text-foreground",
           )}
         >
-          Any
+          {t("explorer.any")}
         </button>
-        {MONTH_LETTER.map((letter, i) => {
+        {monthShort.map((label, i) => {
           const m = i + 1;
           const selected = month === m;
           return (
             <button
               key={m}
               type="button"
-              title={MONTH_SHORT[i]}
+              title={label}
               aria-pressed={selected}
-              aria-label={MONTH_SHORT[i]}
+              aria-label={label}
               onClick={() => setMonth(selected ? null : m)}
               className={cn(
                 "size-8 rounded-md border text-xs font-bold transition-colors",
@@ -266,32 +279,27 @@ export function ProductExplorer({ scope = "all" }: { scope?: ExplorerScope }) {
                   : "border-border text-muted-foreground hover:border-primary hover:text-primary",
               )}
             >
-              {letter}
+              {label.slice(0, 1)}
             </button>
           );
         })}
       </div>
 
       <p className="mt-6 text-sm text-muted-foreground" aria-live="polite">
-        Showing {list.length} of {base.length} lines
-        {month !== null ? ` available in ${MONTH_SHORT[month - 1]}` : ""}
+        {t("explorer.showing", { shown: list.length, total: base.length })}
+        {month !== null ? t("explorer.showingMonth", { month: monthShort[month - 1] }) : ""}
       </p>
 
       <ProductGrid products={list} className="mt-8" />
 
       {list.length === 0 ? (
         <p className="mt-8 rounded-xl border border-dashed border-border bg-surface p-10 text-center text-sm text-muted-foreground">
-          No lines match this filter — try another month or category.
+          {t("explorer.noMatch")}
         </p>
       ) : null}
 
       <p className="mt-10 max-w-3xl text-xs text-muted-foreground/80">
-        Seasonality, temperatures, ventilation and transit ceilings are compiled from Egyptian
-        export-trade sources and standard postharvest references, cross-checked against reefer
-        setpoints used by Egyptian exporters. Export volumes, world shares and top markets are
-        compiled from CAPMAS/SIS releases, USDA FAS reports and WITS/OEC trade data (2024–2025
-        seasons); ranges denote season volatility. Destination-specific cold-treatment protocols
-        are confirmed per programme.
+        {t("explorer.sourceNote")}
       </p>
     </div>
   );

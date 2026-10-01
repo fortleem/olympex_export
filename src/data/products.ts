@@ -56,7 +56,7 @@ export interface Product {
   latin?: string;
   category: ProductCategory;
   formats: ProductFormat[];
-  /** Flagship lines surfaced on the homepage and footer. */
+  /** Flagship lines surfaced on the homepage. */
   featured?: boolean;
   /** Egypt export-trade profile: volumes, world share, top markets, transit ceilings. */
   trade?: TradeInfo;
@@ -2064,7 +2064,7 @@ export const products: Product[] = [
 
 export const getProduct = (slug: string) => products.find((p) => p.slug === slug);
 
-/** Flagship lines shown on the homepage and in the footer. */
+/** Flagship lines shown on the homepage. */
 export const featuredProducts = products.filter((p) => p.featured);
 
 /** Every line available in fresh format. */

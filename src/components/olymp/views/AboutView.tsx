@@ -3,42 +3,36 @@
 import { Section, SectionHeader, PageHero } from "@/components/olymp/Section";
 import { Reveal } from "@/components/olymp/Reveal";
 import { FinalCta } from "@/components/olymp/CTA";
+import { useI18n } from "@/i18n";
 
 export default function AboutView() {
+  const { t } = useI18n();
+
   return (
     <>
       <PageHero
-        eyebrow="About Olymp Ex"
-        title="A modern Egyptian gateway for premium agricultural products"
-        description="Olymp Ex exists to make Egyptian produce easy to buy internationally: clearly specified, consistently handled and delivered against commitments."
+        eyebrow={t("about.heroEyebrow")}
+        title={t("about.heroTitle")}
+        description={t("about.heroDesc")}
       />
 
       <Section>
         <div className="grid gap-14 lg:grid-cols-12">
           <div className="lg:col-span-7">
             <SectionHeader
-              eyebrow="Our position"
-              title="A trading partner, not a farm gate"
-              description="We operate between Egyptian growing regions and international buyers. That means variety selection, grading standards, packing formats, cold chain and documentation are handled as one coordinated process rather than passed between disconnected parties."
+              eyebrow={t("about.posEyebrow")}
+              title={t("about.posTitle")}
+              description={t("about.posDesc")}
             />
             <div className="mt-8 space-y-5 text-base leading-relaxed text-muted-foreground">
-              <p>
-                Egypt has cultivated the Nile basin for millennia. What has changed is the
-                discipline around it: irrigation, variety science, post-harvest handling and
-                temperature control now decide whether fruit arrives in condition.
-              </p>
-              <p>
-                Olymp Ex is built around that modern layer. We commit to programmes ahead of the
-                season, hold suppliers to written specifications, and keep buyers informed when
-                conditions change — because credibility in trade is built on accurate information,
-                not optimistic promises.
-              </p>
+              <p>{t("about.p1")}</p>
+              <p>{t("about.p2")}</p>
             </div>
           </div>
           <Reveal className="lg:col-span-5">
             <img
               src="/images/egypt-fields.jpg"
-              alt="Irrigated agricultural fields in Egypt"
+              alt={t("alt.aboutFields")}
               width={1600}
               height={900}
               loading="lazy"
@@ -49,20 +43,25 @@ export default function AboutView() {
       </Section>
 
       <Section tone="surface">
-        <SectionHeader eyebrow="What we stand for" title="Principles that shape every shipment" />
+        <SectionHeader
+          eyebrow={t("about.valuesEyebrow")}
+          title={t("about.valuesTitle")}
+        />
         <div className="mt-14 grid gap-px border border-border bg-border md:grid-cols-2 xl:grid-cols-4">
-          {[
-            { t: "Precision", d: "Specifications are written, agreed and checked — not assumed." },
-            { t: "Provenance", d: "Every lot is tied back to its source and handling record." },
-            { t: "Partnership", d: "Multi-season relationships with growers and buyers alike." },
-            { t: "Perspective", d: "Egyptian roots, international standards and expectations." },
-          ].map((v, i) => (
-            <Reveal key={v.t} delay={i * 70} className="bg-card p-8">
+          {(
+            [
+              ["about.v1t", "about.v1d"],
+              ["about.v2t", "about.v2d"],
+              ["about.v3t", "about.v3d"],
+              ["about.v4t", "about.v4d"],
+            ] as const
+          ).map(([tk, dk], i) => (
+            <Reveal key={tk} delay={i * 70} className="bg-card p-8">
               <span className="font-[family-name:var(--font-display)] text-3xl text-border">
                 {String(i + 1).padStart(2, "0")}
               </span>
-              <h3 className="mt-5 text-lg font-bold">{v.t}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{v.d}</p>
+              <h3 className="mt-5 text-lg font-bold">{t(tk)}</h3>
+              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{t(dk)}</p>
             </Reveal>
           ))}
         </div>

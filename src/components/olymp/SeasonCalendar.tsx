@@ -10,23 +10,9 @@
 
 import { useSyncExternalStore } from "react";
 import type { Product, ProductFormat } from "@/data/products";
-import { MONTH_LETTER, MONTH_SHORT, monthsLabel } from "@/data/products";
+import { MONTH_LETTER } from "@/data/products";
 import { cn } from "@/lib/utils";
-
-const FORMAT_LABEL: Record<ProductFormat, string> = {
-  fresh: "Fresh",
-  frozen: "IQF",
-};
-
-const FORMAT_ACTIVE_BG: Record<ProductFormat, string> = {
-  fresh: "bg-primary",
-  frozen: "bg-accent",
-};
-
-const FORMAT_ACTIVE_CELL: Record<ProductFormat, string> = {
-  fresh: "border-primary/40 bg-primary/10 text-primary",
-  frozen: "border-accent/40 bg-accent/10 text-accent",
-};
+import { useI18n } from "@/i18n";
 
 const noSubscribe = () => () => {};
 
@@ -53,6 +39,8 @@ export function SeasonCalendar({
   detailed?: boolean;
   className?: string;
 }) {
+  const { t, monthShort, monthsLabel } = useI18n();
+  const formatLabel = (f: ProductFormat) => (f === "fresh" ? t("cal.fresh") : t("cal.frozen"));
   const current = useCurrentMonth();
   const rows = product.formats.filter((f): f is ProductFormat => Boolean(product.calendar[f]));
 
@@ -60,14 +48,14 @@ export function SeasonCalendar({
 
   if (!detailed) {
     return (
-      <div className={className} aria-label="Availability calendar">
+      <div className={className} aria-label={t("cal.aria")}>
         <div className="space-y-1.5">
           {rows.map((f) => {
             const info = product.calendar[f]!;
             return (
               <div key={f} className="flex items-center gap-2">
                 <span className="w-8 shrink-0 text-[9px] font-bold tracking-[0.14em] text-muted-foreground uppercase">
-                  {FORMAT_LABEL[f]}
+                  {f === "fresh" ? t("cal.fresh") : t("cal.frozenShort")}
                 </span>
                 <div className="flex flex-1 gap-[3px]">
                   {MONTH_LETTER.map((_, i) => {
@@ -78,7 +66,11 @@ export function SeasonCalendar({
                         key={m}
                         className={cn(
                           "h-1.5 flex-1 rounded-[2px]",
-                          active ? FORMAT_ACTIVE_BG[f] : "bg-border",
+                          active
+                            ? f === "fresh"
+                              ? "bg-primary"
+                              : "bg-accent"
+                            : "bg-border",
                         )}
                       />
                     );
@@ -91,7 +83,7 @@ export function SeasonCalendar({
         <div className="mt-1.5 flex items-center gap-2" aria-hidden>
           <span className="w-8 shrink-0" />
           <div className="flex flex-1 gap-[3px]">
-            {MONTH_LETTER.map((l, i) => (
+            {MONTH_LETTER.map((_, i) => (
               <span
                 key={i}
                 className={cn(
@@ -101,14 +93,17 @@ export function SeasonCalendar({
                     : "font-medium text-muted-foreground/50",
                 )}
               >
-                {l}
+                {monthShort[i].slice(0, 1)}
               </span>
             ))}
           </div>
         </div>
         <span className="sr-only">
           {rows
-            .map((f) => `${FORMAT_LABEL[f]}: available ${monthsLabel(product.calendar[f]!.months)}`)
+            .map(
+              (f) =>
+                `${formatLabel(f)}: ${t("cal.availableSr")} ${monthsLabel(product.calendar[f]!.months)}`,
+            )
             .join("; ")}
         </span>
       </div>
@@ -123,15 +118,15 @@ export function SeasonCalendar({
           <div key={f}>
             <div className="flex flex-wrap items-baseline justify-between gap-2">
               <span className="text-xs font-bold tracking-[0.16em] uppercase">
-                {f === "frozen" ? "Frozen / IQF" : "Fresh"}
+                {formatLabel(f)}
               </span>
               <span className="text-xs font-medium text-muted-foreground">
                 {monthsLabel(info.months)}
-                {info.peak ? ` · peak ${info.peak}` : ""}
+                {info.peak ? ` · ${t("cal.peak")} ${info.peak}` : ""}
               </span>
             </div>
             <div className="mt-2.5 grid grid-cols-12 gap-1.5">
-              {MONTH_SHORT.map((label, i) => {
+              {monthShort.map((label, i) => {
                 const m = i + 1;
                 const active = info.months.includes(m);
                 return (
@@ -140,11 +135,13 @@ export function SeasonCalendar({
                     className={cn(
                       "rounded-md border py-2 text-center text-[10px] font-semibold",
                       active
-                        ? FORMAT_ACTIVE_CELL[f]
+                        ? f === "fresh"
+                          ? "border-primary/40 bg-primary/10 text-primary"
+                          : "border-accent/40 bg-accent/10 text-accent"
                         : "border-border bg-muted/40 text-muted-foreground/50",
                       current === m && "ring-2 ring-foreground/30 ring-offset-1 ring-offset-card",
                     )}
-                    title={`${label}: ${active ? "in season" : "out of season"}`}
+                    title={`${label}: ${active ? t("cal.inSeason") : t("cal.outOfSeason")}`}
                   >
                     {label}
                   </div>
@@ -152,7 +149,7 @@ export function SeasonCalendar({
               })}
             </div>
             <span className="sr-only">
-              {f === "frozen" ? "Frozen" : "Fresh"}: available {monthsLabel(info.months)}.
+              {formatLabel(f)}: {t("cal.availableSr")} {monthsLabel(info.months)}.
             </span>
           </div>
         );

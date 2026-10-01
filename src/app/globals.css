@@ -18,8 +18,10 @@
   --radius-3xl: calc(var(--radius) + 12px);
   --radius-4xl: calc(var(--radius) + 16px);
 
-  --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
-  --font-display: var(--font-fraunces), "Manrope", ui-serif, Georgia, serif;
+  --font-sans: var(--font-manrope), "Segoe UI", "Noto Sans Arabic", "Noto Sans SC",
+    "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-fraunces), "Amiri", "Noto Naskh Arabic", "Songti SC", "SimSun",
+    "Manrope", ui-serif, Georgia, serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
 
   --color-background: var(--background);
@@ -613,4 +615,23 @@
   .ox-sweep-band {
     animation-delay: 0s !important;
   }
+}
+
+/* ------------------------------------------------------------------ */
+/* Right-to-left (Arabic) support                                      */
+/* ------------------------------------------------------------------ */
+
+/* Letter-tracking utilities destroy the connected Arabic script — neutralise
+   them document-wide in RTL. The logo wordmark (.ox-letter) sets its own
+   spacing in CSS, so it is unaffected. */
+[dir="rtl"] [class*="tracking-"] {
+  letter-spacing: normal;
+}
+
+/* Directional lucide icons flip in RTL. */
+[dir="rtl"] .lucide-arrow-right,
+[dir="rtl"] .lucide-arrow-left,
+[dir="rtl"] .lucide-chevron-right,
+[dir="rtl"] .lucide-arrow-up-right {
+  transform: scaleX(-1);
 }
