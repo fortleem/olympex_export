@@ -154,12 +154,14 @@ export function LogoWordmark({ className }: { className?: string }) {
 }
 
 /**
- * Brand lock-up. `stacked` renders the official aligned composition from
- * the source asset — mark centred above the wordmark at matching widths.
- * `size="sm"` is the compact stacked lock-up used in the header; the
- * default "md" is the large footer lock-up. The stacked lock-up plays the
- * cinematic entrance (focus pull → arc trace → peaks rise → letter
- * cascade) and carries the recurring light-sweep overlay.
+ * Brand lock-up. The default (horizontal) composition places the OLYMPEX
+ * wordmark NEXT TO the mark — mark on the left, wordmark on the right,
+ * optically centred on the mark's pyramid baseline. `size="sm"` is the
+ * compact header lock-up; the default "md" is the large footer lock-up.
+ * Both compositions play the cinematic entrance (focus pull → arc trace
+ * → peaks rise → letter cascade) and carry the recurring light-sweep
+ * overlay. `stacked` keeps the official centred composition from the
+ * source asset (mark above the wordmark) for print/special layouts.
  */
 export function Logo({
   className,
@@ -170,37 +172,45 @@ export function Logo({
   stacked?: boolean;
   size?: "sm" | "md";
 }) {
-  if (stacked) {
-    const sm = size === "sm";
-    return (
-      <span className={cn("relative inline-flex flex-col items-center", className)}>
-        <span
-          className={cn(
-            "ox-entrance inline-flex flex-col items-center",
-            sm ? "gap-1" : "gap-2",
-          )}
-        >
-          <LogoMark
-            className={cn(
-              sm ? "w-[94px]" : "w-[220px]",
-              "max-w-full h-auto shrink-0",
-            )}
-          />
-          <LogoWordmark
-            className={cn(sm ? "w-[94px]" : "w-[224px]", "max-w-full h-auto")}
-          />
-        </span>
-        {/* recurring light sweep — brightness travels through the lock-up */}
-        <span className="ox-sweep" aria-hidden>
-          <span className="ox-sweep-band" />
-        </span>
-      </span>
-    );
-  }
+  const sm = size === "sm";
   return (
-    <span className={cn("inline-flex items-center gap-2.5", className)}>
-      <LogoMark className="h-10 w-auto shrink-0" />
-      <LogoWordmark className="h-[22px] w-auto" />
+    <span
+      className={cn(
+        "relative inline-flex items-center",
+        stacked && "flex-col",
+        className,
+      )}
+    >
+      <span
+        className={cn(
+          "ox-entrance inline-flex items-center",
+          stacked ? "flex-col" : "flex-row",
+          stacked ? (sm ? "gap-1" : "gap-2") : sm ? "gap-2.5" : "gap-3.5",
+        )}
+      >
+        {stacked ? (
+          <>
+            <LogoMark
+              className={cn(
+                sm ? "w-[94px]" : "w-[220px]",
+                "max-w-full h-auto shrink-0",
+              )}
+            />
+            <LogoWordmark
+              className={cn(sm ? "w-[94px]" : "w-[224px]", "max-w-full h-auto")}
+            />
+          </>
+        ) : (
+          <>
+            <LogoMark className={cn(sm ? "h-11" : "h-16", "w-auto shrink-0")} />
+            <LogoWordmark className={cn(sm ? "h-6" : "h-9", "w-auto")} />
+          </>
+        )}
+      </span>
+      {/* recurring light sweep — brightness travels through the lock-up */}
+      <span className="ox-sweep" aria-hidden>
+        <span className="ox-sweep-band" />
+      </span>
     </span>
   );
 }
