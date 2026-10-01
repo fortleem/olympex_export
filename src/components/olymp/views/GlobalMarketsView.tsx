@@ -5,6 +5,7 @@ import { Reveal } from "@/components/olymp/Reveal";
 import { LaneGrid, JourneyTimeline } from "@/components/olymp/Logistics";
 import { FinalCta, ExportDiagram } from "@/components/olymp/CTA";
 import { freightModes } from "@/data/logistics";
+import { EGYPT_TRADE_STATS } from "@/data/products";
 
 export default function GlobalMarketsView() {
   return (
@@ -14,6 +15,27 @@ export default function GlobalMarketsView() {
         title="Egyptian origin, connected to the world's buying centres"
         description="Olymp Ex ships from Egypt's main gateways into Europe, the Gulf, the United Kingdom, Asia and the Americas. Transit windows below are indicative and confirmed per booking."
       />
+
+      <Section>
+        <SectionHeader
+          eyebrow="Egypt by the numbers"
+          title="The export engine behind every shipment"
+          description="Verified standing of Egypt's agricultural exports — the trade context your buyers plan against."
+        />
+        <div className="mt-14 grid gap-px border border-border bg-border sm:grid-cols-2 lg:grid-cols-3">
+          {EGYPT_TRADE_STATS.map((s, i) => (
+            <Reveal key={s.label} delay={i * 60} className="bg-card p-7">
+              <p className="text-4xl font-extrabold text-gradient-brand">{s.value}</p>
+              <p className="mt-3 text-sm font-bold">{s.label}</p>
+              <p className="mt-2 text-xs leading-relaxed text-muted-foreground">{s.note}</p>
+            </Reveal>
+          ))}
+        </div>
+        <p className="mt-6 text-xs text-muted-foreground/80">
+          Compiled from CAPMAS/SIS releases, USDA FAS reports and WITS/OEC trade data —
+          2024–2025 seasons.
+        </p>
+      </Section>
 
       <Section>
         <SectionHeader

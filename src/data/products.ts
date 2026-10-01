@@ -34,6 +34,22 @@ export interface FormatInfo {
   note?: string;
 }
 
+/** Egypt's standing in world trade for one product line. */
+export interface TradeInfo {
+  /** Annual export volume (all formats), display form, e.g. "≈ 1.8 million t". */
+  volume: string;
+  /** Reference season/year for the volume figure. */
+  year: string;
+  /** One-line world standing, e.g. "World's #1 orange exporter". */
+  headline: string;
+  /** Detailed share of world trade / context. */
+  share: string;
+  /** Biggest importers of Egyptian product, ordered by size. */
+  topImporters: string[];
+  /** Recommended maximum transit to avoid spoilage, per format. */
+  transit: Partial<Record<ProductFormat, string>>;
+}
+
 export interface Product {
   slug: string;
   name: string;
@@ -42,6 +58,8 @@ export interface Product {
   formats: ProductFormat[];
   /** Flagship lines surfaced on the homepage and footer. */
   featured?: boolean;
+  /** Egypt export-trade profile: volumes, world share, top markets, transit ceilings. */
+  trade?: TradeInfo;
   /** Display seasonality, e.g. "Nov – Apr (fresh) · year-round (IQF)". */
   season: string;
   /** Main Egyptian growing regions. */
@@ -57,6 +75,11 @@ export interface Product {
 /* ------------------------------------------------------------------ */
 /* Helpers                                                             */
 /* ------------------------------------------------------------------ */
+
+/** Compact transit form for chips, e.g. "≤ 21–40 days at sea (protocol…)" → "≤ 21–40 days at sea". */
+export function shortTransit(t: string): string {
+  return t.split(" (")[0].split(" — ")[0];
+}
 
 /** Inclusive month range that wraps across the year end (11, 4) = Nov–Apr. */
 export const monthRange = (start: number, end: number): number[] => {
@@ -117,10 +140,60 @@ export function monthsLabel(months: number[]): string {
 /* Catalogue — flagship lines first                                    */
 /* ------------------------------------------------------------------ */
 
+/**
+ * Verified standing of Egypt's agricultural exports — the "by the numbers" band.
+ * Compiled from CAPMAS/SIS releases, USDA FAS reports and WITS/OEC trade data
+ * (2024–2025 seasons); ranges denote season volatility.
+ */
+export const EGYPT_TRADE_STATS = [
+  {
+    value: "9.5M t",
+    label: "of agricultural exports in 2025",
+    note: "A record $11.5 B — ≈ 24% of Egypt's total goods exports, reaching 167 countries.",
+  },
+  {
+    value: "#1",
+    label: "world orange exporter, six seasons running",
+    note: "≈ 1.8 M t of oranges a season — ≈ 35–40% of global orange export volume.",
+  },
+  {
+    value: "36%",
+    label: "of world IQF-strawberry export value",
+    note: "$697 M in 2025 — the single biggest line in world frozen-berry trade.",
+  },
+  {
+    value: "917k t",
+    label: "of fresh produce to Europe in 2024",
+    note: "Europe's largest non-EU fresh-produce supplier.",
+  },
+  {
+    value: "2.44M t",
+    label: "of citrus in the 2025/26 season",
+    note: "$1.34 B across oranges, mandarins, lemons and grapefruit.",
+  },
+  {
+    value: "#4–5",
+    label: "world potato exporter",
+    note: "≈ 1 M t in 2024/25 — alongside #3 in dried onions and #2 in dried fava beans.",
+  },
+] as const;
+
 export const products: Product[] = [
   {
     slug: "strawberries",
     name: "Strawberries",
+    trade: {
+      volume: "≈ 190,000 t frozen + ≈ 60,000 t fresh",
+      year: "2024/25",
+      headline: "World's #1 frozen-strawberry exporter",
+      share:
+        "≈ 36% of global frozen-strawberry export value in 2025 ($697 M) — the biggest single line in world IQF trade; fresh berries rank in the world top 10 by value.",
+      topImporters: ["Germany", "USA", "UK", "Russia", "France", "Canada"],
+      transit: {
+        fresh: "≤ 7 days (air freight is the norm; ≤ 10 days by sea to the Gulf)",
+        frozen: "≤ 90 days at −18 °C — no spoilage while the chain holds; 24-month total shelf life",
+      },
+    },
     latin: "Fragaria × ananassa",
     category: "fruit",
     formats: ["fresh", "frozen"],
@@ -165,6 +238,17 @@ export const products: Product[] = [
   {
     slug: "navel-oranges",
     name: "Navel Oranges",
+    trade: {
+      volume: "≈ 1.8 million t (all Egyptian oranges)",
+      year: "2024/25 – 2025/26",
+      headline: "World's #1 orange exporter — six consecutive seasons",
+      share:
+        "≈ 35–40% of global orange export volume (≈ $1.0 B); the record season shipped ≈ 1.93 M t.",
+      topImporters: ["Netherlands", "Russia", "Saudi Arabia", "India", "UAE", "Bangladesh"],
+      transit: {
+        fresh: "≤ 21–40 days at sea (protocol cold treatment can extend beyond 40 days)",
+      },
+    },
     latin: "Citrus sinensis",
     category: "fruit",
     formats: ["fresh"],
@@ -175,7 +259,7 @@ export const products: Product[] = [
     packaging: ["15 kg telescopic cartons", "8 / 10 kg bags (Gulf trade)", "Bulk bins"],
     summary: "The opening act of Egypt's flagship citrus season — the world's largest fresh-orange export programme.",
     detail:
-      "Egypt ships around 1.66 million tonnes of oranges a year, and Navel opens the season: graded on calibre, colour and skin finish, packed in telescopic cartons and palletised for high-cube reefer loading (25–28 t per 40' container). Documentation and phytosanitary handling are coordinated per destination.",
+      "Egypt ships around 1.8 million tonnes of oranges a year, and Navel opens the season: graded on calibre, colour and skin finish, packed in telescopic cartons and palletised for high-cube reefer loading (25–28 t per 40' container). Documentation and phytosanitary handling are coordinated per destination.",
     calendar: {
       fresh: {
         months: monthRange(11, 4),
@@ -193,6 +277,18 @@ export const products: Product[] = [
   {
     slug: "table-grapes",
     name: "Table Grapes",
+    trade: {
+      volume: "≈ 190,000 – 220,000 t",
+      year: "2024/25",
+      headline: "Top-5 world table-grape exporter",
+      share:
+        "≈ 5–8% of global export volume; USDA forecasts 220,000 t for the 2025/26 season.",
+      topImporters: ["UK", "Netherlands", "Germany", "Russia", "Saudi Arabia", "UAE"],
+      transit: {
+        fresh: "≤ 28–42 days at sea with SO₂ pads",
+        frozen: "≤ 90 days at −18 °C",
+      },
+    },
     latin: "Vitis vinifera",
     category: "fruit",
     formats: ["fresh", "frozen"],
@@ -238,6 +334,18 @@ export const products: Product[] = [
   {
     slug: "pomegranates",
     name: "Pomegranates",
+    trade: {
+      volume: "≈ 136,000 t",
+      year: "2025",
+      headline: "World top-5 pomegranate exporter",
+      share:
+        "≈ 5.4% of global export value (world #5, ≈ $78 M); the UAE alone takes about half of the volume.",
+      topImporters: ["UAE", "Saudi Arabia", "Russia", "Netherlands", "UK"],
+      transit: {
+        fresh: "≤ 30–60 days at sea (cold-stored stock ships into January)",
+        frozen: "≤ 90 days at −18 °C",
+      },
+    },
     latin: "Punica granatum",
     category: "fruit",
     formats: ["fresh", "frozen"],
@@ -276,6 +384,18 @@ export const products: Product[] = [
   {
     slug: "green-beans",
     name: "Green Beans",
+    trade: {
+      volume: "≈ 30,000 – 45,000 t fresh, plus IQF",
+      year: "2024/25",
+      headline: "A pillar of Europe's winter fine-bean supply",
+      share:
+        "Top-5 world exporter; beans and okra lead Egypt's ≈ 167,000 t frozen-vegetable programme to the EU.",
+      topImporters: ["UK", "Netherlands", "France", "Germany", "Italy"],
+      transit: {
+        fresh: "≤ 7–12 days (fine and extra-fine grades move by air)",
+        frozen: "≤ 90 days at −18 °C",
+      },
+    },
     latin: "Phaseolus vulgaris",
     category: "vegetable",
     formats: ["fresh", "frozen"],
@@ -313,6 +433,18 @@ export const products: Product[] = [
   {
     slug: "artichokes",
     name: "Artichokes",
+    trade: {
+      volume: "≈ 20,000 – 27,000 t fresh, plus processed",
+      year: "2024",
+      headline: "From the world's #1 artichoke producer",
+      share:
+        "≈ 460,000 t of domestic production; a top-3 exporter with Italy and Spain, supplying up to 95% of Italy's frozen-artichoke imports.",
+      topImporters: ["Italy", "France", "Spain", "USA"],
+      transit: {
+        fresh: "≤ 14–21 days at sea at 0–2 °C",
+        frozen: "≤ 90 days at −18 °C",
+      },
+    },
     latin: "Cynara cardunculus var. scolymus",
     category: "vegetable",
     formats: ["fresh", "frozen"],
@@ -351,6 +483,18 @@ export const products: Product[] = [
   {
     slug: "okra",
     name: "Okra",
+    trade: {
+      volume: "≈ 30,000 – 50,000 t IQF + ≈ 20,000 t fresh",
+      year: "2024/25",
+      headline: "World's #1–2 frozen-okra origin",
+      share:
+        "Frozen okra leads Egypt's EU frozen-vegetable programme alongside beans, and is a staple of Gulf imports.",
+      topImporters: ["Saudi Arabia", "UAE", "USA", "Kuwait", "UK", "Qatar"],
+      transit: {
+        fresh: "≤ 5–7 days (air freight is standard)",
+        frozen: "≤ 90 days at −18 °C",
+      },
+    },
     latin: "Abelmoschus esculentus",
     category: "vegetable",
     formats: ["fresh", "frozen"],
@@ -388,6 +532,18 @@ export const products: Product[] = [
   {
     slug: "mangoes",
     name: "Mangoes",
+    trade: {
+      volume: "≈ 65,000 – 150,000 t fresh by season, plus IQF",
+      year: "2023 – 2025",
+      headline: "Top-6 world fresh-mango exporter",
+      share:
+        "≈ 4–5% of global fresh-mango export volume; Saudi Arabia, the UAE and Kuwait take over 60% combined.",
+      topImporters: ["Saudi Arabia", "UAE", "Kuwait", "UK", "Jordan", "Netherlands"],
+      transit: {
+        fresh: "≤ 14–21 days at sea after hot-water treatment (air 1–3 days)",
+        frozen: "≤ 90 days at −18 °C",
+      },
+    },
     latin: "Mangifera indica",
     category: "fruit",
     formats: ["fresh", "frozen"],
@@ -426,6 +582,17 @@ export const products: Product[] = [
   {
     slug: "valencia-oranges",
     name: "Valencia Oranges",
+    trade: {
+      volume: "≈ 1.8 million t (all Egyptian oranges)",
+      year: "2024/25 – 2025/26",
+      headline: "World's #1 orange exporter — six consecutive seasons",
+      share:
+        "≈ 35–40% of global orange export volume; Valencia closes the season Mar – Aug, when Southern Hemisphere fruit is scarce.",
+      topImporters: ["Russia", "Saudi Arabia", "India", "UAE", "Netherlands", "Bangladesh"],
+      transit: {
+        fresh: "≤ 21–40 days at sea (protocol cold treatment can extend beyond 40 days)",
+      },
+    },
     latin: "Citrus sinensis",
     category: "fruit",
     formats: ["fresh"],
@@ -452,6 +619,17 @@ export const products: Product[] = [
   {
     slug: "mandarins",
     name: "Mandarins & Clementines",
+    trade: {
+      volume: "≈ 361,000 t",
+      year: "2025/26 (246,000 t in 2024/25)",
+      headline: "Top-6 world mandarin exporter",
+      share:
+        "≈ 8–10% of global export volume, growing ≈ 47% season-on-season; ≈ 208,000 t went to Europe alone in 2025/26.",
+      topImporters: ["Russia", "Saudi Arabia", "UK", "Netherlands", "Ukraine", "Bangladesh"],
+      transit: {
+        fresh: "≤ 21–35 days at sea",
+      },
+    },
     latin: "Citrus reticulata",
     category: "fruit",
     formats: ["fresh"],
@@ -479,6 +657,16 @@ export const products: Product[] = [
   {
     slug: "lemons",
     name: "Lemons & Limes",
+    trade: {
+      volume: "≈ 217,000 t",
+      year: "2025/26 (+25% year-on-year)",
+      headline: "Top-5 world lemon exporter",
+      share: "≈ 6–7% of global export volume; ≈ 174,000 t in 2024/25 rising to ≈ 217,000 t.",
+      topImporters: ["Saudi Arabia", "UAE", "Russia", "Ukraine", "UK", "Jordan"],
+      transit: {
+        fresh: "≤ 21–40 days at sea",
+      },
+    },
     latin: "Citrus limon",
     category: "fruit",
     formats: ["fresh"],
@@ -506,6 +694,17 @@ export const products: Product[] = [
   {
     slug: "grapefruit",
     name: "Grapefruit",
+    trade: {
+      volume: "≈ 30,000 t",
+      year: "2024/25",
+      headline: "Boutique citrus line",
+      share:
+        "Under 3% of world grapefruit trade — a specialist extension of the world's largest citrus-export programme.",
+      topImporters: ["Russia", "Ukraine", "Netherlands", "Saudi Arabia"],
+      transit: {
+        fresh: "≤ 21–35 days at sea",
+      },
+    },
     latin: "Citrus × paradisi",
     category: "fruit",
     formats: ["fresh"],
@@ -533,6 +732,17 @@ export const products: Product[] = [
   {
     slug: "watermelons",
     name: "Watermelons",
+    trade: {
+      volume: "≈ 30,000 – 60,000 t",
+      year: "2025 (record season)",
+      headline: "Fast-growing Gulf watermelon programme",
+      share:
+        "A regional line focused on the Gulf — Saudi Arabia alone took ≈ 18,500 t in the first nine months of 2025.",
+      topImporters: ["Saudi Arabia", "Kuwait", "UAE", "Qatar", "Jordan"],
+      transit: {
+        fresh: "≤ 14–21 days at sea at 7–10 °C",
+      },
+    },
     latin: "Citrullus lanatus",
     category: "fruit",
     formats: ["fresh"],
@@ -560,6 +770,17 @@ export const products: Product[] = [
   {
     slug: "melons",
     name: "Melons — Galia, Cantaloupe & Honeydew",
+    trade: {
+      volume: "≈ 15,000 – 30,000 t",
+      year: "2024/25",
+      headline: "Regional speciality-melon programme",
+      share:
+        "A Gulf-focused line that complements the watermelon programme through the spring and early summer.",
+      topImporters: ["Saudi Arabia", "Kuwait", "UAE", "Qatar", "UK"],
+      transit: {
+        fresh: "≤ 14–21 days at sea",
+      },
+    },
     latin: "Cucumis melo",
     category: "fruit",
     formats: ["fresh"],
@@ -587,6 +808,18 @@ export const products: Product[] = [
   {
     slug: "peaches-nectarines",
     name: "Peaches & Nectarines",
+    trade: {
+      volume: "≈ 10,000 – 20,000 t",
+      year: "2024/25",
+      headline: "Boutique stone-fruit line",
+      share:
+        "Low-chill Delta orchards serve a Gulf and Eastern-European niche in April – June.",
+      topImporters: ["Saudi Arabia", "UAE", "Kuwait", "Russia"],
+      transit: {
+        fresh: "≤ 14–21 days at sea",
+        frozen: "≤ 90 days at −18 °C",
+      },
+    },
     latin: "Prunus persica",
     category: "fruit",
     formats: ["fresh", "frozen"],
@@ -623,6 +856,18 @@ export const products: Product[] = [
   {
     slug: "apricots",
     name: "Apricots",
+    trade: {
+      volume: "≈ 10,000 – 15,000 t fresh, plus IQF",
+      year: "2024/25",
+      headline: "From a top-3 world apricot producer",
+      share:
+        "Most of the crop processes domestically; exports split between the fresh Gulf trade and IQF for processors.",
+      topImporters: ["Saudi Arabia", "UAE", "Kuwait", "UK", "Russia"],
+      transit: {
+        fresh: "≤ 14–21 days at sea",
+        frozen: "≤ 90 days at −18 °C",
+      },
+    },
     latin: "Prunus armeniaca",
     category: "fruit",
     formats: ["fresh", "frozen"],
@@ -659,6 +904,17 @@ export const products: Product[] = [
   {
     slug: "dates",
     name: "Dates",
+    trade: {
+      volume: "≈ 40,000 – 50,000 t",
+      year: "2024 (≈ $106 M)",
+      headline: "From the world's #1 date producer",
+      share:
+        "≈ 2 million t of production — 19–21% of world output; #7–9 as an exporter (< 3% of trade), led by Siwa and Delta dry dates.",
+      topImporters: ["Morocco", "Turkey", "Indonesia", "Malaysia", "Bangladesh"],
+      transit: {
+        fresh: "≤ 30–60 days at sea (dry dates); fresh khalal moves by air",
+      },
+    },
     latin: "Phoenix dactylifera",
     category: "fruit",
     formats: ["fresh"],
@@ -686,6 +942,17 @@ export const products: Product[] = [
   {
     slug: "guava",
     name: "Guava",
+    trade: {
+      volume: "≈ 10,000 – 20,000 t",
+      year: "2024/25",
+      headline: "From a top-5 world guava producer",
+      share:
+        "Winter guava is a Gulf favourite; the broader crop feeds Egypt's juice and processing industry.",
+      topImporters: ["Saudi Arabia", "UAE", "Kuwait", "Russia", "UK"],
+      transit: {
+        fresh: "≤ 14–21 days at sea",
+      },
+    },
     latin: "Psidium guajava",
     category: "fruit",
     formats: ["fresh"],
@@ -712,6 +979,16 @@ export const products: Product[] = [
   {
     slug: "fresh-figs",
     name: "Fresh Figs",
+    trade: {
+      volume: "≈ 3,000 – 6,000 t",
+      year: "2024/25",
+      headline: "Premium niche air-freight line",
+      share: "Short pre-harvest windows and air freight keep it a high-value boutique programme.",
+      topImporters: ["UK", "Netherlands", "Germany", "Saudi Arabia", "UAE"],
+      transit: {
+        fresh: "≤ 5–7 days — air freight only",
+      },
+    },
     latin: "Ficus carica",
     category: "fruit",
     formats: ["fresh"],
@@ -738,6 +1015,18 @@ export const products: Product[] = [
   {
     slug: "onions",
     name: "Onions",
+    trade: {
+      volume: "≈ 288,000 t (2025 rebound)",
+      year: "2025",
+      headline: "World top-5 dry-onion exporter",
+      share:
+        "Over 500,000 t in peak seasons and the EU's leading third-country onion supplier; volumes move with export-ban policy (2023/24 season was restricted).",
+      topImporters: ["Russia", "Saudi Arabia", "UAE", "Jordan", "Bangladesh", "UK"],
+      transit: {
+        fresh: "≤ 60–90 days at sea",
+        frozen: "≤ 90 days at −18 °C",
+      },
+    },
     latin: "Allium cepa",
     category: "vegetable",
     formats: ["fresh", "frozen"],
@@ -779,6 +1068,16 @@ export const products: Product[] = [
   {
     slug: "potatoes",
     name: "Potatoes",
+    trade: {
+      volume: "≈ 1.0 million t",
+      year: "2024/25",
+      headline: "World's #4–5 potato exporter",
+      share: "≈ 8–10% of global potato export volume; Russia, the Levant and West Africa anchor the programme.",
+      topImporters: ["Russia", "Lebanon", "Jordan", "Kuwait", "UAE", "UK"],
+      transit: {
+        fresh: "≤ 30–45 days at sea",
+      },
+    },
     latin: "Solanum tuberosum",
     category: "vegetable",
     formats: ["fresh"],
@@ -806,6 +1105,18 @@ export const products: Product[] = [
   {
     slug: "sweet-potatoes",
     name: "Sweet Potatoes",
+    trade: {
+      volume: "≈ 50,000 t",
+      year: "2024",
+      headline: "Fast-rising sweet-potato origin",
+      share:
+        "Up from ≈ 28,500 t in 2020 — nearly doubled in four years into the world's top-10 exporters.",
+      topImporters: ["UK", "Netherlands", "France", "Russia", "Saudi Arabia"],
+      transit: {
+        fresh: "≤ 30–60 days at sea at 13–15 °C",
+        frozen: "≤ 90 days at −18 °C",
+      },
+    },
     latin: "Ipomoea batatas",
     category: "vegetable",
     formats: ["fresh", "frozen"],
@@ -843,6 +1154,18 @@ export const products: Product[] = [
   {
     slug: "garlic",
     name: "Garlic",
+    trade: {
+      volume: "≈ 5,000 – 15,000 t",
+      year: "2024/25",
+      headline: "Boutique fresh-garlic line",
+      share:
+        "Egypt is a net garlic importer; early Delta garlic serves Gulf windows between Chinese and Spanish supply.",
+      topImporters: ["Saudi Arabia", "UAE", "Russia", "Kuwait"],
+      transit: {
+        fresh: "≤ 60–90 days at sea",
+        frozen: "≤ 90 days at −18 °C",
+      },
+    },
     latin: "Allium sativum",
     category: "vegetable",
     formats: ["fresh", "frozen"],
@@ -880,6 +1203,17 @@ export const products: Product[] = [
   {
     slug: "tomatoes",
     name: "Tomatoes",
+    trade: {
+      volume: "≈ 30,000 – 60,000 t",
+      year: "2024/25",
+      headline: "Regional tomato programme",
+      share: "≈ 2–3% of world fresh-tomato trade, focused on Gulf and Eastern-European markets.",
+      topImporters: ["Saudi Arabia", "UAE", "Russia", "Jordan", "Qatar"],
+      transit: {
+        fresh: "≤ 7–14 days at sea (mature-green at 10–13 °C)",
+        frozen: "≤ 90 days at −18 °C",
+      },
+    },
     latin: "Solanum lycopersicum",
     category: "vegetable",
     formats: ["fresh", "frozen"],
@@ -917,6 +1251,17 @@ export const products: Product[] = [
   {
     slug: "bell-peppers",
     name: "Bell & Sweet Peppers",
+    trade: {
+      volume: "≈ 60,000 – 100,000 t",
+      year: "2024/25",
+      headline: "Notable world pepper supplier",
+      share: "≈ 5–8% of global pepper exports; colour-mix programmes for EU and Russian retail.",
+      topImporters: ["Russia", "UK", "Netherlands", "Germany", "Saudi Arabia"],
+      transit: {
+        fresh: "≤ 14–21 days at sea at 7–10 °C",
+        frozen: "≤ 90 days at −18 °C",
+      },
+    },
     latin: "Capsicum annuum",
     category: "vegetable",
     formats: ["fresh", "frozen"],
@@ -954,6 +1299,16 @@ export const products: Product[] = [
   {
     slug: "hot-peppers",
     name: "Hot Peppers",
+    trade: {
+      volume: "≈ 20,000 – 40,000 t",
+      year: "2024/25",
+      headline: "Gulf & UK hot-pepper supplier",
+      share: "A regional line alongside the sweet-pepper programme.",
+      topImporters: ["Saudi Arabia", "UAE", "UK", "Netherlands", "Russia"],
+      transit: {
+        fresh: "≤ 14–21 days at sea",
+      },
+    },
     latin: "Capsicum frutescens / annuum",
     category: "vegetable",
     formats: ["fresh"],
@@ -981,6 +1336,16 @@ export const products: Product[] = [
   {
     slug: "cucumbers",
     name: "Cucumbers",
+    trade: {
+      volume: "≈ 20,000 – 40,000 t",
+      year: "2024/25",
+      headline: "Regional cucumber programme",
+      share: "A Gulf- and Russia-focused winter line from Delta greenhouses.",
+      topImporters: ["Saudi Arabia", "UAE", "Kuwait", "Russia"],
+      transit: {
+        fresh: "≤ 10–14 days at sea at 10–12 °C",
+      },
+    },
     latin: "Cucumis sativus",
     category: "vegetable",
     formats: ["fresh"],
@@ -1008,6 +1373,17 @@ export const products: Product[] = [
   {
     slug: "green-peas",
     name: "Green Peas",
+    trade: {
+      volume: "≈ 10,000 – 30,000 t (mostly IQF)",
+      year: "2024/25",
+      headline: "Steady IQF pea programme",
+      share: "Part of Egypt's ≈ $296 M frozen-vegetable exports — the world's #8 frozen-veg exporter.",
+      topImporters: ["UK", "Germany", "Netherlands", "Belgium", "France"],
+      transit: {
+        fresh: "≤ 7–10 days",
+        frozen: "≤ 90 days at −18 °C",
+      },
+    },
     latin: "Pisum sativum",
     category: "vegetable",
     formats: ["fresh", "frozen"],
@@ -1044,6 +1420,16 @@ export const products: Product[] = [
   {
     slug: "eggplants",
     name: "Eggplants",
+    trade: {
+      volume: "≈ 30,000 – 60,000 t",
+      year: "2024/25",
+      headline: "Major Gulf eggplant supplier",
+      share: "From a top-5 world production base — a staple of the Gulf vegetable basket.",
+      topImporters: ["Saudi Arabia", "Kuwait", "UAE", "Jordan", "Russia"],
+      transit: {
+        fresh: "≤ 7–14 days at sea at 10–12 °C",
+      },
+    },
     latin: "Solanum melongena",
     category: "vegetable",
     formats: ["fresh"],
@@ -1071,6 +1457,17 @@ export const products: Product[] = [
   {
     slug: "courgettes",
     name: "Courgettes",
+    trade: {
+      volume: "≈ 20,000 – 40,000 t",
+      year: "2024/25",
+      headline: "Gulf & Northern-Europe courgette line",
+      share: "Winter counter-seasonal supply for UK, Dutch and Gulf programmes.",
+      topImporters: ["Saudi Arabia", "UAE", "UK", "Netherlands", "Russia"],
+      transit: {
+        fresh: "≤ 10–14 days at sea at 7–10 °C",
+        frozen: "≤ 90 days at −18 °C",
+      },
+    },
     latin: "Cucurbita pepo",
     category: "vegetable",
     formats: ["fresh", "frozen"],
@@ -1108,6 +1505,17 @@ export const products: Product[] = [
   {
     slug: "carrots",
     name: "Carrots",
+    trade: {
+      volume: "≈ 30,000 – 50,000 t",
+      year: "2024/25",
+      headline: "Regional carrot supplier",
+      share: "Delta and reclaimed-land carrots shipped as top-iced reefer loads.",
+      topImporters: ["Russia", "Saudi Arabia", "UAE", "UK"],
+      transit: {
+        fresh: "≤ 30–45 days at sea (top-iced)",
+        frozen: "≤ 90 days at −18 °C",
+      },
+    },
     latin: "Daucus carota subsp. sativus",
     category: "vegetable",
     formats: ["fresh", "frozen"],
@@ -1144,6 +1552,16 @@ export const products: Product[] = [
   {
     slug: "lettuce",
     name: "Lettuce & Baby Leaf",
+    trade: {
+      volume: "≈ 10,000 – 25,000 t",
+      year: "2024/25",
+      headline: "Winter salad supplier",
+      share: "Vacuum-cooled winter lettuce and baby leaf for Gulf and European retail programmes.",
+      topImporters: ["Saudi Arabia", "UAE", "UK", "Russia"],
+      transit: {
+        fresh: "≤ 7–10 days (vacuum-cooled)",
+      },
+    },
     latin: "Lactuca sativa",
     category: "vegetable",
     formats: ["fresh"],
@@ -1171,6 +1589,16 @@ export const products: Product[] = [
   {
     slug: "cabbage",
     name: "Cabbage",
+    trade: {
+      volume: "≈ 20,000 – 40,000 t",
+      year: "2024/25",
+      headline: "Regional cabbage programme",
+      share: "A durable long-transit brassica for Russian and Gulf buying programmes.",
+      topImporters: ["Russia", "Saudi Arabia", "UAE", "UK"],
+      transit: {
+        fresh: "≤ 30–45 days at sea",
+      },
+    },
     latin: "Brassica oleracea var. capitata",
     category: "vegetable",
     formats: ["fresh"],
@@ -1197,6 +1625,17 @@ export const products: Product[] = [
   {
     slug: "cauliflower",
     name: "Cauliflower",
+    trade: {
+      volume: "≈ 20,000 – 40,000 t",
+      year: "2024/25",
+      headline: "Gulf & Europe winter cauliflower",
+      share: "Wrapped-curded winter lines for Gulf and Northern-European programmes.",
+      topImporters: ["Saudi Arabia", "UAE", "Russia", "UK", "Netherlands"],
+      transit: {
+        fresh: "≤ 14–21 days at sea",
+        frozen: "≤ 90 days at −18 °C",
+      },
+    },
     latin: "Brassica oleracea var. botrytis",
     category: "vegetable",
     formats: ["fresh", "frozen"],
@@ -1233,6 +1672,16 @@ export const products: Product[] = [
   {
     slug: "celery",
     name: "Celery",
+    trade: {
+      volume: "≈ 10,000 – 20,000 t",
+      year: "2024/25",
+      headline: "Regional celery line",
+      share: "Winter celery for Gulf and Russian programmes.",
+      topImporters: ["Saudi Arabia", "UAE", "Russia", "UK"],
+      transit: {
+        fresh: "≤ 14–21 days at sea",
+      },
+    },
     latin: "Apium graveolens",
     category: "vegetable",
     formats: ["fresh"],
@@ -1259,6 +1708,17 @@ export const products: Product[] = [
   {
     slug: "fresh-herbs",
     name: "Fresh Herbs",
+    trade: {
+      volume: "≈ 8,000 – 15,000 t fresh",
+      year: "2024",
+      headline: "Top-3 EU winter herb supplier",
+      share:
+        "≈ 5,100 t to the EU alone in 2024, growing ≈ 21% a year, and the #1 herb supplier to Russia; the wider herb complex (incl. dried) is worth ≈ $330 M.",
+      topImporters: ["UK", "Netherlands", "Germany", "Saudi Arabia", "UAE", "Russia"],
+      transit: {
+        fresh: "≤ 3–5 days air freight (10–14 days by sea with modified atmosphere)",
+      },
+    },
     latin: "Petroselinum crispum & others",
     category: "vegetable",
     formats: ["fresh"],
@@ -1294,6 +1754,17 @@ export const products: Product[] = [
   {
     slug: "spring-onions",
     name: "Spring Onions",
+    trade: {
+      volume: "≈ 10,000 – 20,000 t",
+      year: "2024/25",
+      headline: "Steady EU & Gulf salad-onion line",
+      share: "Bundle-packed spring onions for retail salad programmes.",
+      topImporters: ["UK", "Netherlands", "Russia", "Saudi Arabia"],
+      transit: {
+        fresh: "≤ 7–14 days at sea",
+        frozen: "≤ 90 days at −18 °C",
+      },
+    },
     latin: "Allium fistulosum",
     category: "vegetable",
     formats: ["fresh", "frozen"],
@@ -1330,6 +1801,17 @@ export const products: Product[] = [
   {
     slug: "molokhia",
     name: "Molokhia",
+    trade: {
+      volume: "≈ 5,000 – 10,000 t fresh + 10,000 – 20,000 t IQF",
+      year: "2024/25",
+      headline: "Effectively the world's only commercial origin",
+      share: "Egyptian molokhia dominates world supply in both fresh and frozen form.",
+      topImporters: ["Saudi Arabia", "Kuwait", "UAE", "Jordan", "USA", "UK"],
+      transit: {
+        fresh: "≤ 3–5 days — air freight",
+        frozen: "≤ 90 days at −18 °C",
+      },
+    },
     latin: "Corchorus olitorius",
     category: "vegetable",
     formats: ["fresh", "frozen"],
@@ -1366,6 +1848,16 @@ export const products: Product[] = [
   {
     slug: "sweet-corn",
     name: "Sweet Corn",
+    trade: {
+      volume: "≈ 10,000 – 20,000 t",
+      year: "2024/25",
+      headline: "Growing IQF sweet-corn line",
+      share: "Part of Egypt's ≈ $296 M frozen-vegetable export programme (world #8).",
+      topImporters: ["Saudi Arabia", "UAE", "UK", "Netherlands", "Russia"],
+      transit: {
+        frozen: "≤ 90 days at −18 °C",
+      },
+    },
     latin: "Zea mays var. saccharata",
     category: "vegetable",
     formats: ["frozen"],
@@ -1392,6 +1884,16 @@ export const products: Product[] = [
   {
     slug: "broad-beans",
     name: "Broad Beans (Ful)",
+    trade: {
+      volume: "≈ 90,000 t dried fava, plus IQF",
+      year: "2024 (≈ $47.8 M)",
+      headline: "World's #2 dried-fava exporter",
+      share: "≈ 7.9% of world dried-fava exports; the fresh and IQF crop serves Gulf and Mediterranean buyers.",
+      topImporters: ["Saudi Arabia", "Libya", "Sudan", "Jordan"],
+      transit: {
+        frozen: "≤ 90 days at −18 °C",
+      },
+    },
     latin: "Vicia faba",
     category: "vegetable",
     formats: ["frozen"],
@@ -1418,6 +1920,16 @@ export const products: Product[] = [
   {
     slug: "broccoli",
     name: "Broccoli",
+    trade: {
+      volume: "≈ 5,000 – 15,000 t",
+      year: "2024/25",
+      headline: "Growing IQF broccoli line",
+      share: "New reclaimed-land broccoli feeding the frozen programme.",
+      topImporters: ["Saudi Arabia", "UAE", "UK", "USA"],
+      transit: {
+        frozen: "≤ 90 days at −18 °C",
+      },
+    },
     latin: "Brassica oleracea var. italica",
     category: "vegetable",
     formats: ["frozen"],
@@ -1444,6 +1956,16 @@ export const products: Product[] = [
   {
     slug: "spinach",
     name: "Spinach",
+    trade: {
+      volume: "≈ 10,000 – 20,000 t",
+      year: "2024/25",
+      headline: "Significant EU IQF spinach supplier",
+      share: "Part of Egypt's world-#8 frozen-vegetable exports.",
+      topImporters: ["Germany", "UK", "Netherlands", "USA", "Saudi Arabia"],
+      transit: {
+        frozen: "≤ 90 days at −18 °C",
+      },
+    },
     latin: "Spinacia oleracea",
     category: "vegetable",
     formats: ["frozen"],
@@ -1470,6 +1992,16 @@ export const products: Product[] = [
   {
     slug: "mixed-vegetables",
     name: "Mixed Vegetables",
+    trade: {
+      volume: "≈ 10,000 – 20,000 t",
+      year: "2024/25",
+      headline: "Gulf & EU blend programme",
+      share: "Custom IQF blends for retail and food-service buyers.",
+      topImporters: ["Saudi Arabia", "UAE", "Kuwait", "UK"],
+      transit: {
+        frozen: "≤ 90 days at −18 °C",
+      },
+    },
     latin: "Blends to recipe",
     category: "vegetable",
     formats: ["frozen"],
@@ -1495,6 +2027,17 @@ export const products: Product[] = [
   {
     slug: "potato-fries",
     name: "Frozen Potato Fries",
+    trade: {
+      volume: "≈ 250,000 t",
+      year: "2025 (≈ $330 M)",
+      headline: "Egypt's fastest-growing processed line",
+      share:
+        "249,732 t in 2025 — up from just 75,000 t in 2021 (+920% in 2024 alone); ≈ 2% of world fries trade.",
+      topImporters: ["Saudi Arabia", "UAE", "Kuwait", "Qatar", "Jordan", "Libya"],
+      transit: {
+        frozen: "≤ 90 days at −18 °C (12-month shelf life)",
+      },
+    },
     latin: "Solanum tuberosum (processing)",
     category: "vegetable",
     formats: ["frozen"],

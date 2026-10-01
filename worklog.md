@@ -353,3 +353,21 @@ Work Log:
 
 Stage Summary:
 - Everything committed, backed up and verified; GitHub push pending a PAT (repo: fortleem/olympex_export, branch main)
+
+---
+Task ID: TRADE-RESEARCH
+Agent: general-purpose subagent (research only, no project code)
+Task: Verify and correct the trade-data priors for all 44 OlympEx catalogue products (export volume, world share/rank, top importers, max transit) + aggregate "Egypt by the numbers" figures, via ~35 targeted web searches (USDA FAS, FreshPlaza, EastFruit, OEC/WITS, Tridge, PEI Trade, SIS.gov.eg, Egyptian Min. of Agriculture, CBI, IFPRI, FAO)
+
+Work Log:
+- Read worklog Tasks 15/16/17 for project context; extracted the 44-product catalogue scope (38 fresh / 26 frozen lines in src/data/products.ts)
+- Ran 35 web searches + 1 full-article read (FreshPlaza "Egyptian citrus exports up 16% in 2025/26" carrying Egyptian trade-authority season data: citrus total 2,441,096 t / $1.34B, oranges 1,830,050 t, mandarins 361,122 t, lemons 216,812 t); all raw results archived in /home/z/my-project/tool-results/trade/ (s01–s35 + p1) with FINDINGS.md synthesis
+- Verified with HIGH confidence: oranges (≈1.83M t 25/26, world #1 6th straight year, ~35–40% of world volume; NL/Russia/Saudi/Syria-transit/India/UAE top lanes), mandarins (361k t 25/26), lemons (217k t 25/26), potatoes (≈1.0M t, world #4–5), sweet potatoes (49,879 t 2024, USDA FAS), table grapes (190–220k t, USDA FAS forecast), IQF strawberries (world #1, 191k t/$381M 2024 official → $697M/36% of global value 2025), dried onions (world #3 2024, 12% share, Germany 22%/NL 17% of buyers), total agri exports (9.5M t / record $11.5B in 2025, 24% of national exports, 167 countries; 8.6M t in 2024)
+- MAJOR CORRECTIONS flagged vs priors: watermelons NOT 150–300k t/top-3 (actual ≈30–60k t, OEC ranks Egypt #32–33 in melons — domestic crop dominates); mandarins NOT 700k–1M t (361k t); pomegranates ≈136k t (2025 Ministry data; Tridge world #5 by value — the "247k t/season" industry claim is inflated); fresh strawberries world #7 not top-3 (~64k t 2025; UK/Syria/Germany top buyers); dates <3% of world export trade despite #1 producer status (≈40–50k t/$106M; Morocco top buyer); broad beans = world #2 exporter (90,167 t, 2024) but world's #1 faba IMPORTER (prior "largest producer" wrong — China is); onions volatile from state bans (≈95k t 2024 → 288k t 2025 → 250k+ other years); frozen fries surged to ≈250k t (2025, from 75k t 2021); total citrus 23/24 = 2.39M t record — the prior "3.8M t citrus" figure actually matches a mid-2024 TOTAL-agri-exports milestone, not citrus; fresh herbs to EU only ≈5.1k t (CBI 2024) within a ~$330M all-herb complex
+- Sanity-checked transit-time priors against industry sources (PEI Trade season/storage windows, UC Davis-aligned): citrus 21–40 d sea, mango 14–21 d sea after HWT, pomegranate 30–60 d (storage into January), onion 60–90 d, potato 30–45 d, green beans 7–12 d, herbs 3–5 d air / 10–14 d MAP sea, frozen 90+ d at −18 °C (18–24-month total life) — all confirmed, no changes needed
+- Compiled full per-product table (tons+year | share/rank | top importers | max transit | confidence | source) — delivered in task report and saved to tool-results/trade/FINDINGS.md for downstream use
+
+Stage Summary:
+- All 44 products + aggregates verified/corrected; 17 priors flagged as materially wrong (mostly over-stated volumes/shares) and replaced with sourced figures, latest available year noted per line
+- Recommended website-facing headline stats: world #1 oranges, #1 IQF strawberries (36% of global export value), #1 artichoke producer, #1 date producer, #3 dried onions, #4–5 potatoes, Europe's largest non-EU fresh-produce supplier (~917k t to Europe 2024), $11.5B / 9.5M t total agri exports 2025
+- No project code touched; raw search evidence + FINDINGS.md archived under tool-results/trade/ (gitignored)

@@ -1,7 +1,8 @@
 "use client";
 
-import { ArrowUpRight, Snowflake, Thermometer } from "lucide-react";
+import { ArrowUpRight, Globe, Snowflake, Thermometer } from "lucide-react";
 import type { Product } from "@/data/products";
+import { shortTransit } from "@/data/products";
 import { Badge } from "@/components/ui/badge";
 import { ALink } from "@/lib/router";
 import { SeasonCalendar, inSeason, useCurrentMonth } from "@/components/olymp/SeasonCalendar";
@@ -72,11 +73,12 @@ export function ProductCard({ product }: { product: Product }) {
             Availability
           </p>
           <SeasonCalendar product={product} className="mt-3" />
-          {/* Cold-chain chips: temperature (°C/°F), humidity and shelf life per format */}
+          {/* Cold-chain chips: temperature (°C/°F), humidity, shelf life and max transit per format */}
           <div className="mt-4 space-y-1.5">
             {product.formats.map((f) => {
               const info = product.calendar[f];
               if (!info) return null;
+              const transit = product.trade?.transit[f];
               return (
                 <p key={f} className="flex flex-wrap items-center gap-x-1.5 gap-y-0.5 text-xs">
                   {f === "fresh" ? (
@@ -95,10 +97,22 @@ export function ProductCard({ product }: { product: Product }) {
                   {info.shelfLife ? (
                     <span className="text-muted-foreground">· keeps {info.shelfLife}</span>
                   ) : null}
+                  {transit ? (
+                    <span className="text-muted-foreground">· transit {shortTransit(transit)}</span>
+                  ) : null}
                 </p>
               );
             })}
           </div>
+          {/* Egypt trade profile: export volume + world standing */}
+          {product.trade ? (
+            <p className="mt-3 flex flex-wrap items-center gap-x-1.5 gap-y-0.5 text-xs">
+              <Globe className="size-3.5 shrink-0 text-primary" aria-hidden />
+              <span className="text-muted-foreground">Egypt exports</span>{" "}
+              <span className="font-semibold text-foreground/85">{product.trade.volume}</span>{" "}
+              <span className="text-muted-foreground">— {product.trade.headline}</span>
+            </p>
+          ) : null}
         </div>
       </div>
 

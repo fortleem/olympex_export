@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowLeft, ArrowRight, Snowflake, Thermometer, Wind } from "lucide-react";
+import { ArrowLeft, ArrowRight, Globe, Snowflake, Thermometer, Wind } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Section, Eyebrow } from "@/components/olymp/Section";
 import { Reveal } from "@/components/olymp/Reveal";
@@ -109,6 +109,60 @@ export default function ProductDetailView({ slug }: { slug: string }) {
           ))}
         </div>
 
+        {/* Egypt trade profile: volumes, world standing, biggest markets */}
+        {product.trade ? (
+          <div className="mt-14 border border-border bg-surface p-8 md:p-10">
+            <div className="flex items-center gap-3">
+              <Globe className="size-5 text-primary" aria-hidden />
+              <h2 className="text-xl font-bold">Egypt&apos;s trade in this line</h2>
+            </div>
+            <div className="mt-8 grid gap-10 lg:grid-cols-3">
+              <div>
+                <p className="text-[0.65rem] font-semibold tracking-[0.2em] uppercase text-muted-foreground">
+                  Egyptian export volume
+                </p>
+                <p className="mt-3 text-2xl font-extrabold text-gradient-brand">
+                  {product.trade.volume}
+                </p>
+                <p className="mt-1 text-xs text-muted-foreground">per year — {product.trade.year}</p>
+              </div>
+              <div>
+                <p className="text-[0.65rem] font-semibold tracking-[0.2em] uppercase text-muted-foreground">
+                  Standing in world trade
+                </p>
+                <p className="mt-3 text-base font-bold">{product.trade.headline}</p>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                  {product.trade.share}
+                </p>
+              </div>
+              <div>
+                <p className="text-[0.65rem] font-semibold tracking-[0.2em] uppercase text-muted-foreground">
+                  Biggest importing countries
+                </p>
+                <ul className="mt-3 flex flex-wrap gap-2">
+                  {product.trade.topImporters.map((c, i) => (
+                    <li
+                      key={c}
+                      className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-3 py-1 text-xs font-semibold"
+                    >
+                      {i === 0 ? (
+                        <span className="text-[0.6rem] font-extrabold tracking-wide text-primary">
+                          #1
+                        </span>
+                      ) : null}
+                      {c}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+            <p className="mt-8 border-t border-border pt-4 text-xs text-muted-foreground/80">
+              Volumes and shares compiled from CAPMAS/SIS releases, USDA FAS reports and WITS/OEC
+              trade data; ranges denote season volatility.
+            </p>
+          </div>
+        ) : null}
+
         {/* Availability calendar + cold chain */}
         <div className="mt-14 grid gap-10 lg:grid-cols-2">
           <div className="border border-border p-8">
@@ -165,6 +219,12 @@ export default function ProductDetailView({ slug }: { slug: string }) {
                         <div>
                           <dt className="text-muted-foreground">Shelf life</dt>
                           <dd className="mt-0.5 font-semibold">{info.shelfLife}</dd>
+                        </div>
+                      ) : null}
+                      {product.trade?.transit[f] ? (
+                        <div className="col-span-2 sm:col-span-3">
+                          <dt className="text-muted-foreground">Max transit to avoid spoilage</dt>
+                          <dd className="mt-0.5 font-semibold">{product.trade.transit[f]}</dd>
                         </div>
                       ) : null}
                       {info.transport ? (

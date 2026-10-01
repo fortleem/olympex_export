@@ -85,6 +85,13 @@ export function downloadCatalogueCsv(list: Product[], scope: ExplorerScope) {
     "IQF — shelf life",
     "IQF — transport",
     "IQF — note",
+    "Egypt — export volume",
+    "Egypt — volume year",
+    "Egypt — world standing",
+    "Egypt — share of world trade",
+    "Egypt — top importers",
+    "Fresh — max transit",
+    "IQF — max transit",
     "Varieties",
     "Growing regions",
     "Packaging",
@@ -112,6 +119,13 @@ export function downloadCatalogueCsv(list: Product[], scope: ExplorerScope) {
     specCell(p.calendar.frozen, "shelfLife"),
     specCell(p.calendar.frozen, "transport"),
     specCell(p.calendar.frozen, "note"),
+    p.trade?.volume ?? "",
+    p.trade?.year ?? "",
+    p.trade?.headline ?? "",
+    p.trade?.share ?? "",
+    p.trade?.topImporters.join("; ") ?? "",
+    p.trade?.transit.fresh ?? "",
+    p.trade?.transit.frozen ?? "",
     p.varieties.join("; "),
     p.regions,
     p.packaging.join("; "),
@@ -204,7 +218,7 @@ export function ProductExplorer({ scope = "all" }: { scope?: ExplorerScope }) {
         <button
           type="button"
           onClick={() => downloadCatalogueCsv(base, scope)}
-          title={`Exports all ${base.length} ${scope === "all" ? "catalogue" : scope} lines with availability, temperatures, ventilation, humidity and shelf life`}
+          title={`Exports all ${base.length} ${scope === "all" ? "catalogue" : scope} lines with availability, temperatures, ventilation, humidity, shelf life, export volumes, world shares, top importers and max transit`}
           className="inline-flex shrink-0 items-center gap-2 self-start rounded-md border border-border px-4 py-2 text-sm font-semibold text-muted-foreground transition-colors hover:border-primary hover:text-primary lg:self-auto"
         >
           <Download className="size-4" aria-hidden />
@@ -272,10 +286,12 @@ export function ProductExplorer({ scope = "all" }: { scope?: ExplorerScope }) {
       ) : null}
 
       <p className="mt-10 max-w-3xl text-xs text-muted-foreground/80">
-        Seasonality, temperatures and ventilation are compiled from Egyptian export-trade sources
-        and standard postharvest references, cross-checked against reefer setpoints used by
-        Egyptian exporters. Destination-specific cold-treatment protocols are confirmed per
-        programme.
+        Seasonality, temperatures, ventilation and transit ceilings are compiled from Egyptian
+        export-trade sources and standard postharvest references, cross-checked against reefer
+        setpoints used by Egyptian exporters. Export volumes, world shares and top markets are
+        compiled from CAPMAS/SIS releases, USDA FAS reports and WITS/OEC trade data (2024–2025
+        seasons); ranges denote season volatility. Destination-specific cold-treatment protocols
+        are confirmed per programme.
       </p>
     </div>
   );

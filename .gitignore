@@ -72,3 +72,4 @@ server.log
 *.pid
 !.env.example
 /tool-results/
+*.zscripts/
