@@ -486,7 +486,7 @@ export const zh: Dictionary = {
   "title.default": "Olymp Ex — 埃及保鲜与冷冻产品出口商",
 
   /* ---- image alt texts ---- */
-  "alt.hero": "摆放在白色台面上的埃及新鲜草莓、葡萄、橙子与石榴",
+  "alt.hero": "金色黄昏下的埃及尼罗河三角洲农田，前景是刚采收的农产品箱",
   "alt.egyptFields": "黄昏时分埃及产区里成排灌溉作物的几何田垄",
   "alt.freshImg": "正在分拣包装以供出口的新鲜埃及蔬菜",
   "alt.frozenImg": "覆着白霜的 IQF 单体速冻混合浆果",

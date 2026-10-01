@@ -507,7 +507,7 @@ export const en = {
   "title.default": "Olymp Ex — Egyptian Fresh & Frozen Produce Exporter",
 
   /* ---- image alt texts ---- */
-  "alt.hero": "Fresh Egyptian strawberries, grapes, oranges and pomegranates arranged on a white surface",
+  "alt.hero": "Golden-hour view of Egyptian Nile delta farmland with crates of freshly harvested produce in the foreground",
   "alt.egyptFields": "Geometric rows of irrigated crops in an Egyptian growing region at golden hour",
   "alt.freshImg": "Freshly graded Egyptian vegetables being packed for export",
   "alt.frozenImg": "Individually quick frozen mixed berries covered in frost",

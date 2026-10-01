@@ -27,7 +27,7 @@ export function LaneGrid({ className }: { className?: string }) {
         <Reveal
           key={lane.region}
           delay={i * 80}
-          className="rounded-2xl border border-border bg-card p-8 text-center transition-shadow duration-500 hover:shadow-elevated"
+          className="h-full rounded-2xl border border-border bg-card p-8 text-center transition-shadow duration-500 hover:shadow-elevated"
         >
           <span className="text-3xl leading-none" aria-hidden>
             {lane.flag}

@@ -9,6 +9,7 @@ import { ProductGrid } from "@/components/olymp/ProductGrid";
 import { SeasonCalendar, inSeason, useCurrentMonth } from "@/components/olymp/SeasonCalendar";
 import { FinalCta } from "@/components/olymp/CTA";
 import { getProduct, products } from "@/data/products";
+import { productImage } from "@/data/product-images";
 import { ALink } from "@/lib/router";
 import { useI18n } from "@/i18n";
 import { localizedName } from "@/i18n/product-names";
@@ -39,9 +40,7 @@ export default function ProductDetailView({ slug }: { slug: string }) {
   const related = products
     .filter((p) => p.slug !== product.slug && p.category === product.category)
     .slice(0, 3);
-  const img = product.formats.includes("fresh")
-    ? "/images/fresh-produce.jpg"
-    : "/images/frozen-produce.jpg";
+  const img = productImage(product.slug, product.formats);
   const inSeasonNow = currentMonth > 0 && inSeason(product, currentMonth);
 
   return (

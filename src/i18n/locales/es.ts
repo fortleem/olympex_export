@@ -503,7 +503,7 @@ export const es: Dictionary = {
   "title.default": "Olymp Ex — Exportador egipcio de producto fresco y congelado",
 
   /* ---- image alt texts ---- */
-  "alt.hero": "Fresas, uvas, naranjas y granadas egipcias frescas sobre una superficie blanca",
+  "alt.hero": "Vista al atardecer de campos agrícolas del delta del Nilo en Egipto con cajas de productos recién cosechados en primer plano",
   "alt.egyptFields": "Filas geométricas de cultivos regados en una región agrícola egipcia a la hora dorada",
   "alt.freshImg": "Verduras egipcias recién calibradas siendo envasadas para exportación",
   "alt.frozenImg": "Mezcla de frutos rojos congelados individualmente (IQF) cubiertos de escarcha",

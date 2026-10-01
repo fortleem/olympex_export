@@ -37,7 +37,7 @@ export default function GlobalMarketsView() {
             <Reveal
               key={s.value}
               delay={i * 60}
-              className="bg-card p-7"
+              className="h-full bg-card p-7"
             >
               <p className="text-4xl font-extrabold text-gradient-brand">{s.value}</p>
               <p className="mt-3 text-sm font-bold">
@@ -78,7 +78,7 @@ export default function GlobalMarketsView() {
                 <Reveal
                   key={tk}
                   delay={i * 70}
-                  className="rounded-xl border border-border bg-card p-6"
+                  className="h-full rounded-xl border border-border bg-card p-6"
                 >
                   <h3 className="text-base font-bold text-brand-ink">{t(tk)}</h3>
                   <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{t(dk)}</p>

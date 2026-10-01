@@ -502,7 +502,7 @@ export const fr: Dictionary = {
   "title.default": "Olymp Ex — Exportateur égyptien de produits frais et surgelés",
 
   /* ---- image alt texts ---- */
-  "alt.hero": "Fraises, raisins, oranges et grenades égyptiennes frais disposés sur une surface blanche",
+  "alt.hero": "Vue des terres agricoles du delta du Nil en Égypte à l'heure dorée, avec des caisses de produits fraîchement récoltés au premier plan",
   "alt.egyptFields": "Rangées géométriques de cultures irriguées dans une région agricole égyptienne à l'heure dorée",
   "alt.freshImg": "Légumes égyptiens fraîchement calibrés en cours d'emballage pour l'export",
   "alt.frozenImg": "Mélanges de fruits rouges individuellement surgelés (IQF) couverts de givre",

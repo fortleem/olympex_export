@@ -501,7 +501,7 @@ export const de: Dictionary = {
   "title.default": "Olymp Ex — Ägyptischer Exporteur für frische und tiefgekühlte Produkte",
 
   /* ---- image alt texts ---- */
-  "alt.hero": "Frische ägyptische Erdbeeren, Trauben, Orangen und Granatäpfel auf weißer Oberfläche",
+  "alt.hero": "Blick auf ägyptische Ackerland am Nil im goldenen Abendlicht, im Vordergrund Kisten mit frisch geernteten Produkten",
   "alt.egyptFields": "Geometrische Reihen bewässerter Kulturen in einer ägyptischen Anbauregion zur goldenen Stunde",
   "alt.freshImg": "Frisch sortiertes ägyptisches Gemüse wird für den Export verpackt",
   "alt.frozenImg": "Einzelgefrorene gemischte Beeren, mit Reif bedeckt",

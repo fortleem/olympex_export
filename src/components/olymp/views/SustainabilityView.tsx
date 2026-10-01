@@ -39,7 +39,7 @@ export default function SustainabilityView() {
               <Reveal
                 key={p.tk}
                 delay={i * 70}
-                className="rounded-xl border border-border bg-card p-7"
+                className="h-full rounded-xl border border-border bg-card p-7"
               >
                 <span className="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-accent/25 bg-accent/5 text-accent">
                   <p.icon className="size-5" aria-hidden />

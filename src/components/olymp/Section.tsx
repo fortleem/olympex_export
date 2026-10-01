@@ -92,10 +92,64 @@ export function PageHero({
     <header className="relative overflow-hidden border-b border-border bg-surface">
       <div className="grid-motif pointer-events-none absolute inset-0 opacity-50" aria-hidden />
       <div
-        className="pointer-events-none absolute -top-40 -right-32 h-[26rem] w-[26rem] rounded-full opacity-[0.14] blur-3xl"
+        className="pointer-events-none absolute -top-40 -right-32 h-[26rem] w-[26rem] rounded-full opacity-[0.14] blur-3xl rtl:-left-32 rtl:right-auto"
         style={{ background: "var(--gradient-brand)" }}
         aria-hidden
       />
+      {/* Brand echo — abstract rainbow arc and three peaks filling the right half */}
+      <svg
+        className="pointer-events-none absolute top-1/2 right-0 hidden h-[85%] max-w-[46%] -translate-y-1/2 md:block rtl:left-0 rtl:right-auto"
+        viewBox="0 0 480 300"
+        fill="none"
+        aria-hidden
+      >
+        <path
+          d="M20 280 A220 220 0 0 1 460 280"
+          stroke="var(--primary)"
+          strokeOpacity="0.09"
+          strokeWidth="14"
+        />
+        <path
+          d="M64 280 A176 176 0 0 1 416 280"
+          stroke="var(--primary)"
+          strokeOpacity="0.15"
+          strokeWidth="14"
+        />
+        <path
+          d="M108 280 A132 132 0 0 1 372 280"
+          stroke="var(--accent)"
+          strokeOpacity="0.13"
+          strokeWidth="14"
+        />
+        <path
+          d="M152 280 A88 88 0 0 1 328 280"
+          stroke="var(--accent)"
+          strokeOpacity="0.19"
+          strokeWidth="14"
+        />
+        <path
+          d="M150 280 L196 178 L242 280"
+          stroke="var(--primary)"
+          strokeOpacity="0.28"
+          strokeWidth="10"
+          strokeLinejoin="round"
+        />
+        <path
+          d="M212 280 L268 132 L324 280"
+          stroke="var(--primary)"
+          strokeOpacity="0.36"
+          strokeWidth="10"
+          strokeLinejoin="round"
+        />
+        <path
+          d="M286 280 L330 170 L374 280"
+          stroke="var(--accent)"
+          strokeOpacity="0.32"
+          strokeWidth="10"
+          strokeLinejoin="round"
+        />
+        <path d="M20 280 H460" stroke="var(--brand-ink)" strokeOpacity="0.12" strokeWidth="2" />
+      </svg>
       <div className="container-x relative py-20 md:py-28">
         <Reveal className="max-w-3xl">
           <Eyebrow>{eyebrow}</Eyebrow>

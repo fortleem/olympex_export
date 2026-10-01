@@ -83,7 +83,7 @@ export default function QualityView() {
         />
         <ul className="mt-12 grid gap-px overflow-hidden rounded-2xl border border-border bg-border sm:grid-cols-2 lg:grid-cols-3">
           {standardKeys.map((key, i) => (
-            <Reveal as="li" key={key} delay={i * 50} className="bg-card p-7">
+            <Reveal as="li" key={key} delay={i * 50} className="h-full bg-card p-7">
               <span className="inline-block h-1 w-8 bg-primary" aria-hidden />
               <p className="mt-4 text-sm font-semibold text-brand-ink">{t(key)}</p>
             </Reveal>

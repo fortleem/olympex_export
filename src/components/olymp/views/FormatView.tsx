@@ -66,7 +66,7 @@ export function FormatView({ format, prefix }: FormatPageProps) {
           <Reveal
             key={pillar.title}
             delay={i * 70}
-            className="rounded-xl border border-border bg-card p-6"
+            className="h-full rounded-xl border border-border bg-card p-6"
           >
             <h3 className="text-base font-bold text-brand-ink">{pillar.title}</h3>
             <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{pillar.text}</p>

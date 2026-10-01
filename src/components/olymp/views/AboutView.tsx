@@ -56,7 +56,7 @@ export default function AboutView() {
               ["about.v4t", "about.v4d"],
             ] as const
           ).map(([tk, dk], i) => (
-            <Reveal key={tk} delay={i * 70} className="bg-card p-8">
+            <Reveal key={tk} delay={i * 70} className="h-full bg-card p-8">
               <span className="font-[family-name:var(--font-display)] text-3xl text-border">
                 {String(i + 1).padStart(2, "0")}
               </span>

@@ -3,6 +3,7 @@
 import { ArrowUpRight, Globe, Snowflake, Thermometer } from "lucide-react";
 import type { Product } from "@/data/products";
 import { shortTransit } from "@/data/products";
+import { productImage } from "@/data/product-images";
 import { Badge } from "@/components/ui/badge";
 import { ALink } from "@/lib/router";
 import { SeasonCalendar, inSeason, useCurrentMonth } from "@/components/olymp/SeasonCalendar";
@@ -44,13 +45,25 @@ export function ProductCard({ product }: { product: Product }) {
   const currentMonth = useCurrentMonth();
   const inSeasonNow = currentMonth > 0 && inSeason(product, currentMonth);
   const name = localizedName(product.slug, product.name, locale);
+  const img = productImage(product.slug, product.formats);
 
   return (
-    <article className="group relative flex h-full flex-col justify-between border border-border bg-card p-6 transition-all duration-500 hover:-translate-y-1 hover:border-primary/40 hover:shadow-elevated md:p-7">
-      <div
-        className="field-motif pointer-events-none absolute inset-x-0 top-0 h-1 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
-        aria-hidden
-      />
+    <article className="group relative flex h-full flex-col overflow-hidden border border-border bg-card transition-all duration-500 hover:-translate-y-1 hover:border-primary/40 hover:shadow-elevated">
+      <div className="relative aspect-[16/9] shrink-0 overflow-hidden border-b border-border bg-surface">
+        <img
+          src={img}
+          alt={name}
+          width={1152}
+          height={648}
+          loading="lazy"
+          className="h-full w-full object-cover transition-transform duration-[1.1s] group-hover:scale-[1.05]"
+        />
+        <div
+          className="field-motif pointer-events-none absolute inset-x-0 bottom-0 h-1 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+          aria-hidden
+        />
+      </div>
+      <div className="flex flex-1 flex-col p-6 md:p-7">
       <div>
         <div className="flex flex-wrap items-center gap-2">
           {product.formats.map((f) => (
@@ -128,7 +141,7 @@ export function ProductCard({ product }: { product: Product }) {
         </div>
       </div>
 
-      <dl className="mt-6 space-y-2.5 border-t border-border pt-5 text-xs">
+      <dl className="mt-6 shrink-0 space-y-2.5 border-t border-border pt-5 text-xs">
         <div className="flex justify-between gap-4">
           <dt className="text-muted-foreground">{t("card.season")}</dt>
           <dd className="text-end font-semibold">{product.season}</dd>
@@ -143,13 +156,14 @@ export function ProductCard({ product }: { product: Product }) {
         </div>
       </dl>
 
-      <span className="mt-6 inline-flex items-center gap-1.5 text-sm font-semibold text-primary">
+      <span className="mt-6 inline-flex shrink-0 items-center gap-1.5 text-sm font-semibold text-primary">
         {t("common.viewSpecification")}
         <ArrowUpRight
           className="size-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 rtl:group-hover:-translate-x-0.5"
           aria-hidden
         />
       </span>
+      </div>
     </article>
   );
 }

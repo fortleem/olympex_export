@@ -28,13 +28,13 @@ export default function HomeView() {
     <>
       {/* HERO */}
       <section className="relative overflow-hidden bg-background">
-        <div className="grid-motif pointer-events-none absolute inset-0 opacity-60" aria-hidden />
+        <div className="grid-motif pointer-events-none absolute inset-0 opacity-40" aria-hidden />
         <div
           className="pointer-events-none absolute top-1/3 -left-40 h-[32rem] w-[32rem] rounded-full opacity-[0.12] blur-3xl rtl:-right-40 rtl:-left-auto"
           style={{ background: "var(--gradient-brand)" }}
           aria-hidden
         />
-        <div className="container-x relative grid items-center gap-14 py-16 lg:grid-cols-2 lg:gap-8 lg:py-24">
+        <div className="container-x relative grid items-stretch gap-14 py-16 lg:grid-cols-2 lg:gap-8 lg:py-24">
           <Reveal className="is-revealed max-w-2xl">
             <Eyebrow>{t("home.heroEyebrow")}</Eyebrow>
             <h1 className="mt-7 text-[2.6rem] leading-[1.02] font-extrabold sm:text-6xl xl:text-7xl">
@@ -76,13 +76,13 @@ export default function HomeView() {
             </dl>
           </Reveal>
 
-          <div className="relative">
-            <div className="relative overflow-hidden border border-border bg-surface shadow-elevated">
+          <div className="relative flex flex-col">
+            <div className="relative aspect-[4/3] w-full overflow-hidden border border-border bg-surface shadow-elevated lg:aspect-auto lg:flex-1">
               <img
-                src="/images/hero-produce.jpg"
+                src="/images/hero-harvest.jpg"
                 alt={t("alt.hero")}
-                width={1920}
-                height={1280}
+                width={1440}
+                height={720}
                 className="h-full w-full object-cover"
               />
             </div>
@@ -201,7 +201,7 @@ export default function HomeView() {
               points: [t("home.frozenP1"), t("home.frozenP2"), t("home.frozenP3")],
             },
           ].map((c, i) => (
-            <Reveal key={c.title} delay={i * 100}>
+            <Reveal key={c.title} delay={i * 100} className="h-full">
               <article className="group flex h-full flex-col overflow-hidden border border-border bg-card transition-shadow duration-500 hover:shadow-elevated">
                 <div className="relative aspect-[16/9] overflow-hidden">
                   <img
@@ -278,7 +278,7 @@ export default function HomeView() {
                 ["home.sp4t", "home.sp4d"],
               ] as const
             ).map(([tk, dk], i) => (
-              <Reveal key={tk} delay={i * 70} className="border border-border bg-card p-7">
+              <Reveal key={tk} delay={i * 70} className="h-full border border-border bg-card p-7">
                 <h3 className="text-base font-bold">{t(tk)}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{t(dk)}</p>
               </Reveal>
@@ -303,7 +303,7 @@ export default function HomeView() {
               ["home.v3q", "home.v3w"],
             ] as const
           ).map(([qk, wk], i) => (
-            <Reveal key={wk} delay={i * 80} className="border border-border bg-card p-8">
+            <Reveal key={wk} delay={i * 80} className="h-full border border-border bg-card p-8">
               <Quote className="size-6 text-accent" aria-hidden />
               <blockquote className="mt-5 text-base leading-relaxed">{t(qk)}</blockquote>
               <footer className="mt-6 border-t border-border pt-5 text-xs">
