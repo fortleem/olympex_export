@@ -340,3 +340,16 @@ Stage Summary:
 - UI architecture consolidated: 3 new shared primitives (ProductGrid, ProductExplorer, FormatView) replaced 5 hand-rolled grids, 2 duplicated views and a fragmented filter UX — every product section now offers identical listing capability from one source of truth
 - All 44 products carry the four cold-chain dimensions the user asked to double-check: temperature (°C/°F), ventilation, humidity, shelf life — visible on cards, detail pages and the CSV
 - Two latent bugs fixed (hydration mismatch, title clobber); full e2e verification green; backups + push follow
+
+---
+Task ID: 17 (appendix)
+Agent: Z.ai Code (main)
+Task: Backup + push status
+
+Work Log:
+- Triple backup written to download/: olympex-db-20261001-142020.db (SQLite, 0 test records), olympex-nextjs-git-20260901-142020.bundle (full history), olympex-nextjs-source-20260901-142020.tar.gz (source + env + upload)
+- Push attempted: NO GitHub PAT on this machine (full sweep: git config, ~/.git-credentials, ~/.netrc, gh CLI config, env vars, upload/ — the token from tasks 7/8 died with the deleted olympex_export clone)
+- 1 commit ahead of github/main (138b186) on top of the previously-staged fast-forward queue; `git push github main` publishes everything the moment a PAT is provided (or user pushes from Vercel-linked local clone)
+
+Stage Summary:
+- Everything committed, backed up and verified; GitHub push pending a PAT (repo: fortleem/olympex_export, branch main)
