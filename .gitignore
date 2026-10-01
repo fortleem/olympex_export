@@ -71,3 +71,4 @@ server.log
 # runtime pid files
 *.pid
 !.env.example
+/tool-results/

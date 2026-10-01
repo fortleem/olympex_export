@@ -121,7 +121,7 @@ export default function HomeView() {
           <SectionHeader
             eyebrow="Product portfolio"
             title="Premium Egyptian lines, packed to your specification"
-            description="A representative selection of our core export lines. Every specification below is an editable placeholder — confirmed availability, calibre and packing are agreed per programme."
+            description="Our core export lines with their Egyptian availability windows and cold-chain setpoints. Confirmed calibre, volume and packing are agreed per programme."
           />
           <Button asChild variant="outline">
             <ALink to="/products">

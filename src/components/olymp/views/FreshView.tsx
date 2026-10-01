@@ -61,7 +61,11 @@ export default function FreshView() {
       </Section>
 
       <Section tone="surface">
-        <SectionHeader eyebrow="Fresh lines" title="Available in fresh format" />
+        <SectionHeader
+          eyebrow="Fresh lines"
+          title={`${fresh.length} lines available in fresh format`}
+          description="Every card shows the Egyptian export window and the fresh-format cold-chain setpoint — filter the full catalogue by month on the products page."
+        />
         <div className="mt-14 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
           {fresh.map((p, i) => (
             <Reveal key={p.slug} delay={i * 60}>

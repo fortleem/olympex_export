@@ -1,16 +1,18 @@
 "use client";
 
-import { ArrowLeft, ArrowRight } from "lucide-react";
+import { ArrowLeft, ArrowRight, Snowflake, Thermometer, Wind } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Section, Eyebrow } from "@/components/olymp/Section";
 import { Reveal } from "@/components/olymp/Reveal";
 import { FormatBadge, ProductCard } from "@/components/olymp/ProductCard";
+import { SeasonCalendar, inSeason, useCurrentMonth } from "@/components/olymp/SeasonCalendar";
 import { FinalCta } from "@/components/olymp/CTA";
 import { getProduct, products } from "@/data/products";
 import { ALink } from "@/lib/router";
 
 export default function ProductDetailView({ slug }: { slug: string }) {
   const product = getProduct(slug);
+  const currentMonth = useCurrentMonth();
 
   if (!product) {
     return (
@@ -31,10 +33,13 @@ export default function ProductDetailView({ slug }: { slug: string }) {
     );
   }
 
-  const related = products.filter((p) => p.slug !== product.slug).slice(0, 3);
+  const related = products
+    .filter((p) => p.slug !== product.slug && p.category === product.category)
+    .slice(0, 3);
   const img = product.formats.includes("fresh")
     ? "/images/fresh-produce.jpg"
     : "/images/frozen-produce.jpg";
+  const inSeasonNow = currentMonth > 0 && inSeason(product, currentMonth);
 
   return (
     <>
@@ -55,10 +60,19 @@ export default function ProductDetailView({ slug }: { slug: string }) {
                   {product.latin}
                 </p>
               ) : null}
-              <div className="mt-6 flex flex-wrap gap-2">
+              <div className="mt-6 flex flex-wrap items-center gap-2">
                 {product.formats.map((f) => (
                   <FormatBadge key={f} format={f} />
                 ))}
+                {inSeasonNow ? (
+                  <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-2.5 py-0.5 text-[11px] font-semibold text-primary">
+                    <span className="relative flex size-1.5" aria-hidden>
+                      <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-60" />
+                      <span className="relative inline-flex size-1.5 rounded-full bg-primary" />
+                    </span>
+                    In season now
+                  </span>
+                ) : null}
               </div>
               <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted-foreground">
                 {product.detail}
@@ -88,10 +102,10 @@ export default function ProductDetailView({ slug }: { slug: string }) {
       <Section>
         <div className="grid gap-px border border-border bg-border md:grid-cols-2 xl:grid-cols-4">
           {[
-            { label: "Origin", value: product.origin },
             { label: "Seasonality", value: product.season },
-            { label: "Availability", value: product.availability },
+            { label: "Growing regions", value: product.regions },
             { label: "Varieties", value: product.varieties.join(", ") },
+            { label: "Origin", value: "Egypt — Nile Delta & Valley" },
           ].map((s) => (
             <div key={s.label} className="bg-card p-7">
               <p className="text-[0.65rem] font-semibold tracking-[0.2em] uppercase text-muted-foreground">
@@ -102,7 +116,79 @@ export default function ProductDetailView({ slug }: { slug: string }) {
           ))}
         </div>
 
+        {/* Availability calendar + cold chain */}
         <div className="mt-14 grid gap-10 lg:grid-cols-2">
+          <div className="border border-border p-8">
+            <h2 className="text-xl font-bold">Availability calendar</h2>
+            <p className="mt-2 text-sm text-muted-foreground">
+              Egyptian export window by month — the current month is outlined.
+            </p>
+            <SeasonCalendar product={product} detailed className="mt-6" />
+            <p className="mt-6 text-xs text-muted-foreground/80">
+              Windows reflect Egyptian export practice; exact shipments are confirmed per
+              programme and destination.
+            </p>
+          </div>
+          <div className="border border-border p-8">
+            <h2 className="text-xl font-bold">Cold-chain specification</h2>
+            <p className="mt-2 text-sm text-muted-foreground">
+              Optimal storage and transport temperatures per format.
+            </p>
+            <div className="mt-6 space-y-4">
+              {product.formats.map((f) => {
+                const info = product.calendar[f];
+                if (!info) return null;
+                return (
+                  <div key={f} className="rounded-xl border border-border bg-surface p-5">
+                    <div className="flex items-center justify-between gap-3">
+                      <span className="inline-flex items-center gap-2 text-sm font-bold">
+                        {f === "fresh" ? (
+                          <Thermometer className="size-4 text-primary" aria-hidden />
+                        ) : (
+                          <Snowflake className="size-4 text-accent" aria-hidden />
+                        )}
+                        {f === "fresh" ? "Fresh" : "Frozen / IQF"}
+                      </span>
+                      <span className="text-lg font-extrabold">{info.tempC}</span>
+                    </div>
+                    <dl className="mt-4 grid grid-cols-2 gap-x-4 gap-y-3 text-xs sm:grid-cols-3">
+                      <div>
+                        <dt className="text-muted-foreground">Fahrenheit</dt>
+                        <dd className="mt-0.5 font-semibold">{info.tempF}</dd>
+                      </div>
+                      {info.rh ? (
+                        <div>
+                          <dt className="text-muted-foreground">Humidity</dt>
+                          <dd className="mt-0.5 font-semibold">{info.rh}</dd>
+                        </div>
+                      ) : null}
+                      {info.shelfLife ? (
+                        <div>
+                          <dt className="text-muted-foreground">Shelf life</dt>
+                          <dd className="mt-0.5 font-semibold">{info.shelfLife}</dd>
+                        </div>
+                      ) : null}
+                      {info.transport ? (
+                        <div className="col-span-2 sm:col-span-3">
+                          <dt className="text-muted-foreground">Transport</dt>
+                          <dd className="mt-0.5 font-semibold">{info.transport}</dd>
+                        </div>
+                      ) : null}
+                    </dl>
+                    {info.note ? (
+                      <p className="mt-4 flex items-start gap-2 border-t border-border pt-3 text-xs text-muted-foreground">
+                        <Wind className="mt-0.5 size-3.5 shrink-0 text-accent" aria-hidden />
+                        {info.note}
+                      </p>
+                    ) : null}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-10 grid gap-10 lg:grid-cols-2">
           <div className="border border-border p-8">
             <h2 className="text-xl font-bold">Packaging options</h2>
             <ul className="mt-5 space-y-3 text-sm text-muted-foreground">
@@ -117,17 +203,6 @@ export default function ProductDetailView({ slug }: { slug: string }) {
               Packaging shown is representative; private-label and buyer-specific formats are
               available on request.
             </p>
-          </div>
-          <div className="border border-border p-8">
-            <h2 className="text-xl font-bold">Handling specification</h2>
-            <dl className="mt-5 space-y-4 text-sm">
-              {product.specs.map((s) => (
-                <div key={s.label} className="flex justify-between gap-6 border-b border-border pb-3">
-                  <dt className="text-muted-foreground">{s.label}</dt>
-                  <dd className="text-right font-semibold">{s.value}</dd>
-                </div>
-              ))}
-            </dl>
           </div>
         </div>
       </Section>

@@ -58,7 +58,11 @@ export default function FrozenView() {
       </Section>
 
       <Section tone="surface">
-        <SectionHeader eyebrow="Frozen lines" title="Available in IQF format" />
+        <SectionHeader
+          eyebrow="Frozen lines"
+          title={`${frozen.length} lines available in IQF format`}
+          description="All frozen programmes run at −18 °C — each card shows the raw-material packing window behind the year-round supply."
+        />
         <div className="mt-14 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
           {frozen.map((p, i) => (
             <Reveal key={p.slug} delay={i * 60}>
