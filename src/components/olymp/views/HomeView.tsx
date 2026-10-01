@@ -9,11 +9,11 @@ import {
 import { Button } from "@/components/ui/button";
 import { Section, SectionHeader, Eyebrow } from "@/components/olymp/Section";
 import { Reveal } from "@/components/olymp/Reveal";
-import { ProductCard } from "@/components/olymp/ProductCard";
+import { ProductGrid } from "@/components/olymp/ProductGrid";
 import { JourneyTimeline, LaneGrid } from "@/components/olymp/Logistics";
 import { FinalCta } from "@/components/olymp/CTA";
 import { ALink } from "@/lib/router";
-import { products } from "@/data/products";
+import { featuredProducts } from "@/data/products";
 
 const trust = [
   { label: "Origin", value: "Egypt" },
@@ -23,7 +23,7 @@ const trust = [
 ];
 
 export default function HomeView() {
-  const featured = products.slice(0, 6);
+  const featured = featuredProducts;
 
   return (
     <>
@@ -129,13 +129,7 @@ export default function HomeView() {
             </ALink>
           </Button>
         </div>
-        <div className="mt-14 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-          {featured.map((p, i) => (
-            <Reveal key={p.slug} delay={i * 70}>
-              <ProductCard product={p} />
-            </Reveal>
-          ))}
-        </div>
+        <ProductGrid products={featured} className="mt-14" />
       </Section>
 
       {/* FROM EGYPT TO THE WORLD */}

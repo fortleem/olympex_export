@@ -21,7 +21,8 @@ export function FormatBadge({ format }: { format: "fresh" | "frozen" }) {
   );
 }
 
-function InSeasonPill() {
+/** Live "In season now" pill — shared by product cards and detail headers. */
+export function InSeasonPill() {
   return (
     <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-2.5 py-0.5 text-[11px] font-semibold text-primary">
       <span className="relative flex size-1.5" aria-hidden>
@@ -71,23 +72,30 @@ export function ProductCard({ product }: { product: Product }) {
             Availability
           </p>
           <SeasonCalendar product={product} className="mt-3" />
-          <div className="mt-4 flex flex-wrap gap-x-4 gap-y-1.5 text-xs">
+          {/* Cold-chain chips: temperature (°C/°F), humidity and shelf life per format */}
+          <div className="mt-4 space-y-1.5">
             {product.formats.map((f) => {
               const info = product.calendar[f];
               if (!info) return null;
               return (
-                <span key={f} className="inline-flex items-center gap-1.5">
+                <p key={f} className="flex flex-wrap items-center gap-x-1.5 gap-y-0.5 text-xs">
                   {f === "fresh" ? (
-                    <Thermometer className="size-3.5 text-primary" aria-hidden />
+                    <Thermometer className="size-3.5 shrink-0 text-primary" aria-hidden />
                   ) : (
-                    <Snowflake className="size-3.5 text-accent" aria-hidden />
+                    <Snowflake className="size-3.5 shrink-0 text-accent" aria-hidden />
                   )}
-                  <span className="text-muted-foreground">
+                  <span className="font-semibold text-foreground/80">
                     {f === "fresh" ? "Fresh" : "IQF"}:
                   </span>
                   <span className="font-semibold">{info.tempC}</span>
                   <span className="text-muted-foreground/70">{info.tempF}</span>
-                </span>
+                  {info.rh ? (
+                    <span className="text-muted-foreground">· RH {info.rh}</span>
+                  ) : null}
+                  {info.shelfLife ? (
+                    <span className="text-muted-foreground">· keeps {info.shelfLife}</span>
+                  ) : null}
+                </p>
               );
             })}
           </div>

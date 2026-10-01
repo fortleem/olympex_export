@@ -305,3 +305,38 @@ Stage Summary:
 - Logo lock-up horizontal everywhere (header 80/64px states + footer), animations preserved
 - Catalogue complete: 44 source-grounded Egyptian export lines, each showing availability months (visual calendar + month filter + CSV download) and cold-chain temperatures (°C/°F, RH, shelf life, transport, cautions)
 - Hardened state re-verified; triple backup on disk; push pending a GitHub PAT (repo, branch main, 3 commits fast-forwarded)
+
+---
+Task ID: 16
+Agent: Z.ai Code (main)
+Task: UI architecture audit — read every page/screen line by line, detect duplicates & product-data fragmentation, verify temp/ventilation/humidity/shelf-life per product, check APIs from previous chat history
+
+Work Log:
+- Read line by line: page.tsx, router.tsx, all 11 views (Home/About/Products/ProductDetail/Fresh/Frozen/Quality/GlobalMarkets/Sustainability/Contact/NotFound), all olymp components (Header, Footer, Logo, Section, Reveal, ProductCard, SeasonCalendar, Logistics, CTA), data (products.ts 44 lines, logistics.ts), lib (quote-schema, rate-limit via worklog, db), API routes (quote, root health)
+- DUPLICATES FOUND: (D1) FreshView ≅ FrozenView — ~95% identical structure (PageHero → pillars+image → product grid → LaneGrid → FinalCta), only copy differs; (D2) product grid markup hand-rolled ×5 (Home/Products/Fresh/Frozen/ProductDetail-related); (D3) month-availability filter exists ONLY on ProductsView — Fresh/Frozen views literally tell users to go elsewhere ("filter the full catalogue by month on the products page") = fragmented UX; (D4) InSeasonPill markup duplicated (private in ProductCard, re-implemented inline in ProductDetailView); (D5) featured products = arbitrary products.slice(0,6) in HomeView AND Footer (no curated flag); (D6) CSV export columns incomplete (missing °F, peak, transport, note — and ventilation which doesn't exist) and only reachable from Products page
+- FRAGMENTATION ROOT CAUSE: no shared "product explorer" primitive — each section reimplements listing with different capabilities (Products: filters+month+CSV; Fresh/Frozen: no filters, no CSV; Home: slice(0,6))
+- DATA VERIFICATION (all 44 products): °C→°F conversions all correct (0–2→32–36, −18→−0.4, 5–8→41–46, 13–15→55–59 …); RH values match UC Davis postharvest standards (onions/garlic 65–70% low-RH, carrots/artichokes 95–100%, citrus 85–90%); shelf lives reasonable per line. TWO GAPS: (V1) ventilation field MISSING from schema entirely — user asked for it explicitly; reefer fresh-air exchange (m³/h) is a standard cold-chain parameter (fresh: 10–30 m³/h per commodity, citrus closed during protocol cold treatment, onions/garlic high 40–50, frozen cargo: vents CLOSED 0 m³/h); (V2) melons note bug: "galia and honeydew are chilling-sensitive above 7 °C" should read BELOW 7 °C
+- API CHECK (vs previous chat history): POST /api/quote still hardened exactly as built in task 7 (5 req/min/IP → 429+Retry-After, 10KB cap → 413, honeypot fake-201, zod field caps) and wiring matches task-15 catalogue (product select feeds from products.ts); GET /api health probe OK; error boundaries + security headers present per next.config.ts — NO regressions found
+- PLAN: add ventilation to all 44 products + fix melons note + featured flags/selectors in data layer; extract ProductGrid + ProductExplorer (shared filters/month/CSV) + FormatView template; rewrite Products/Fresh/Frozen views over them; enrich ProductCard chips (RH + shelf life) + ProductDetailView (ventilation row) + reuse InSeasonPill; Home/Footer use featuredProducts; full-column CSV everywhere
+
+Stage Summary:
+- Audit complete: 6 duplication findings, 2 data gaps, 0 API regressions
+- Consolidation plan approved for implementation: single source of truth + shared explorer across all product sections
+
+---
+Task ID: 17
+Agent: Z.ai Code (main)
+Task: Implement the audit — dedupe & unify the UI architecture, add ventilation data, fix hydration/title bugs, verify end-to-end, backup + push
+
+Work Log:
+- DATA LAYER (products.ts): added `ventilation` field to FormatInfo + populated all 64 format blocks across 44 products (fresh: reefer fresh-air exchange per commodity — citrus 25–30 m³/h closed during cold treatment, onions/garlic high 40–50 m³/h, grapes 10–15 m³/h with SO₂ pads, air-freight lines "no reefer vents"; frozen: "Closed (0 m³/h)"); fixed melons note bug ("chilling-sensitive above 7 °C" → below); added `featured?: boolean` to Product + flagged 6 flagship lines; added selectors featuredProducts / freshProducts / frozenProducts
+- NEW SHARED COMPONENTS: ProductGrid.tsx (the one card grid, was hand-rolled ×5) + ProductExplorer.tsx (the one listing experience: format/category filters, month-of-availability filter, aria-live count, empty state, full 25-column CSV export incl. °F/ventilation/peak/transport/note, scoped filename per section)
+- DEDUPE: FreshView + FrozenView (were ~95% identical) → thin content wrappers over new FormatView.tsx template (97→48 lines each); ProductsView → PageHero + ProductExplorer (207→33 lines); ProductDetailView reuses shared InSeasonPill (was duplicated inline) + ProductGrid for related lines; HomeView + Footer use featuredProducts selector instead of arbitrary slice(0,6)
+- DE-FRAGMENTATION: Fresh & Frozen pages now embed the full explorer (previously no filters, told users to go to products page) — same capabilities everywhere products are listed; cold-chain chips on every card now show temp °C/°F + RH + shelf life; detail view cold-chain cards gained a Ventilation row
+- BUG FIXES: (1) hydration mismatch on hash deep-links — useHashRoute read window.location.hash in initial client state so landing at #/products rendered different markup than SSR; now starts at "/" and syncs the hash post-hydration (verified: fresh-session deep-link load = 0 page errors, was 1 hydration error); (2) document.title clobbered by Next's post-hydration static metadata application (~100 ms after effect write) — title now re-applied once after 400 ms; verified final titles on /, deep-link, and all navigations
+- VERIFICATION: lint clean; tsc clean for src/; browser sweep of all 11 views (44/38/26 card counts, 404); filter combos (frozen→26, Jan→40/44, fresh+Jun→18/38); CSV export intercepted — olymp-ex-catalogue.csv, 25 cols × 44 rows, strawberries row spot-checked with ventilation; detail pages show Ventilation 15–20 m³/h / Closed (0 m³/h); RFQ golden path → 201 → success panel → Prisma record → cleaned; mobile menu + sticky footer + dark mode + 390px VLM PASS (3 explorer screenshots + final frozen page); API re-verified live (health ok, 4 security headers, 5×201→429 rate limit, honeypot path intact)
+
+Stage Summary:
+- UI architecture consolidated: 3 new shared primitives (ProductGrid, ProductExplorer, FormatView) replaced 5 hand-rolled grids, 2 duplicated views and a fragmented filter UX — every product section now offers identical listing capability from one source of truth
+- All 44 products carry the four cold-chain dimensions the user asked to double-check: temperature (°C/°F), ventilation, humidity, shelf life — visible on cards, detail pages and the CSV
+- Two latent bugs fixed (hydration mismatch, title clobber); full e2e verification green; backups + push follow

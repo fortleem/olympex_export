@@ -33,12 +33,14 @@ export function parseHash(hash: string): string {
 
 /** React hook: current hash path, kept in sync with the browser. */
 export function useHashRoute(): string {
-  const [path, setPath] = useState<string>(() =>
-    typeof window === "undefined" ? "/" : parseHash(window.location.hash),
-  );
+  // Start from "/" so SSR markup and the first client render always match
+  // (the server cannot see the hash). The real hash — if any — is picked up
+  // in the mount effect below, right after hydration.
+  const [path, setPath] = useState<string>("/");
 
   useEffect(() => {
     const onChange = () => setPath(parseHash(window.location.hash));
+    onChange(); // sync the initial hash (deep links) after hydration
     window.addEventListener("hashchange", onChange);
     return () => window.removeEventListener("hashchange", onChange);
   }, []);

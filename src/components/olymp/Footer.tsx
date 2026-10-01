@@ -2,7 +2,7 @@
 
 import { Mail, Phone, MapPin, Linkedin, Instagram, Facebook } from "lucide-react";
 import { Logo } from "@/components/olymp/Logo";
-import { contactDetails, products } from "@/data/products";
+import { contactDetails, featuredProducts } from "@/data/products";
 import { ALink } from "@/lib/router";
 
 const company = [
@@ -61,7 +61,7 @@ export function Footer() {
           <div className="lg:col-span-3">
             <h2 className="text-xs font-semibold tracking-[0.2em] uppercase">Products</h2>
             <ul className="mt-5 grid grid-cols-2 gap-x-4 gap-y-3 text-sm lg:grid-cols-1">
-              {products.slice(0, 6).map((p) => (
+              {featuredProducts.map((p) => (
                 <li key={p.slug}>
                   <ALink
                     to="/products/$slug"

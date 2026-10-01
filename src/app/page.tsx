@@ -48,6 +48,18 @@ function NotFoundView() {
   );
 }
 
+/** Resolve the document title for a hash path. */
+function titleFor(path: string): string {
+  const productMatch = path.match(/^\/products\/([^/]+)$/);
+  if (productMatch) {
+    const product = getProduct(decodeURIComponent(productMatch[1]));
+    return product
+      ? `${product.name} from Egypt — Olymp Ex`
+      : "Product not found — Olymp Ex";
+  }
+  return titles[path] ?? "Olymp Ex — Egyptian Fresh & Frozen Produce Exporter";
+}
+
 export default function Home() {
   const path = useHashRoute();
 
@@ -56,18 +68,19 @@ export default function Home() {
     window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior });
   }, [path]);
 
-  // Keep the document title in sync with the active view.
+  // Keep the document title in sync with the active view. The write is
+  // re-applied once after a short delay because Next.js applies the root
+  // layout's static metadata <title> right after hydration (~100 ms), which
+  // otherwise overwrites the hand-set title on initial loads.
+  const pageTitle = titleFor(path);
   useEffect(() => {
-    const productMatch = path.match(/^\/products\/([^/]+)$/);
-    if (productMatch) {
-      const product = getProduct(decodeURIComponent(productMatch[1]));
-      document.title = product
-        ? `${product.name} from Egypt — Olymp Ex`
-        : "Product not found — Olymp Ex";
-    } else {
-      document.title = titles[path] ?? "Olymp Ex — Egyptian Fresh & Frozen Produce Exporter";
-    }
-  }, [path]);
+    const apply = () => {
+      document.title = pageTitle;
+    };
+    apply();
+    const to = setTimeout(apply, 400);
+    return () => clearTimeout(to);
+  }, [pageTitle]);
 
   let view: React.ReactNode;
   switch (true) {

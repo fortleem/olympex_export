@@ -4,7 +4,8 @@ import { ArrowLeft, ArrowRight, Snowflake, Thermometer, Wind } from "lucide-reac
 import { Button } from "@/components/ui/button";
 import { Section, Eyebrow } from "@/components/olymp/Section";
 import { Reveal } from "@/components/olymp/Reveal";
-import { FormatBadge, ProductCard } from "@/components/olymp/ProductCard";
+import { FormatBadge, InSeasonPill } from "@/components/olymp/ProductCard";
+import { ProductGrid } from "@/components/olymp/ProductGrid";
 import { SeasonCalendar, inSeason, useCurrentMonth } from "@/components/olymp/SeasonCalendar";
 import { FinalCta } from "@/components/olymp/CTA";
 import { getProduct, products } from "@/data/products";
@@ -64,15 +65,7 @@ export default function ProductDetailView({ slug }: { slug: string }) {
                 {product.formats.map((f) => (
                   <FormatBadge key={f} format={f} />
                 ))}
-                {inSeasonNow ? (
-                  <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-2.5 py-0.5 text-[11px] font-semibold text-primary">
-                    <span className="relative flex size-1.5" aria-hidden>
-                      <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-60" />
-                      <span className="relative inline-flex size-1.5 rounded-full bg-primary" />
-                    </span>
-                    In season now
-                  </span>
-                ) : null}
+                {inSeasonNow ? <InSeasonPill /> : null}
               </div>
               <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted-foreground">
                 {product.detail}
@@ -132,7 +125,7 @@ export default function ProductDetailView({ slug }: { slug: string }) {
           <div className="border border-border p-8">
             <h2 className="text-xl font-bold">Cold-chain specification</h2>
             <p className="mt-2 text-sm text-muted-foreground">
-              Optimal storage and transport temperatures per format.
+              Temperature, ventilation and humidity per format.
             </p>
             <div className="mt-6 space-y-4">
               {product.formats.map((f) => {
@@ -156,6 +149,12 @@ export default function ProductDetailView({ slug }: { slug: string }) {
                         <dt className="text-muted-foreground">Fahrenheit</dt>
                         <dd className="mt-0.5 font-semibold">{info.tempF}</dd>
                       </div>
+                      {info.ventilation ? (
+                        <div>
+                          <dt className="text-muted-foreground">Ventilation</dt>
+                          <dd className="mt-0.5 font-semibold">{info.ventilation}</dd>
+                        </div>
+                      ) : null}
                       {info.rh ? (
                         <div>
                           <dt className="text-muted-foreground">Humidity</dt>
@@ -209,13 +208,7 @@ export default function ProductDetailView({ slug }: { slug: string }) {
 
       <Section tone="surface">
         <h2 className="text-2xl font-extrabold md:text-3xl">Related lines</h2>
-        <div className="mt-10 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-          {related.map((p, i) => (
-            <Reveal key={p.slug} delay={i * 60}>
-              <ProductCard product={p} />
-            </Reveal>
-          ))}
-        </div>
+        <ProductGrid products={related} className="mt-10" />
       </Section>
 
       <FinalCta />

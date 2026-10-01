@@ -1,94 +1,55 @@
 "use client";
 
-import { ArrowRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Section, SectionHeader, PageHero } from "@/components/olymp/Section";
-import { Reveal } from "@/components/olymp/Reveal";
-import { ProductCard } from "@/components/olymp/ProductCard";
-import { LaneGrid } from "@/components/olymp/Logistics";
-import { FinalCta } from "@/components/olymp/CTA";
-import { ALink } from "@/lib/router";
-import { products } from "@/data/products";
+import { FormatView } from "@/components/olymp/views/FormatView";
 
-const pillars = [
-  { title: "Blanch & freeze", text: "Controlled blanching and IQF tunnels to lock colour, texture and sweetness." },
-  { title: "Formats", text: "Whole, halved, sliced, diced and custom multi-way blends." },
-  { title: "Packing", text: "400g / 1kg retail bags, 10kg bulk and private-label programmes." },
-  { title: "Chain", text: "−18°C maintained from tunnel to reefer, with temperature logging." },
-];
-
+/** Frozen-produce page — copy only; layout and explorer are shared. */
 export default function FrozenView() {
-  const frozen = products.filter((p) => p.formats.includes("frozen"));
   return (
-    <>
-      <PageHero
-        eyebrow="Frozen produce"
-        title="IQF programmes built for industrial consistency"
-        description="Frozen supply is judged on repeatability. Our IQF lines are specified, graded and packed so every pallet in a programme behaves the same way in your process."
-      />
-
-      <Section>
-        <div className="grid items-center gap-14 lg:grid-cols-2">
-          <div>
-            <SectionHeader eyebrow="How we handle frozen" title="From tunnel to reefer without a gap" />
-            <div className="mt-10 grid gap-6 sm:grid-cols-2">
-              {pillars.map((p, i) => (
-                <Reveal
-                  key={p.title}
-                  delay={i * 70}
-                  className="rounded-xl border border-border bg-card p-6"
-                >
-                  <h3 className="text-base font-bold text-brand-ink">{p.title}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{p.text}</p>
-                </Reveal>
-              ))}
-            </div>
-          </div>
-          <Reveal className="overflow-hidden rounded-2xl border border-border shadow-soft">
-            <img
-              src="/images/frozen-produce.jpg"
-              alt="Individually quick frozen mixed berries covered in frost"
-              width={800}
-              height={1200}
-              loading="lazy"
-              className="aspect-[4/3] h-full w-full object-cover"
-            />
-          </Reveal>
-        </div>
-      </Section>
-
-      <Section tone="surface">
-        <SectionHeader
-          eyebrow="Frozen lines"
-          title={`${frozen.length} lines available in IQF format`}
-          description="All frozen programmes run at −18 °C — each card shows the raw-material packing window behind the year-round supply."
-        />
-        <div className="mt-14 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-          {frozen.map((p, i) => (
-            <Reveal key={p.slug} delay={i * 60}>
-              <ProductCard product={p} />
-            </Reveal>
-          ))}
-        </div>
-        <Reveal className="mt-10">
-          <Button asChild variant="outline">
-            <ALink to="/products">
-              All products <ArrowRight aria-hidden />
-            </ALink>
-          </Button>
-        </Reveal>
-      </Section>
-
-      <Section>
-        <SectionHeader
-          eyebrow="Logistics"
-          title="Where frozen consignments go"
-          description="Indicative transit windows from Egyptian gateways."
-        />
-        <LaneGrid className="mt-14" />
-      </Section>
-
-      <FinalCta />
-    </>
+    <FormatView
+      format="frozen"
+      hero={{
+        eyebrow: "Frozen produce",
+        title: "IQF programmes built for industrial consistency",
+        description:
+          "Frozen supply is judged on repeatability. Our IQF lines are specified, graded and packed so every pallet in a programme behaves the same way in your process.",
+      }}
+      handling={{ eyebrow: "How we handle frozen", title: "From tunnel to reefer without a gap" }}
+      pillars={[
+        {
+          title: "Blanch & freeze",
+          text: "Controlled blanching and IQF tunnels to lock colour, texture and sweetness.",
+        },
+        {
+          title: "Formats",
+          text: "Whole, halved, sliced, diced and custom multi-way blends.",
+        },
+        {
+          title: "Packing",
+          text: "400g / 1kg retail bags, 10kg bulk and private-label programmes.",
+        },
+        {
+          title: "Chain",
+          text: "−18°C maintained from tunnel to reefer, with temperature logging.",
+        },
+      ]}
+      image={{
+        src: "/images/frozen-produce.jpg",
+        alt: "Individually quick frozen mixed berries covered in frost",
+        width: 800,
+        height: 1200,
+      }}
+      imageSide="right"
+      lines={{
+        eyebrow: "Frozen lines",
+        title: "{count} lines available in IQF format",
+        description:
+          "All frozen programmes run at −18 °C with closed reefer ventilation — filter by packing window or download the IQF catalogue with full cold-chain data.",
+      }}
+      logistics={{
+        eyebrow: "Logistics",
+        title: "Where frozen consignments go",
+        description: "Indicative transit windows from Egyptian gateways.",
+      }}
+    />
   );
 }
