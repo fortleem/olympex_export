@@ -351,6 +351,7 @@ export const zh: Dictionary = {
   "card.season": "产季",
   "card.regions": "产区",
   "card.packaging": "包装",
+  "card.varieties": "{count} 个品种",
 
   /* ---- product detail ---- */
   "detail.tradeTitle": "埃及在该品类的贸易地位",
@@ -363,6 +364,10 @@ export const zh: Dictionary = {
   "detail.statSeasonality": "产季性",
   "detail.statRegions": "种植产区",
   "detail.statVarieties": "品种",
+  "detail.varietiesTitle": "品种与供应窗口",
+  "detail.varietiesDesc": "本产品线的每个商业亚品种——各自拥有独立的埃及采收与加工窗口。",
+  "detail.varietiesNote": "IQF（单体速冻）产品在这些窗口期内加工，并在 −18 °C 下全年保藏随时发货。窗口期为参考值，具体以每季确认的方案为准。",
+  "detail.varietiesNoteFresh": "窗口期为参考值并随产季变化；具体以每个产季确认的方案为准。",
   "detail.statOrigin": "原产地",
   "detail.calendarTitle": "可供月份日历",
   "detail.calendarDesc": "逐月展示埃及出口窗口 — 当前月份有描边标示。",

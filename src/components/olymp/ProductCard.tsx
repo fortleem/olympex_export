@@ -70,6 +70,11 @@ export function ProductCard({ product }: { product: Product }) {
             <FormatBadge key={f} format={f} />
           ))}
           {inSeasonNow ? <InSeasonPill /> : null}
+          {product.subtypes.length >= 2 ? (
+            <span className="inline-flex items-center rounded-full border border-border bg-card px-2.5 py-0.5 text-[11px] font-semibold text-muted-foreground">
+              {t("card.varieties", { count: product.subtypes.length })}
+            </span>
+          ) : null}
         </div>
         <h3 className="mt-5 text-xl font-bold">
           <ALink

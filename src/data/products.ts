@@ -5,6 +5,8 @@
  * cold-chain temperatures are compiled from Egyptian export-trade sources
  * and standard postharvest references (UC Davis produce fact sheets),
  * cross-checked against reefer setpoints used by Egyptian exporters.
+ * Every line also carries its commercial subtypes (cultivars, colours or
+ * grades), each with its own harvest/packing window and detail.
  * Commercial terms are confirmed per programme.
  *
  * Shape is intentionally flat so it can be swapped for an API/CMS later.
@@ -50,6 +52,21 @@ export interface TradeInfo {
   transit: Partial<Record<ProductFormat, string>>;
 }
 
+/** A commercial subtype — cultivar, colour or grade — with its own season window. */
+export interface Subtype {
+  /** Name as traded, e.g. "Wonderful", "Golden / yellow", "Shoestring (7 mm)". */
+  name: string;
+  /** Harvest / packing window (1 = Jan … 12 = Dec). May extend beyond the
+   *  format calendar for lines that ship from cold storage or frozen stock. */
+  months: number[];
+  /** Peak display, e.g. "Nov – Dec". */
+  peak?: string;
+  /** Short badge, e.g. "Earliest", "Main line", "Premium". */
+  tag?: string;
+  /** One-to-two-sentence commercial detail. */
+  detail: string;
+}
+
 export interface Product {
   slug: string;
   name: string;
@@ -64,7 +81,8 @@ export interface Product {
   season: string;
   /** Main Egyptian growing regions. */
   regions: string;
-  varieties: string[];
+  /** Commercial subtypes / cultivars, each with its own season window and detail. */
+  subtypes: Subtype[];
   packaging: string[];
   summary: string;
   detail: string;
@@ -200,7 +218,45 @@ export const products: Product[] = [
     featured: true,
     season: "Nov – Apr (fresh) · year-round (IQF)",
     regions: "Beheira · Nubaria · Qalyubia",
-    varieties: ["Festival", "Fortuna", "Sensation", "Winter Dawn", "Sweet Charlie"],
+    subtypes: [
+      {
+        name: "Sweet Charlie",
+        months: monthRange(11, 1),
+        peak: "Dec",
+        tag: "Earliest",
+        detail:
+          "The opening variety of the Delta season — sweet, low-acid berries that start the air-freight programmes in November.",
+      },
+      {
+        name: "Fortuna",
+        months: monthRange(11, 2),
+        peak: "Dec – Jan",
+        tag: "Early",
+        detail: "Large, glossy, light-red fruit — a fresh-market favourite for Gulf and European punnet programmes.",
+      },
+      {
+        name: "Festival",
+        months: monthRange(11, 4),
+        peak: "Dec – Mar",
+        tag: "Main line",
+        detail:
+          "The workhorse of Egyptian strawberries — roughly 95% of planted area — firm, deep-red berries that carry both the fresh trade and the entire IQF industry.",
+      },
+      {
+        name: "Sensation",
+        months: monthRange(12, 3),
+        peak: "Jan",
+        tag: "Mid",
+        detail: "A newer Florida variety gaining area — large, firm berries through the heart of winter.",
+      },
+      {
+        name: "Winter Dawn",
+        months: monthRange(12, 2),
+        peak: "Jan – Feb",
+        tag: "Late winter",
+        detail: "Compact, aromatic berries extending the fresh programme through the late-winter window.",
+      },
+    ],
     packaging: [
       "250 g / 500 g clamshell punnets",
       "2 kg / 5 kg fresh cartons",
@@ -255,7 +311,37 @@ export const products: Product[] = [
     featured: true,
     season: "Nov – Apr",
     regions: "Nubaria · Beheira · Minufiya (Delta new lands)",
-    varieties: ["Washington Navel", "Navel Late"],
+    subtypes: [
+      {
+        name: "Navelina",
+        months: monthRange(11, 1),
+        peak: "Nov – Dec",
+        tag: "Earliest",
+        detail: "The earliest navel — small-to-medium, deep-orange fruit that opens Egypt's citrus season in November.",
+      },
+      {
+        name: "Thomson",
+        months: monthRange(12, 2),
+        peak: "Dec – Jan",
+        tag: "Early-mid",
+        detail: "Smooth, thin-skinned early navel — lighter in colour than Washington but first into the market.",
+      },
+      {
+        name: "Washington Navel",
+        months: monthRange(12, 3),
+        peak: "Dec – Feb",
+        tag: "Main line",
+        detail:
+          "The flagship export navel — large, seedless, easy-peeling fruit; the backbone of Egypt's record orange seasons.",
+      },
+      {
+        name: "Cara Cara",
+        months: monthRange(1, 2),
+        peak: "Jan",
+        tag: "Specialty",
+        detail: "Pink-fleshed navel grown in small volumes for premium programmes.",
+      },
+    ],
     packaging: ["15 kg telescopic cartons", "8 / 10 kg bags (Gulf trade)", "Bulk bins"],
     summary: "The opening act of Egypt's flagship citrus season — the world's largest fresh-orange export programme.",
     detail:
@@ -295,14 +381,64 @@ export const products: Product[] = [
     featured: true,
     season: "May – Aug (fresh) · year-round (IQF niche)",
     regions: "Beheira · Nubaria · Minya",
-    varieties: [
-      "Early Sweet",
-      "Superior",
-      "Prime",
-      "Flame Seedless",
-      "Red Globe",
-      "Crimson Seedless",
-      "Autumn Royal",
+    subtypes: [
+      {
+        name: "Early Sweet",
+        months: monthRange(5, 6),
+        peak: "Mid-May – Jun",
+        tag: "Earliest",
+        detail: "Egypt's earliest grape — white seedless berries that land in Europe weeks before any Mediterranean competitor.",
+      },
+      {
+        name: "Prime",
+        months: monthRange(5, 6),
+        peak: "Late May – Jun",
+        tag: "Early",
+        detail: "Early white seedless with compact bunches for the first punnet programmes.",
+      },
+      {
+        name: "Superior Seedless",
+        months: monthRange(6, 7),
+        peak: "Jun",
+        tag: "Main line",
+        detail: "The dominant white seedless of the early window — crunchy, golden-green berries.",
+      },
+      {
+        name: "Flame Seedless",
+        months: monthRange(6, 7),
+        peak: "Jun – Jul",
+        tag: "Main line",
+        detail: "Red seedless with a crunchy bite — the volume red of the early summer.",
+      },
+      {
+        name: "Red Globe",
+        months: monthRange(7, 8),
+        peak: "Jul – Aug",
+        tag: "Seeded",
+        detail: "Large red seeded berries for markets that prize size — Russia, the Gulf and South-East Asia.",
+      },
+      {
+        name: "Thompson Seedless",
+        months: monthRange(7, 8),
+        peak: "Jul",
+        tag: "Classic",
+        detail: "The classic light-green seedless — sweet, elongated bunches.",
+      },
+      {
+        name: "Crimson Seedless",
+        months: monthRange(7, 10),
+        peak: "Aug – Sep",
+        tag: "Late",
+        detail:
+          "The late-season flagship — crisp red berries that store for months and stretch shipments deep into autumn.",
+      },
+      {
+        name: "Autumn Royal",
+        months: monthRange(9, 10),
+        peak: "Sep",
+        tag: "Latest",
+        detail: "Black seedless latecomer for the tail of the export season.",
+      },
     ],
     packaging: ["4.5 / 5 kg export cartons", "8–9 kg boxes", "500 g punnets"],
     summary: "Egypt's early window lands seedless grapes in Europe ahead of Mediterranean competitors.",
@@ -352,7 +488,44 @@ export const products: Product[] = [
     featured: true,
     season: "Aug – Jan (fresh) · year-round (arils)",
     regions: "Minya · Assiut (Manfalout) · Beheira · Fayoum",
-    varieties: ["Early 116", "Baladi", "Manfalouty", "Wonderful"],
+    subtypes: [
+      {
+        name: "Early 116",
+        months: monthRange(8, 9),
+        peak: "Aug",
+        tag: "Earliest",
+        detail: "The earliest commercial line — medium-large fruit with pinkish-red skin that opens the season in August.",
+      },
+      {
+        name: "Acco",
+        months: monthRange(8, 10),
+        peak: "Sep",
+        tag: "Early",
+        detail: "Soft-seeded cultivar with sweet pink arils — taking a growing share of new plantings.",
+      },
+      {
+        name: "Baladi",
+        months: monthRange(9, 11),
+        peak: "Oct",
+        tag: "Traditional",
+        detail: "The traditional local pomegranate — sweet, deep-red arils for regional and Gulf markets.",
+      },
+      {
+        name: "Manfalouty",
+        months: monthRange(10, 12),
+        peak: "Oct – Nov",
+        tag: "Upper Egypt",
+        detail: "Assiut's signature strain from the Manfalout district — very large fruit with intense aril colour.",
+      },
+      {
+        name: "Wonderful",
+        months: monthRange(10, 1),
+        peak: "Nov – Dec",
+        tag: "Main line",
+        detail:
+          "The flagship export variety — deep-red skin, high Brix and dark juicy arils; it stores the longest and ships into January.",
+      },
+    ],
     packaging: ["4 / 5 kg cartons", "2 kg retail trays", "IQF arils: 10 kg bulk · 350–500 g retail"],
     summary: "Deep-red aril varieties in an unbroken Aug–Jan sequence, plus IQF arils for beverage and dairy.",
     detail:
@@ -401,7 +574,29 @@ export const products: Product[] = [
     formats: ["fresh", "frozen"],
     season: "Oct – May (fresh) · year-round (IQF)",
     regions: "Beheira · Qalyubia · Ismailia",
-    varieties: ["Fine", "Extra fine", "Bobby"],
+    subtypes: [
+      {
+        name: "Extra fine",
+        months: monthRange(10, 5),
+        peak: "Dec – Mar",
+        tag: "Top grade",
+        detail: "The premium filet grade — pods under 6 mm, air-freighted to top-end EU retail.",
+      },
+      {
+        name: "Fine",
+        months: monthRange(10, 5),
+        peak: "Dec – Mar",
+        tag: "Main line",
+        detail: "The standard export grade (6–8 mm) — the volume line of the winter air-freight programme.",
+      },
+      {
+        name: "Bobby",
+        months: monthRange(11, 4),
+        peak: "Jan – Mar",
+        tag: "Processing",
+        detail: "Thicker pods (8–10 mm) for IQF and canning programmes, mostly grown under contract.",
+      },
+    ],
     packaging: ["3–5 kg cartons", "Flow-packs · 250 g bags", "IQF: 10 kg bulk · 400 g / 2.5 kg retail"],
     summary: "Winter fine beans flown into Europe when local supply is zero — and frozen at peak quality.",
     detail:
@@ -451,7 +646,23 @@ export const products: Product[] = [
     featured: true,
     season: "Nov – Apr (fresh) · year-round (IQF)",
     regions: "Beheira · Alexandria / Mariut · Qalyubia",
-    varieties: ["Baladi green globe", "Local violet"],
+    subtypes: [
+      {
+        name: "Baladi green globe",
+        months: monthRange(11, 4),
+        peak: "Jan – Mar",
+        tag: "Main line",
+        detail:
+          "The classic Egyptian green globe — compact, thick-hearted buds anchoring both the fresh trade and the IQF-bottom industry.",
+      },
+      {
+        name: "Local violet",
+        months: monthRange(11, 1),
+        peak: "Dec",
+        tag: "Early",
+        detail: "Earlier violet-tinged buds from Alexandria and Mariut — a shorter niche window.",
+      },
+    ],
     packaging: ["5 / 10 kg fresh cartons", "IQF: 10 kg cartons · 400 g retail"],
     summary: "A signature Egyptian line — counter-seasonal winter buds and the famous IQF artichoke bottoms.",
     detail:
@@ -500,7 +711,22 @@ export const products: Product[] = [
     formats: ["fresh", "frozen"],
     season: "May – Nov (fresh) · year-round (IQF)",
     regions: "Delta · Beheira · Upper Egypt",
-    varieties: ["Baladi short-pod", "Hybrids"],
+    subtypes: [
+      {
+        name: "Baladi short-pod",
+        months: monthRange(5, 11),
+        peak: "Jun – Sep",
+        tag: "Main line",
+        detail: "The traditional short-pod cultivar behind both the fresh air-freight trade and the frozen grades.",
+      },
+      {
+        name: "Hybrid uniform",
+        months: monthRange(6, 10),
+        peak: "Jul – Sep",
+        tag: "IQF",
+        detail: "Uniform hybrid pods bred for the frozen trade — consistent calibre through the season.",
+      },
+    ],
     packaging: ["5 kg fresh cartons", "IQF: 10 kg bulk · 400 g / 2.5 kg retail"],
     summary: "The signature Egyptian frozen line — pod-size grades for MENA retail and food service worldwide.",
     detail:
@@ -550,7 +776,65 @@ export const products: Product[] = [
     featured: true,
     season: "Jun – Dec (fresh) · year-round (IQF)",
     regions: "Ismailia · Sharkia · Beheira · Qalyubia",
-    varieties: ["Ewais", "Zebdeya", "Naomi", "Alphonso", "Kent", "Keitt", "Tommy Atkins", "Fajri"],
+    subtypes: [
+      {
+        name: "Tommy Atkins",
+        months: monthRange(6, 8),
+        peak: "Jul",
+        tag: "Early",
+        detail: "The red-blush international workhorse — bred for long sea voyages.",
+      },
+      {
+        name: "Alphonso",
+        months: monthRange(7, 8),
+        peak: "Jul – Aug",
+        tag: "Aromatic",
+        detail: "Small volumes of the famed Indian cultivar — intensely aromatic, mostly regional trade.",
+      },
+      {
+        name: "Zebdeya",
+        months: monthRange(7, 9),
+        peak: "Aug",
+        tag: "Local favourite",
+        detail: "Egypt's beloved buttery local variety — the taste of the Egyptian summer and a Gulf staple.",
+      },
+      {
+        name: "Fajri",
+        months: monthRange(8, 9),
+        peak: "Aug – Sep",
+        tag: "Large",
+        detail: "Very large green-fruited Indian-type cultivar for ethnic markets.",
+      },
+      {
+        name: "Kent",
+        months: monthRange(8, 9),
+        peak: "Sep",
+        tag: "Export",
+        detail: "Sweet, fibreless and blushing — a top export variety for European retail.",
+      },
+      {
+        name: "Ewais",
+        months: monthRange(8, 10),
+        peak: "Sep",
+        tag: "Signature",
+        detail:
+          "Egypt's signature late mango — fibreless and aromatic, unique to Egyptian orchards; the flagship of the season.",
+      },
+      {
+        name: "Naomi",
+        months: monthRange(8, 9),
+        peak: "Sep",
+        tag: "Premium",
+        detail: "New premium red-blush cultivar gaining area for late-summer programmes.",
+      },
+      {
+        name: "Keitt",
+        months: monthRange(9, 11),
+        peak: "Sep – Oct",
+        tag: "Late",
+        detail: "The late green-yellow variety closing the fresh season — also the main IQF side-stream.",
+      },
+    ],
     packaging: ["4 / 5 kg cartons (counts 5–12)", "3.5 kg cartons", "IQF: 10 kg bags · 2.5 kg retail"],
     summary: "Aromatic Egyptian desi varieties and export-grade Kent/Keitt — fresh and IQF cubes year-round.",
     detail:
@@ -598,7 +882,23 @@ export const products: Product[] = [
     formats: ["fresh"],
     season: "Feb – Jul",
     regions: "Nubaria (largest Valencia district) · Delta",
-    varieties: ["Valencia", "Valencia Late"],
+    subtypes: [
+      {
+        name: "Valencia",
+        months: monthRange(2, 7),
+        peak: "Mar – Jun",
+        tag: "Main line",
+        detail:
+          "The standard late orange — high juice content and colour that carries Egyptian exports deep into the northern summer.",
+      },
+      {
+        name: "Olinda",
+        months: monthRange(4, 7),
+        peak: "May – Jul",
+        tag: "Late",
+        detail: "A late Valencia selection that holds quality on the tree into the final weeks of the season.",
+      },
+    ],
     packaging: ["15 kg telescopic cartons", "Juice-trade bulk bins"],
     summary: "The late-season, high-juice orange that carries Egyptian exports into early summer.",
     detail:
@@ -635,7 +935,50 @@ export const products: Product[] = [
     formats: ["fresh"],
     season: "Nov – Apr",
     regions: "Beheira · Minufiya · Nubaria",
-    varieties: ["Fremont", "Clementine", "Minneola", "Murcott", "W. Murcott", "Baladi"],
+    subtypes: [
+      {
+        name: "Clementine",
+        months: monthRange(11, 12),
+        peak: "Nov",
+        tag: "Opener",
+        detail: "Seedless, easy-peel clementine that opens the mandarin season for European retail.",
+      },
+      {
+        name: "Fremont",
+        months: monthRange(11, 1),
+        peak: "Dec",
+        tag: "Early",
+        detail: "Deep orange-red mandarin with rich flavour — the early volume line.",
+      },
+      {
+        name: "Minneola",
+        months: monthRange(12, 2),
+        peak: "Jan",
+        tag: "Mid",
+        detail: "The bell-shaped tangelo hybrid with a tart-sweet zip — a distinctive mid-season line.",
+      },
+      {
+        name: "Baladi mandarin",
+        months: monthRange(11, 1),
+        peak: "Dec",
+        tag: "Local",
+        detail: "The traditional seeded local mandarin — aromatic, mostly for regional and Gulf trade.",
+      },
+      {
+        name: "W. Murcott",
+        months: monthRange(1, 3),
+        peak: "Feb",
+        tag: "Premium",
+        detail: "The high-Brix late murcott — the premium flagship of the easy-peeler programme.",
+      },
+      {
+        name: "Murcott",
+        months: monthRange(2, 4),
+        peak: "Feb – Mar",
+        tag: "Late",
+        detail: "Classic late murcott for the final programmes of the winter.",
+      },
+    ],
     packaging: ["6 / 8 / 10 kg cartons (sizes 36–60)"],
     summary: "Easy-peeler winter trade — Fremont opens the season, Murcott is the premium flagship.",
     detail:
@@ -672,7 +1015,43 @@ export const products: Product[] = [
     formats: ["fresh"],
     season: "Dec – Jul (yellow) · Aug – Oct (green lime)",
     regions: "Delta · Nubaria",
-    varieties: ["Eureka (Adalia)", "Lisbon", "Baladi", "Green lime"],
+    subtypes: [
+      {
+        name: "Adalia",
+        months: monthRange(12, 4),
+        peak: "Feb – Apr",
+        tag: "Main line",
+        detail: "Egypt's signature export lemon — smooth, thin-skinned and juicy through the winter peak.",
+      },
+      {
+        name: "Eureka",
+        months: monthRange(1, 6),
+        peak: "Mar – May",
+        tag: "Volume",
+        detail: "The classic true lemon extending the yellow season into early summer.",
+      },
+      {
+        name: "Lisbon",
+        months: monthRange(2, 6),
+        peak: "Apr – May",
+        tag: "Late spring",
+        detail: "A vigorous, productive true lemon holding the late-spring window.",
+      },
+      {
+        name: "Baladi",
+        months: monthRange(12, 3),
+        peak: "Jan",
+        tag: "Local",
+        detail: "The traditional local lemon — smaller and seedier, with strong peel oil; regional trade.",
+      },
+      {
+        name: "Green lime",
+        months: monthRange(8, 10),
+        peak: "Sep",
+        tag: "Autumn",
+        detail: "The distinctive autumn green-lime window that fills the gap before the yellow crop.",
+      },
+    ],
     packaging: ["15 kg cartons", "10 / 18 kg bags"],
     summary: "Near year-round lemon supply with a distinctive autumn green-lime window.",
     detail:
@@ -710,7 +1089,29 @@ export const products: Product[] = [
     formats: ["fresh"],
     season: "Nov – May",
     regions: "Delta new lands",
-    varieties: ["Star Ruby", "Ruby Red", "Marsh"],
+    subtypes: [
+      {
+        name: "Star Ruby",
+        months: monthRange(11, 2),
+        peak: "Dec – Jan",
+        tag: "Main line",
+        detail: "Deep-red flesh and thin skin — the variety behind most Egyptian grapefruit exports.",
+      },
+      {
+        name: "Ruby Red",
+        months: monthRange(12, 3),
+        peak: "Jan – Feb",
+        tag: "Mid",
+        detail: "Reliable pink-red colour through the heart of winter.",
+      },
+      {
+        name: "Marsh Seedless",
+        months: monthRange(1, 4),
+        peak: "Feb – Mar",
+        tag: "Late white",
+        detail: "The classic white seedless — late fruit with a clean, sharp finish.",
+      },
+    ],
     packaging: ["15 / 17 kg cartons"],
     summary: "Red-fleshed winter grapefruit with the best internal colour from January.",
     detail:
@@ -748,7 +1149,43 @@ export const products: Product[] = [
     formats: ["fresh"],
     season: "Apr – Oct",
     regions: "Beheira · Ismailia · Sharqiya · Aswan (early crop)",
-    varieties: ["Red seedless", "Red seeded", "Yellow-flesh (minor)"],
+    subtypes: [
+      {
+        name: "Giza 1",
+        months: monthRange(4, 6),
+        peak: "May",
+        tag: "Earliest",
+        detail: "The classic early round melon from Aswan's warm winter that opens the season in April.",
+      },
+      {
+        name: "Sugar Baby",
+        months: monthRange(5, 7),
+        peak: "Jun",
+        tag: "Small",
+        detail: "Small, dark-skinned melons for retail singles and the Gulf trade.",
+      },
+      {
+        name: "Crimson Sweet",
+        months: monthRange(5, 9),
+        peak: "Jun – Aug",
+        tag: "Main line",
+        detail: "The large striped volume melon of the Delta summer.",
+      },
+      {
+        name: "Seedless red",
+        months: monthRange(5, 9),
+        peak: "Jun – Aug",
+        tag: "Premium",
+        detail: "Triploid seedless programme growing quickly for European retail.",
+      },
+      {
+        name: "Yellow-flesh",
+        months: monthRange(6, 8),
+        peak: "Jul",
+        tag: "Specialty",
+        detail: "Small volumes of yellow-flesh melons for specialty programmes.",
+      },
+    ],
     packaging: ["Loose on pallets / bins", "Film-wrapped retail singles"],
     summary: "Warm-season volume melons from an early Aswan crop through the Delta summer.",
     detail:
@@ -786,7 +1223,36 @@ export const products: Product[] = [
     formats: ["fresh"],
     season: "Apr – Sep",
     regions: "Beheira · Ismailia · Sharqiya (tunnel-early Feb–Mar)",
-    varieties: ["Galia", "Cantaloupe", "Honeydew"],
+    subtypes: [
+      {
+        name: "Galia",
+        months: monthRange(4, 7),
+        peak: "May – Jun",
+        tag: "Earliest",
+        detail: "Tunnel-grown netted galia beats Spanish supply into the EU spring market by weeks.",
+      },
+      {
+        name: "Cantaloupe",
+        months: monthRange(5, 8),
+        peak: "Jun – Jul",
+        tag: "Main line",
+        detail: "Orange-flesh netted cantaloupe — the coldest-tolerant melon of the group.",
+      },
+      {
+        name: "Yellow Canary",
+        months: monthRange(6, 8),
+        peak: "Jul",
+        tag: "Long life",
+        detail: "Yellow-skinned canary melon with a long shelf life — a Gulf favourite.",
+      },
+      {
+        name: "Honeydew",
+        months: monthRange(6, 9),
+        peak: "Jul – Aug",
+        tag: "Late",
+        detail: "Smooth white honeydew with green flesh closing the melon season.",
+      },
+    ],
     packaging: ["4–6 kg cartons (counts 4 / 6 / 8)"],
     summary: "Tunnel-early production beats Spanish melons into the EU spring market.",
     detail:
@@ -825,7 +1291,37 @@ export const products: Product[] = [
     formats: ["fresh", "frozen"],
     season: "Apr – Jun (fresh) · year-round (IQF slices)",
     regions: "Beheira · Qalyubia · Minya (low-chill districts)",
-    varieties: ["Florida Prince", "Dessert (Gold)", "Swiling", "Early low-chill nectarines"],
+    subtypes: [
+      {
+        name: "Florida Prince",
+        months: monthRange(4, 5),
+        peak: "Apr – May",
+        tag: "Earliest",
+        detail: "The earliest peach on any world market — low-chill red-blushed fruit from April.",
+      },
+      {
+        name: "Dessert (Gold)",
+        months: monthRange(5, 6),
+        peak: "May",
+        tag: "Early",
+        detail: "Yellow-fleshed early dessert peach — the volume line of the stone-fruit programme.",
+      },
+      {
+        name: "Swiling",
+        months: monthRange(5, 6),
+        peak: "May – Jun",
+        tag: "Mid",
+        detail: "Mid-season yellow peach extending the window into June.",
+      },
+      {
+        name: "Low-chill nectarines",
+        months: monthRange(5, 7),
+        peak: "Jun",
+        tag: "Nectarine",
+        detail:
+          "Early low-chill nectarines — smooth-skinned and high-colour for Gulf and Eastern-European markets.",
+      },
+    ],
     packaging: ["4 / 5 kg cartons", "Punnets", "IQF slices: 10 kg bulk"],
     summary: "Low-chill early varieties give Egypt a May head start on the stone-fruit season.",
     detail:
@@ -873,7 +1369,22 @@ export const products: Product[] = [
     formats: ["fresh", "frozen"],
     season: "May – Jul (fresh) · year-round (IQF)",
     regions: "Delta · Middle Egypt",
-    varieties: ["Local Canino-type"],
+    subtypes: [
+      {
+        name: "Baladi early",
+        months: monthRange(5, 6),
+        peak: "May",
+        tag: "Earliest",
+        detail: "Small, aromatic local apricots that open the season at premium prices.",
+      },
+      {
+        name: "Canino-type",
+        months: monthRange(6, 7),
+        peak: "Jun",
+        tag: "Main line",
+        detail: "The classic export and processing apricot — firm golden fruit for fresh shipping and IQF slices.",
+      },
+    ],
     packaging: ["5 kg cartons", "IQF: 10 kg bulk"],
     summary: "A short, high-price early-summer window — fresh and frozen.",
     detail:
@@ -920,7 +1431,43 @@ export const products: Product[] = [
     formats: ["fresh"],
     season: "Sep – Mar (Ramadan-driven)",
     regions: "Siwa · Aswan · Farafra / Bahariya oases · Nubaria (Medjool)",
-    varieties: ["Medjool", "Siwi", "Barhi (rutab)", "Amhat"],
+    subtypes: [
+      {
+        name: "Barhi (rutab)",
+        months: monthRange(8, 9),
+        peak: "Aug – Sep",
+        tag: "Fresh rutab",
+        detail: "Honey-sweet fresh rutab eaten soft — air-freighted in its short golden window.",
+      },
+      {
+        name: "Samani",
+        months: monthRange(8, 9),
+        peak: "Sep",
+        tag: "Ramadan",
+        detail: "The beloved soft early date that commands the Ramadan market across the region.",
+      },
+      {
+        name: "Amhat",
+        months: monthRange(8, 10),
+        peak: "Sep",
+        tag: "Siwa",
+        detail: "A signature Siwan cultivar — amber, semi-soft fruit and a mainstay of the dry-date trade.",
+      },
+      {
+        name: "Siwi",
+        months: monthRange(9, 10),
+        peak: "Sep – Oct",
+        tag: "Main line",
+        detail: "Siwa's flagship soft date — the variety that built Egypt's dry-date export reputation.",
+      },
+      {
+        name: "Medjool",
+        months: monthRange(9, 11),
+        peak: "Oct",
+        tag: "Premium",
+        detail: "Jumbo Medjool from the new lands of Nubaria — the fastest-growing premium line.",
+      },
+    ],
     packaging: ["200–500 g trays / punnets", "5 kg cartons", "10 kg bulk"],
     summary: "Siwan dry dates and premium Medjool moving on the Ramadan calendar.",
     detail:
@@ -958,7 +1505,23 @@ export const products: Product[] = [
     formats: ["fresh"],
     season: "Sep – Dec · Jan – Mar (winter crop)",
     regions: "Beheira · Sharkia · Qalyubia",
-    varieties: ["White-flesh Baladi", "Pink Allahabadi"],
+    subtypes: [
+      {
+        name: "White-flesh Baladi",
+        months: [9, 10, 11, 12, 1, 2, 3],
+        peak: "Oct – Nov",
+        tag: "Main line",
+        detail:
+          "The classic Egyptian white guava — aromatic and sweet across both the autumn crop and the lighter winter crop.",
+      },
+      {
+        name: "Pink Allahabadi",
+        months: monthRange(9, 11),
+        peak: "Oct",
+        tag: "Pink",
+        detail: "Pink-fleshed variety serving specific Gulf and processing programmes.",
+      },
+    ],
     packaging: ["4 / 5 kg cartons"],
     summary: "Two-crop guava spanning autumn and late winter for Gulf and ethnic EU markets.",
     detail:
@@ -994,7 +1557,22 @@ export const products: Product[] = [
     formats: ["fresh"],
     season: "Jun – Aug · Nov – Jan",
     regions: "Beheira · Alexandria",
-    varieties: ["Local black & green Sultani-type"],
+    subtypes: [
+      {
+        name: "Green Sultani",
+        months: monthRange(6, 8),
+        peak: "Jun – Jul",
+        tag: "Main line",
+        detail: "The classic local green-skinned fig of the main summer harvest.",
+      },
+      {
+        name: "Black local",
+        months: [6, 7, 11, 12, 1],
+        peak: "Jun",
+        tag: "Two windows",
+        detail: "Dark-skinned local figs moving in both the summer harvest and the autumn crop.",
+      },
+    ],
     packaging: ["250–500 g punnets", "2 kg cartons"],
     summary: "A high-price niche — air freight only, two harvest windows.",
     detail:
@@ -1032,7 +1610,31 @@ export const products: Product[] = [
     formats: ["fresh", "frozen"],
     season: "Feb – Sep (fresh) · year-round (IQF)",
     regions: "Minufiya · Beheira · Upper Egypt spring belt",
-    varieties: ["Golden / yellow", "Red", "White"],
+    subtypes: [
+      {
+        name: "Golden / yellow",
+        months: monthRange(2, 9),
+        peak: "Apr – Aug",
+        tag: "Main line",
+        detail:
+          "The volume export onion — golden-brown bulbs graded 45–80 mm, from the Minufiya start in February to the Upper-Egypt tail.",
+      },
+      {
+        name: "Red",
+        months: monthRange(3, 8),
+        peak: "Apr – Jul",
+        tag: "Premium",
+        detail: "Deep-red onions with real bite — a premium line into Russia, the Gulf and the EU.",
+      },
+      {
+        name: "White",
+        months: monthRange(2, 6),
+        peak: "Mar – May",
+        tag: "Dehydration",
+        detail:
+          "High-solids white onions — mostly contracted to the dehydration industry, with fresh export volumes in spring.",
+      },
+    ],
     packaging: [
       "10 / 20 / 25 kg mesh bags",
       "1.25 t jumbo bags · 550 kg bins",
@@ -1083,7 +1685,43 @@ export const products: Product[] = [
     formats: ["fresh"],
     season: "Feb – Jun · Sep – Dec",
     regions: "Upper Egypt (spring) · Delta / Nubaria (autumn)",
-    varieties: ["Spunta", "Diamant", "Lady Rosetta", "Hermes", "Cara"],
+    subtypes: [
+      {
+        name: "Spunta",
+        months: [...monthRange(2, 6), ...monthRange(9, 12)],
+        peak: "Feb – May",
+        tag: "Main line",
+        detail: "The Egyptian table standard — the great majority of planted area; long oval tubers with pale-yellow flesh.",
+      },
+      {
+        name: "Diamant",
+        months: monthRange(2, 6),
+        peak: "Mar – Apr",
+        tag: "Early",
+        detail: "Yellow-fleshed early table potato with strong skin finish for long transit.",
+      },
+      {
+        name: "Lady Rosetta",
+        months: monthRange(3, 6),
+        peak: "Apr – May",
+        tag: "Crisp",
+        detail: "High dry-matter red-skinned chipping potato grown under crisp contracts.",
+      },
+      {
+        name: "Hermes",
+        months: [...monthRange(3, 6), ...monthRange(10, 12)],
+        peak: "Apr – May",
+        tag: "Crisp",
+        detail: "Long-oval crisp variety with light-gold fry colour — a contract-processing staple.",
+      },
+      {
+        name: "Cara",
+        months: monthRange(9, 12),
+        peak: "Oct – Nov",
+        tag: "Autumn",
+        detail: "Tall, late maincrop for the autumn harvest and the storage trade.",
+      },
+    ],
     packaging: ["10 / 15 / 25 kg mesh bags", "1.25 t jumbo bags", "550 kg bins (45–75 mm EU grade)"],
     summary: "Two harvests bracket the European storage trough — 25–28 t per 40' reefer.",
     detail:
@@ -1122,7 +1760,29 @@ export const products: Product[] = [
     formats: ["fresh", "frozen"],
     season: "Aug – Mar (fresh) · year-round (IQF)",
     regions: "Beheira · Nile Delta",
-    varieties: ["Baladi (orange-flesh)", "Beauregard", "Bellevue"],
+    subtypes: [
+      {
+        name: "Baladi (white-flesh)",
+        months: monthRange(8, 11),
+        peak: "Sep – Oct",
+        tag: "Local",
+        detail: "The traditional cream-flesh local sweet potato — the Gulf and domestic favourite.",
+      },
+      {
+        name: "Beauregard",
+        months: monthRange(9, 2),
+        peak: "Oct – Dec",
+        tag: "Main line",
+        detail: "The orange-flesh American variety behind Egypt's boom in UK sweet-potato supply.",
+      },
+      {
+        name: "Bellevue",
+        months: monthRange(10, 3),
+        peak: "Nov – Jan",
+        tag: "Late storage",
+        detail: "Newer orange variety with blocky roots and long storage life for winter programmes.",
+      },
+    ],
     packaging: ["6 kg cartons (3.4 t / 40')", "10 kg mesh (25 t / 40')", "IQF cubes: 10 kg · 2.5 kg retail"],
     summary: "Egypt's fastest-growing UK line — cured, orange-flesh roots plus IQF cubes.",
     detail:
@@ -1171,7 +1831,29 @@ export const products: Product[] = [
     formats: ["fresh", "frozen"],
     season: "Jan – Apr (fresh) · year-round (IQF)",
     regions: "Beni Suef · Minya",
-    varieties: ["Baladi", "White", "Red"],
+    subtypes: [
+      {
+        name: "Baladi",
+        months: monthRange(1, 4),
+        peak: "Feb – Mar",
+        tag: "Main line",
+        detail: "The pungent purple-streaked local garlic — the flavour benchmark of the Egyptian kitchen.",
+      },
+      {
+        name: "Chinese-type white",
+        months: monthRange(1, 3),
+        peak: "Feb",
+        tag: "Large heads",
+        detail: "Large, tight-headed white garlic from imported seed — milder and uniform for retail.",
+      },
+      {
+        name: "Red",
+        months: monthRange(2, 4),
+        peak: "Mar",
+        tag: "Late",
+        detail: "Hard-neck red garlic holding the tail of the fresh window.",
+      },
+    ],
     packaging: ["2–20 kg nets · cartons · mesh", "IQF cloves/diced: 1 kg · 10 kg"],
     summary: "Pungent Baladi garlic, cold-stored well past the fresh window.",
     detail:
@@ -1219,7 +1901,37 @@ export const products: Product[] = [
     formats: ["fresh", "frozen"],
     season: "Year-round (greenhouse) · export peak Oct – Mar",
     regions: "Nubaria · Beheira · Sinai greenhouses",
-    varieties: ["Beef", "Roma / round", "Cluster", "Cherry"],
+    subtypes: [
+      {
+        name: "Cluster / on-the-vine",
+        months: monthRange(10, 6),
+        peak: "Nov – Feb",
+        tag: "Main line",
+        detail:
+          "The flagship greenhouse line — five- and six-fruit trusses packed for retail through the European winter.",
+      },
+      {
+        name: "Beef",
+        months: monthRange(10, 5),
+        peak: "Nov – Mar",
+        tag: "Large",
+        detail: "Large beefsteak fruit for Gulf retail and food service.",
+      },
+      {
+        name: "Roma / plum",
+        months: YEAR_ROUND,
+        peak: "Oct – Mar",
+        tag: "Year-round",
+        detail: "The year-round plum line — greenhouse in winter, Delta field fruit through summer.",
+      },
+      {
+        name: "Cherry",
+        months: monthRange(11, 4),
+        peak: "Dec – Feb",
+        tag: "Premium",
+        detail: "Snacking cherries in punnets — air-freight and premium sea programmes.",
+      },
+    ],
     packaging: ["2 kg cartons", "6 kg loose", "IQF: 10 kg bulk"],
     summary: "Greenhouse backbone keeps Egypt in the tomato market twelve months a year.",
     detail:
@@ -1267,7 +1979,36 @@ export const products: Product[] = [
     formats: ["fresh", "frozen"],
     season: "Oct – Jun (fresh) · year-round (IQF)",
     regions: "Beheira · Nubaria · Ismailia (greenhouses)",
-    varieties: ["Red blocky", "Yellow blocky", "Orange blocky", "Green blocky"],
+    subtypes: [
+      {
+        name: "Green blocky",
+        months: monthRange(10, 3),
+        peak: "Nov – Feb",
+        tag: "Volume",
+        detail: "The volume colour — picked green through the first half of the season.",
+      },
+      {
+        name: "Red blocky",
+        months: monthRange(11, 6),
+        peak: "Dec – Mar",
+        tag: "Main line",
+        detail: "Fully coloured reds from December — the anchor of colour-mix programmes.",
+      },
+      {
+        name: "Yellow blocky",
+        months: monthRange(12, 5),
+        peak: "Jan – Mar",
+        tag: "Colour mix",
+        detail: "Bright yellows for the three-colour retail mix.",
+      },
+      {
+        name: "Orange blocky",
+        months: monthRange(1, 4),
+        peak: "Feb – Mar",
+        tag: "Niche",
+        detail: "Orange specialty peppers for premium mixes.",
+      },
+    ],
     packaging: ["5 kg cartons", "250 / 500 g retail packs", "IQF dice/strips: 10 kg"],
     summary: "The coloured-pepper winter greenhouse trade — volumes to Europe have tripled.",
     detail:
@@ -1314,7 +2055,29 @@ export const products: Product[] = [
     formats: ["fresh"],
     season: "Sep – May",
     regions: "Delta",
-    varieties: ["Red / green chili (8–12 cm)", "Bird's-eye"],
+    subtypes: [
+      {
+        name: "Green chili (8–12 cm)",
+        months: monthRange(9, 2),
+        peak: "Nov – Dec",
+        tag: "Main line",
+        detail: "The green finger chili — the volume line for Gulf and UK ethnic retail.",
+      },
+      {
+        name: "Red chili",
+        months: monthRange(11, 5),
+        peak: "Jan – Feb",
+        tag: "Coloured",
+        detail: "Fully red fruit for programmes that want colour as well as heat.",
+      },
+      {
+        name: "Bird's-eye",
+        months: monthRange(10, 4),
+        peak: "Dec – Jan",
+        tag: "Hot",
+        detail: "Small, fiercely hot pods for South-East-Asian and African markets.",
+      },
+    ],
     packaging: ["3 / 5 kg cartons"],
     summary: "Fresh chili riding Egypt's world-leading pepper platform.",
     detail:
@@ -1351,7 +2114,22 @@ export const products: Product[] = [
     formats: ["fresh"],
     season: "Oct – May",
     regions: "Delta · Sinai greenhouses",
-    varieties: ["English / telegraph", "Slicer"],
+    subtypes: [
+      {
+        name: "English / telegraph",
+        months: monthRange(10, 5),
+        peak: "Dec – Mar",
+        tag: "Main line",
+        detail: "Long, smooth greenhouse cucumbers film-wrapped for retail.",
+      },
+      {
+        name: "Slicer",
+        months: monthRange(11, 4),
+        peak: "Jan – Mar",
+        tag: "Short",
+        detail: "Thicker slicer types for Gulf wholesale and food service.",
+      },
+    ],
     packaging: ["12-count / 24-count cartons"],
     summary: "Greenhouse cucumbers through the European winter.",
     detail:
@@ -1389,7 +2167,22 @@ export const products: Product[] = [
     formats: ["fresh", "frozen"],
     season: "Nov – Apr (fresh) · year-round (IQF)",
     regions: "Delta winter",
-    varieties: ["Garden peas", "Petit pois"],
+    subtypes: [
+      {
+        name: "Garden peas",
+        months: monthRange(11, 4),
+        peak: "Jan – Mar",
+        tag: "Main line",
+        detail: "Standard shelling peas — the raw material of the IQF programme and a small fresh winter line.",
+      },
+      {
+        name: "Petit pois",
+        months: monthRange(1, 3),
+        peak: "Feb",
+        tag: "Fine grade",
+        detail: "Small, ultra-sweet petit pois frozen within hours of picking.",
+      },
+    ],
     packaging: ["2 / 3 kg fresh bags", "10 kg fresh bulk", "IQF: 400 g / 1 kg / 2.5 kg retail · 10 kg bulk"],
     summary: "Sweet, size-graded peas — almost all volume flows to IQF.",
     detail:
@@ -1435,7 +2228,29 @@ export const products: Product[] = [
     formats: ["fresh"],
     season: "Sep – Jun",
     regions: "Delta · greenhouses",
-    varieties: ["Black Roumy", "Black Arous", "White Arous"],
+    subtypes: [
+      {
+        name: "Black Roumy",
+        months: monthRange(9, 6),
+        peak: "Nov – Feb",
+        tag: "Main line",
+        detail: "The classic wide oval purple aubergine of Egyptian cooking — the volume export line.",
+      },
+      {
+        name: "Black Arous",
+        months: monthRange(10, 5),
+        peak: "Dec – Feb",
+        tag: "Elongated",
+        detail: "The slender 'bride' aubergine prized for grilling across Gulf kitchens.",
+      },
+      {
+        name: "White Arous",
+        months: monthRange(10, 3),
+        peak: "Nov – Dec",
+        tag: "Specialty",
+        detail: "Creamy-white specialty fruit for niche programmes.",
+      },
+    ],
     packaging: ["5 / 6 kg cartons"],
     summary: "Long-season aubergine for Gulf and ethnic European markets.",
     detail:
@@ -1473,7 +2288,22 @@ export const products: Product[] = [
     formats: ["fresh", "frozen"],
     season: "Oct – Jun (fresh) · year-round (IQF)",
     regions: "Delta winter · greenhouses",
-    varieties: ["Classic green", "Yellow (minor)"],
+    subtypes: [
+      {
+        name: "Classic green",
+        months: monthRange(10, 6),
+        peak: "Dec – Mar",
+        tag: "Main line",
+        detail: "Straight, dark-green courgettes through the European winter gap.",
+      },
+      {
+        name: "Yellow",
+        months: monthRange(11, 4),
+        peak: "Jan – Feb",
+        tag: "Niche",
+        detail: "Golden courgettes for mixed-colour retail packs.",
+      },
+    ],
     packaging: ["4 / 5 kg cartons", "IQF slices/dices: 10 kg"],
     summary: "Tender winter squash bridging the European supply gap.",
     detail:
@@ -1521,7 +2351,22 @@ export const products: Product[] = [
     formats: ["fresh", "frozen"],
     season: "Nov – Apr (fresh) · year-round (IQF)",
     regions: "Beheira · Nubaria winter",
-    varieties: ["Nantes", "Chantenay"],
+    subtypes: [
+      {
+        name: "Nantes",
+        months: monthRange(11, 4),
+        peak: "Dec – Feb",
+        tag: "Main line",
+        detail: "Cylindrical, blunt-tipped Nantes types — the sweet standard of the winter carrot trade.",
+      },
+      {
+        name: "Chantenay",
+        months: monthRange(11, 3),
+        peak: "Dec – Jan",
+        tag: "Processing",
+        detail: "Shorter, thicker Chantenay roots — the dice-grade material behind IQF blends.",
+      },
+    ],
     packaging: ["10 kg bags", "450 g / 1 kg wash-ready retail", "IQF dice/slices: 10 kg"],
     summary: "Winter roots for juicing and retail, plus dice-grade IQF carrots.",
     detail:
@@ -1567,7 +2412,36 @@ export const products: Product[] = [
     formats: ["fresh"],
     season: "Oct – Apr",
     regions: "Delta winter · greenhouses",
-    varieties: ["Iceberg", "Romaine", "Lollo", "Baby-leaf mixes"],
+    subtypes: [
+      {
+        name: "Iceberg",
+        months: monthRange(10, 4),
+        peak: "Dec – Feb",
+        tag: "Main line",
+        detail: "Dense, crisp heads vacuum-cooled for long reefer voyages.",
+      },
+      {
+        name: "Romaine",
+        months: monthRange(10, 3),
+        peak: "Dec – Jan",
+        tag: "Volume",
+        detail: "Upright cos hearts for Gulf retail and Caesar programmes.",
+      },
+      {
+        name: "Lollo",
+        months: monthRange(11, 2),
+        peak: "Dec",
+        tag: "Specialty",
+        detail: "Fringed lollo rosso and bionda leaves for premium salad mixes.",
+      },
+      {
+        name: "Baby-leaf mixes",
+        months: monthRange(10, 4),
+        peak: "Nov – Mar",
+        tag: "Value-added",
+        detail: "Washed rocket, chard and spinach blends in retail bags — the value-added salad line.",
+      },
+    ],
     packaging: ["6 / 12-head cartons", "200–500 g baby-leaf bags"],
     summary: "Iceberg core with value-added baby-leaf mixes.",
     detail:
@@ -1604,7 +2478,22 @@ export const products: Product[] = [
     formats: ["fresh"],
     season: "Sep – Apr",
     regions: "Delta winter",
-    varieties: ["Green / white", "Red"],
+    subtypes: [
+      {
+        name: "Green / white",
+        months: monthRange(9, 4),
+        peak: "Dec – Feb",
+        tag: "Main line",
+        detail: "Dense storage heads that hold condition through long Russian and Gulf voyages.",
+      },
+      {
+        name: "Red",
+        months: monthRange(10, 2),
+        peak: "Dec – Jan",
+        tag: "Niche",
+        detail: "Deep-red heads for colour retail packs.",
+      },
+    ],
     packaging: ["8–10 head cartons", "Nets"],
     summary: "Storable winter brassica for Russia and Gulf programmes.",
     detail:
@@ -1641,7 +2530,23 @@ export const products: Product[] = [
     formats: ["fresh", "frozen"],
     season: "Sep – Apr (fresh) · year-round (IQF)",
     regions: "Delta winter",
-    varieties: ["Snowball-type white"],
+    subtypes: [
+      {
+        name: "Snowball-type white",
+        months: monthRange(9, 4),
+        peak: "Dec – Mar",
+        tag: "Main line",
+        detail:
+          "Snow-white self-wrapping curds — film-wrapped heads for fresh, with the same crop feeding the IQF floret trade.",
+      },
+      {
+        name: "Romanesco",
+        months: monthRange(10, 2),
+        peak: "Dec",
+        tag: "Specialty",
+        detail: "Spiralled green curds in small volumes for specialty programmes.",
+      },
+    ],
     packaging: ["6 / 10 kg cartons (film-wrapped heads)", "IQF florets: 10 kg · 2.5 kg retail"],
     summary: "Snow-white winter curds feeding both fresh and IQF floret lines.",
     detail:
@@ -1687,7 +2592,15 @@ export const products: Product[] = [
     formats: ["fresh"],
     season: "Oct – Apr",
     regions: "Delta winter",
-    varieties: ["Green / Pascal"],
+    subtypes: [
+      {
+        name: "Green / Pascal",
+        months: monthRange(10, 4),
+        peak: "Dec – Feb",
+        tag: "Single line",
+        detail: "Crisp Pascal-type petioles — the one commercial celery type Egypt grows.",
+      },
+    ],
     packaging: ["10–12 kg cartons"],
     summary: "A small winter line for Gulf and EU soup programmes.",
     detail:
@@ -1724,14 +2637,56 @@ export const products: Product[] = [
     formats: ["fresh"],
     season: "Year-round (winter emphasis Oct – May)",
     regions: "Qalyubia · Beheira · Monufiya · Upper Egypt (winter)",
-    varieties: [
-      "Parsley (curly & flat)",
-      "Coriander",
-      "Mint",
-      "Dill",
-      "Chives",
-      "Basil",
-      "Rocket",
+    subtypes: [
+      {
+        name: "Parsley (curly & flat)",
+        months: YEAR_ROUND,
+        peak: "Oct – May",
+        tag: "Main line",
+        detail: "The anchor of the herb programme — bunched curly and flat-leaf parsley twelve months a year.",
+      },
+      {
+        name: "Mint",
+        months: YEAR_ROUND,
+        peak: "Oct – May",
+        tag: "Year-round",
+        detail: "Garden mint from the Delta winter and Upper-Egypt summer for continuous supply.",
+      },
+      {
+        name: "Chives",
+        months: YEAR_ROUND,
+        peak: "Oct – May",
+        tag: "Year-round",
+        detail: "Chives flow all year, with Upper-Egypt farms covering the summer months.",
+      },
+      {
+        name: "Coriander",
+        months: monthRange(10, 4),
+        peak: "Dec – Feb",
+        tag: "Winter",
+        detail: "Fragrant coriander bunches through the cool months.",
+      },
+      {
+        name: "Dill",
+        months: monthRange(10, 4),
+        peak: "Dec – Feb",
+        tag: "Winter",
+        detail: "Fine, feathery dill for Scandinavian and Eastern-European retail.",
+      },
+      {
+        name: "Rocket",
+        months: monthRange(10, 5),
+        peak: "Nov – Mar",
+        tag: "Salad",
+        detail: "Peppery rocket bunches and baby leaf for salad programmes.",
+      },
+      {
+        name: "Basil",
+        months: monthRange(5, 10),
+        peak: "Jun – Sep",
+        tag: "Summer",
+        detail: "Summer basil from Upper Egypt — always shipped at 10–12 °C, segregated from cold herb loads.",
+      },
     ],
     packaging: ["20–50 g bunches (12–24 per carton)", "2–4 kg vented cartons"],
     summary: "The classic air-freight herb platform — twelve months, a dozen varieties.",
@@ -1770,7 +2725,22 @@ export const products: Product[] = [
     formats: ["fresh", "frozen"],
     season: "Jan – Apr · Sep – Dec (two-region relay)",
     regions: "Upper Egypt (spring) · Delta (autumn)",
-    varieties: ["Red-rooted", "White Lisbon-type"],
+    subtypes: [
+      {
+        name: "White Lisbon-type",
+        months: [1, 2, 3, 4, 9, 10, 11, 12],
+        peak: "Feb – Apr",
+        tag: "Main line",
+        detail: "The classic white-rooted salad onion carrying both legs of the two-region relay.",
+      },
+      {
+        name: "Red-rooted",
+        months: [9, 10, 11, 12],
+        peak: "Oct – Nov",
+        tag: "Autumn",
+        detail: "Red-rooted bunching onions from the Delta autumn crop.",
+      },
+    ],
     packaging: ["8 / 12-bunch cartons (~100 g bunches)", "IQF chopped: 10 kg"],
     summary: "A two-region relay keeps bunched onions in market seven-plus months.",
     detail:
@@ -1817,7 +2787,16 @@ export const products: Product[] = [
     formats: ["fresh", "frozen"],
     season: "May – Oct (fresh) · year-round (IQF)",
     regions: "Delta · Middle Egypt",
-    varieties: ["Local Corchorus olitorius"],
+    subtypes: [
+      {
+        name: "Baladi molokhia",
+        months: monthRange(5, 10),
+        peak: "Jun – Sep",
+        tag: "Single cultivar",
+        detail:
+          "The one local cultivar — summer leaf harvest feeding both air-freight fresh bundles and the IQF minced trade.",
+      },
+    ],
     packaging: ["IQF: 400 / 500 g retail (dominant) · 10 kg bulk", "Fresh: 2 / 3 kg bags (air)"],
     summary: "The definitive Egyptian frozen herb for MENA and diaspora retail.",
     detail:
@@ -1863,7 +2842,16 @@ export const products: Product[] = [
     formats: ["frozen"],
     season: "Year-round (IQF) · packed Jun – Sep",
     regions: "Delta summer",
-    varieties: ["Yellow supersweet kernels"],
+    subtypes: [
+      {
+        name: "Yellow supersweet (sh2)",
+        months: monthRange(6, 9),
+        peak: "Jul – Aug",
+        tag: "Packing window",
+        detail:
+          "Supersweet kernels harvested and blanched the same day through the Delta summer, then held year-round at −18 °C.",
+      },
+    ],
     packaging: ["10 kg bulk", "400 g retail bags"],
     summary: "Summer corn frozen within hours of picking.",
     detail:
@@ -1899,7 +2887,22 @@ export const products: Product[] = [
     formats: ["frozen"],
     season: "Year-round (IQF) · packed Jan – May",
     regions: "Delta winter",
-    varieties: ["Peeled", "Unpeeled"],
+    subtypes: [
+      {
+        name: "Unpeeled ful",
+        months: monthRange(1, 5),
+        peak: "Feb – Apr",
+        tag: "Traditional",
+        detail: "Skin-on whole beans for traditional ful medames programmes.",
+      },
+      {
+        name: "Peeled ful",
+        months: monthRange(1, 4),
+        peak: "Feb – Mar",
+        tag: "Convenience",
+        detail: "Skin-off peeled beans — the convenience line for modern retail.",
+      },
+    ],
     packaging: ["10 kg bulk", "400 / 500 g retail"],
     summary: "Classic Egyptian ful for diaspora and MENA markets.",
     detail:
@@ -1935,7 +2938,15 @@ export const products: Product[] = [
     formats: ["frozen"],
     season: "Year-round (IQF) · packed Nov – Apr",
     regions: "Delta winter",
-    varieties: ["Calabrese-type florets"],
+    subtypes: [
+      {
+        name: "Calabrese-type",
+        months: monthRange(11, 4),
+        peak: "Dec – Mar",
+        tag: "Packing window",
+        detail: "Winter calabrese cut and floretted through the cool season, blanched and frozen within hours.",
+      },
+    ],
     packaging: ["10 kg bulk", "2.5 kg retail"],
     summary: "A rising Egyptian IQF line — winter florets, bright and firm.",
     detail:
@@ -1971,7 +2982,15 @@ export const products: Product[] = [
     formats: ["frozen"],
     season: "Year-round (IQF) · packed Oct – Apr",
     regions: "Delta",
-    varieties: ["Savoy / semi-savoy leaf"],
+    subtypes: [
+      {
+        name: "Savoy / semi-savoy",
+        months: monthRange(10, 4),
+        peak: "Nov – Feb",
+        tag: "Packing window",
+        detail: "Dark, blistered leaf blanched bright green through the Delta winter.",
+      },
+    ],
     packaging: ["10 kg bulk", "400 g / 2.5 kg retail"],
     summary: "Dark winter leaf blanched bright green.",
     detail:
@@ -2007,7 +3026,26 @@ export const products: Product[] = [
     formats: ["frozen"],
     season: "Year-round — blended from frozen stock",
     regions: "Delta-wide",
-    varieties: ["California mix", "Two-way", "Three-way", "Four-way", "Custom recipes"],
+    subtypes: [
+      {
+        name: "California mix",
+        months: YEAR_ROUND,
+        tag: "Classic",
+        detail: "The classic carrot, pea, green-bean and corn blend for retail and food service.",
+      },
+      {
+        name: "Two- & three-way blends",
+        months: YEAR_ROUND,
+        tag: "Simple blends",
+        detail: "Simple pea-and-carrot and three-component blends packed to agreed ratios.",
+      },
+      {
+        name: "Four-way & custom recipes",
+        months: YEAR_ROUND,
+        tag: "Custom",
+        detail: "Four-way mixes and bespoke recipes blended and packed under buyer or private-label branding.",
+      },
+    ],
     packaging: ["400 / 450 g · 1 kg · 2.5 kg retail", "10 / 20 kg bulk"],
     summary: "Custom IQF blends built to buyer recipes, all twelve months.",
     detail:
@@ -2043,7 +3081,32 @@ export const products: Product[] = [
     formats: ["frozen"],
     season: "Year-round — two contract harvests",
     regions: "Delta / Nubaria contract farms · 10th of Ramadan processing",
-    varieties: ["Shoestring", "Regular cut", "Wedges · from Spunta / Lady Rosetta / Hermes"],
+    subtypes: [
+      {
+        name: "Shoestring (7 mm)",
+        months: YEAR_ROUND,
+        tag: "Thin cut",
+        detail: "7 mm thin-cut fries from Spunta and Lady Rosetta lines — the QSR standard.",
+      },
+      {
+        name: "Regular cut (9 mm)",
+        months: YEAR_ROUND,
+        tag: "Main line",
+        detail: "The 9 mm retail and catering standard cut.",
+      },
+      {
+        name: "Crinkle-cut",
+        months: YEAR_ROUND,
+        tag: "Texture",
+        detail: "Crinkle-cut fries with extra surface for crunch.",
+      },
+      {
+        name: "Wedges (12 mm)",
+        months: YEAR_ROUND,
+        tag: "Thick cut",
+        detail: "Thick, skin-on wedges for casual dining.",
+      },
+    ],
     packaging: ["450 g – 2.5 kg retail", "10 kg catering · 4 × 2.5 kg"],
     summary: "Egypt runs one of the region's largest fries platforms — 160,000+ t a year.",
     detail:

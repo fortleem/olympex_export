@@ -368,6 +368,7 @@ export const en = {
   "card.season": "Season",
   "card.regions": "Regions",
   "card.packaging": "Packaging",
+  "card.varieties": "{count} varieties",
 
   /* ---- product detail ---- */
   "detail.tradeTitle": "Egypt's trade in this line",
@@ -380,6 +381,12 @@ export const en = {
   "detail.statSeasonality": "Seasonality",
   "detail.statRegions": "Growing regions",
   "detail.statVarieties": "Varieties",
+  "detail.varietiesTitle": "Varieties & season windows",
+  "detail.varietiesDesc":
+    "Every commercial subtype of this line — each with its own Egyptian harvest and packing window.",
+  "detail.varietiesNote":
+    "IQF programmes are packed inside these windows and held at −18 °C for year-round shipment. Windows are indicative; programmes are confirmed per season.",
+  "detail.varietiesNoteFresh": "Windows are indicative and shift with the season; programmes are confirmed per crop.",
   "detail.statOrigin": "Origin",
   "detail.calendarTitle": "Availability calendar",
   "detail.calendarDesc": "Egyptian export window by month — the current month is outlined.",

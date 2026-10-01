@@ -364,6 +364,7 @@ export const es: Dictionary = {
   "card.season": "Temporada",
   "card.regions": "Regiones",
   "card.packaging": "Embalaje",
+  "card.varieties": "{count} variedades",
 
   /* ---- product detail ---- */
   "detail.tradeTitle": "El comercio egipcio de esta línea",
@@ -376,6 +377,10 @@ export const es: Dictionary = {
   "detail.statSeasonality": "Estacionalidad",
   "detail.statRegions": "Regiones de cultivo",
   "detail.statVarieties": "Variedades",
+  "detail.varietiesTitle": "Variedades y ventanas de temporada",
+  "detail.varietiesDesc": "Cada subtipo comercial de esta línea — con su propia ventana egipcia de cosecha y envasado.",
+  "detail.varietiesNote": "Los programas IQF se envasan dentro de estas ventanas y se mantienen a −18 °C para envíos durante todo el año. Las ventanas son orientativas; los programas se confirman cada temporada.",
+  "detail.varietiesNoteFresh": "Las ventanas son orientativas y varían con la temporada; los programas se confirman según cada cosecha.",
   "detail.statOrigin": "Origen",
   "detail.calendarTitle": "Calendario de disponibilidad",
   "detail.calendarDesc": "Ventana de exportación egipcia mes a mes — el mes actual aparece recuadrado.",

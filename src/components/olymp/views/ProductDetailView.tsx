@@ -10,6 +10,7 @@ import { SeasonCalendar, inSeason, useCurrentMonth } from "@/components/olymp/Se
 import { FinalCta } from "@/components/olymp/CTA";
 import { getProduct, products } from "@/data/products";
 import { productImage } from "@/data/product-images";
+import { VarietiesSection } from "@/components/olymp/VarietiesSection";
 import { ALink } from "@/lib/router";
 import { useI18n } from "@/i18n";
 import { localizedName } from "@/i18n/product-names";
@@ -100,7 +101,7 @@ export default function ProductDetailView({ slug }: { slug: string }) {
           {[
             { label: t("detail.statSeasonality"), value: product.season },
             { label: t("detail.statRegions"), value: product.regions },
-            { label: t("detail.statVarieties"), value: product.varieties.join(", ") },
+            { label: t("detail.statVarieties"), value: product.subtypes.map((s) => s.name).join(", ") },
             { label: t("detail.statOrigin"), value: t("common.egyptOrigin") },
           ].map((s) => (
             <div key={s.label} className="bg-card p-7">
@@ -244,19 +245,20 @@ export default function ProductDetailView({ slug }: { slug: string }) {
           </div>
         </div>
 
-        <div className="mt-10 grid gap-10 lg:grid-cols-2">
-          <div className="border border-border p-8">
-            <h2 className="text-xl font-bold">{t("detail.packagingTitle")}</h2>
-            <ul className="mt-5 space-y-3 text-sm text-muted-foreground">
-              {product.packaging.map((p) => (
-                <li key={p} className="flex items-center gap-3">
-                  <span className="inline-block h-1 w-5 bg-primary" aria-hidden />
-                  {p}
-                </li>
-              ))}
-            </ul>
-            <p className="mt-6 text-xs text-muted-foreground/80">{t("detail.packagingNote")}</p>
-          </div>
+        {/* Subtypes: every variety with its own season window and detail */}
+        <VarietiesSection product={product} className="mt-14" />
+
+        <div className="mt-10 border border-border p-8">
+          <h2 className="text-xl font-bold">{t("detail.packagingTitle")}</h2>
+          <ul className="mt-5 grid gap-3 text-sm text-muted-foreground sm:grid-cols-2">
+            {product.packaging.map((p) => (
+              <li key={p} className="flex items-start gap-3">
+                <span className="mt-[0.45rem] inline-block h-1 w-5 shrink-0 bg-primary" aria-hidden />
+                {p}
+              </li>
+            ))}
+          </ul>
+          <p className="mt-6 text-xs text-muted-foreground/80">{t("detail.packagingNote")}</p>
         </div>
       </Section>
 

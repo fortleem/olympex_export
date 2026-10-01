@@ -95,6 +95,8 @@ export function downloadCatalogueCsv(list: Product[], scope: ExplorerScope) {
     "Fresh — max transit",
     "IQF — max transit",
     "Varieties",
+    "Variety season windows",
+    "Variety details",
     "Growing regions",
     "Packaging",
   ];
@@ -128,7 +130,11 @@ export function downloadCatalogueCsv(list: Product[], scope: ExplorerScope) {
     p.trade?.topImporters.join("; ") ?? "",
     p.trade?.transit.fresh ?? "",
     p.trade?.transit.frozen ?? "",
-    p.varieties.join("; "),
+    p.subtypes.map((s) => s.name).join("; "),
+    p.subtypes
+      .map((s) => `${s.name}: ${monthsLabel(s.months)}${s.peak ? ` (peak ${s.peak})` : ""}`)
+      .join("; "),
+    p.subtypes.map((s) => `${s.name}: ${s.detail}`).join("; "),
     p.regions,
     p.packaging.join("; "),
   ]);

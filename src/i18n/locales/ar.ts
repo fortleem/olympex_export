@@ -355,6 +355,7 @@ export const ar: Dictionary = {
   "card.season": "الموسم",
   "card.regions": "الأقاليم",
   "card.packaging": "التعبئة",
+  "card.varieties": "{count} أصناف",
 
   /* ---- product detail ---- */
   "detail.tradeTitle": "تجارة مصر في هذا الخط",
@@ -367,6 +368,10 @@ export const ar: Dictionary = {
   "detail.statSeasonality": "الموسمية",
   "detail.statRegions": "أقاليم الزراعة",
   "detail.statVarieties": "الأصناف",
+  "detail.varietiesTitle": "الأصناف ونوافذ الموسم",
+  "detail.varietiesDesc": "كل صنف تجاري في هذا الخط — ولكل صنف نافذة حصاد وتعبئة مصرية خاصة به.",
+  "detail.varietiesNote": "تُعبّأ برامج التجميد (IQF) خلال هذه النوافذ وتُحفظ عند −18 درجة مئوية للشحن طوال العام. النوافذ استرشادية وتُؤكَّد البرامج كل موسم.",
+  "detail.varietiesNoteFresh": "النوافذ استرشادية وتتغير مع الموسم؛ وتُؤكَّد البرامج وفق كل محصول.",
   "detail.statOrigin": "المنشأ",
   "detail.calendarTitle": "تقويم التوافر",
   "detail.calendarDesc": "نافذة التصدير المصرية شهرًا بشهر — الشهر الحالي محدّد بإطار.",
