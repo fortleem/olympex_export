@@ -20,7 +20,9 @@ export function Footer() {
       <div className="container-x py-16 md:py-20">
         <div className="grid gap-12 lg:grid-cols-12">
           <div className="lg:col-span-4">
-            <Logo size="md" />
+            {/* Official stacked composition — OLYMPEX wordmark under the
+                mark (footer only; the header keeps the horizontal lock-up). */}
+            <Logo stacked size="md" />
             <p className="mt-6 max-w-sm text-sm leading-relaxed text-muted-foreground">
               {t("footer.tagline")}
             </p>
