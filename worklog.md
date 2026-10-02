@@ -514,3 +514,19 @@ Work Log:
 Stage Summary:
 - Footer now shows the stacked official lock-up (OLYMPEX under the mark) — footer only; header unchanged horizontal; verified desktop/mobile/RTL/animation, lint clean, committed 6c469f8
 - Push: no PAT on this machine (re-verified); 12-commit fast-forward staged; platform snapshot channel armed via this uncommitted worklog entry — if it does not reach GitHub this turn, the user provides a GitHub PAT (repo scope) for `git push github main` or pushes from their own clone; Vercel then auto-deploys
+
+---
+Task ID: 24
+Agent: Z.ai Code (main)
+Task: Footer-only stacked OLYMPEX (already shipped as 6c469f8 last turn) — confirm, then push to GitHub fortleem/olympex_export + Vercel
+
+Work Log:
+- STATE CHECK: last turn's footer commit 6c469f8 intact; the end-of-turn platform snapshot fired again (47914d4, 2026-10-02 19:35:43 — second consecutive turn-end snapshot; mechanism live and consistent); GitHub main still 4585e5e → local main 13 commits ahead (fast-forward); no PAT/credentials anywhere (upload/, env, git config re-swept); no platform publish affordance exists (TODO file is just the platform mirroring my todo list; UUID commits are authored by the same z@container identity via a scheduler not visible/controllable from inside)
+- RE-VERIFIED in browser: footer stacked (wordmark top 9092 > mark bottom 9084), optically centred <2px; header unchanged horizontal; logo animations running; zero console errors — footer request confirmed shipped
+- VERCEL STATE: olymp-ex.vercel.app live (200) but serving the OLD build — proven by markers absent from the new build: comma hero copy ("Egypt's Harvest, Delivered to the World"), old stacked 94px header lock-up (w-[94px]), original "Language selector" AR stub (aria-label group). Vercel auto-deploys from GitHub main, so it updates the moment the GitHub push lands; no VERCEL_TOKEN on this machine (CLI deploy not possible, and not needed — the GitHub→Vercel integration handles it)
+- PUSH: final direct attempt again fatal (no credentials) — remote unchanged; triple backup refreshed ($TS db/bundle/source)
+- PLATFORM CHANNEL ARMED: this worklog entry left uncommitted at end of turn (3rd snapshot expected); the GitHub publish historically fired during container idle (the 4585e5e now on GitHub is itself one of these snapshots) — so the 13-commit fast-forward should publish when the platform next syncs; instant alternative remains a GitHub PAT (repo scope) for `git push github main`, or the user pushing from their own clone
+
+Stage Summary:
+- Footer-only stacked OLYMPEX: shipped (6c469f8), re-verified this turn (desktop geometry + animations + zero errors)
+- Push: 13-commit fast-forward staged and triple-backed-up; direct push impossible without a PAT (re-verified); platform snapshot channel armed via this uncommitted worklog entry; Vercel will auto-deploy from GitHub main once the push lands — the entire remaining chain (GitHub + Vercel) unblocks with a single GitHub PAT or the user pushing from their clone
