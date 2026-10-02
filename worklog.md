@@ -530,3 +530,19 @@ Work Log:
 Stage Summary:
 - Footer-only stacked OLYMPEX: shipped (6c469f8), re-verified this turn (desktop geometry + animations + zero errors)
 - Push: 13-commit fast-forward staged and triple-backed-up; direct push impossible without a PAT (re-verified); platform snapshot channel armed via this uncommitted worklog entry; Vercel will auto-deploy from GitHub main once the push lands — the entire remaining chain (GitHub + Vercel) unblocks with a single GitHub PAT or the user pushing from their clone
+
+---
+Task ID: 25
+Agent: Z.ai Code (main)
+Task: Push to GitHub fortleem/olympex_export + Vercel (user supplied a GitHub PAT in chat)
+
+Work Log:
+- User provided a GitHub PAT in chat; used transiently (session env var + one-shot push URL only — never written to any file, config, worklog or backup; push output piped through sed to redact it)
+- PUSHED: git push https://fortleem:[PAT]@github.com/fortleem/olympex_export.git main → 4585e5e..a3a6b5a, clean fast-forward of all 14 commits (the entire local batch: horizontal logo, 44-line catalogue + cold-chain, consolidation refactor, trade data, 6-language i18n + footer dedupe, imagery upscaling, subtypes, stacked-footer-only lock-up, platform snapshots, worklog docs); ls-remote confirms remote main == a3a6b5a == local HEAD
+- VERCEL AUTO-DEPLOY: new build live at olymp-ex.vercel.app within ~2–3 minutes of the push (poll caught it at t+40s after warm cache); old-build markers gone (comma hero copy, "Language selector" AR stub) and new markers present
+- PRODUCTION E2E (agent-browser against https://olymp-ex.vercel.app): footer stacked — OLYMPEX wordmark under the mark, optically centred (desktop + 390px mobile); header stays horizontal (raw geometry: wordmark left 126.3 > mark right 116.3 — an initial false reading was a bug in my own eval one-liner, its box() lacked l/r fields); hero h1 new copy; sticky footer intact; language dropdown live → Arabic flips the whole document to RTL (lang=ar dir=rtl, translated hero); Arabic pomegranate detail page with localized title, Varieties & season windows section, Early 116, trade panel (≈136,000 t); mobile 390px zero horizontal overflow; zero console/page errors; x-vercel headers normal
+- Token hygiene: after final push, token removed from session env (unset); nothing on disk references it (grep over tracked tree, .git/config, worklog — clean); user advised to revoke/regenerate the PAT since it was pasted into chat
+
+Stage Summary:
+- FULL DEPLOY CHAIN COMPLETE: all 14 commits pushed to github.com/fortleem/olympex_export (main = a3a6b5a), Vercel auto-deployed, and the new build verified end-to-end in the production browser — footer-only stacked OLYMPEX live as requested, plus the entire feature batch that had been staged across the session
+- Standing fallback no longer needed: future pushes can reuse a PAT from chat (transiently), no credentials stored on this machine
