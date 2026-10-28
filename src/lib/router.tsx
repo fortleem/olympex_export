@@ -7,7 +7,8 @@ import { cn } from "@/lib/utils";
  * Minimal hash-based router for the single-page Olymp Ex site.
  * Routes mirror the original TanStack file routes:
  *   #/  #/about  #/products  #/products/<slug>  #/fresh-produce
- *   #/frozen-produce  #/quality  #/global-markets  #/sustainability  #/contact
+ *   #/frozen-produce  #/quality  #/global-markets  #/market-intel
+ *   #/sustainability  #/contact
  */
 
 export type RoutePath =
@@ -18,6 +19,7 @@ export type RoutePath =
   | "/frozen-produce"
   | "/quality"
   | "/global-markets"
+  | "/market-intel"
   | "/sustainability"
   | "/contact";
 

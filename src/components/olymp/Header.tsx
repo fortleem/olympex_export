@@ -24,6 +24,7 @@ const navLinks: { to: string; key: DictKey }[] = [
   { to: "/frozen-produce", key: "nav.frozen" },
   { to: "/quality", key: "nav.quality" },
   { to: "/global-markets", key: "nav.markets" },
+  { to: "/market-intel", key: "nav.marketIntel" },
   { to: "/sustainability", key: "nav.sustainability" },
 ];
 

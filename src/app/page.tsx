@@ -11,11 +11,13 @@ import FreshView from "@/components/olymp/views/FreshView";
 import FrozenView from "@/components/olymp/views/FrozenView";
 import QualityView from "@/components/olymp/views/QualityView";
 import GlobalMarketsView from "@/components/olymp/views/GlobalMarketsView";
+import MarketIntelView from "@/components/olymp/views/MarketIntelView";
 import SustainabilityView from "@/components/olymp/views/SustainabilityView";
 import ContactView from "@/components/olymp/views/ContactView";
 import { ALink, useHashRoute } from "@/lib/router";
 import { getProduct } from "@/data/products";
 import { Button } from "@/components/ui/button";
+import { Copilot } from "@/components/olymp/Copilot";
 import { LocaleProvider, useI18n } from "@/i18n";
 import { localizedName } from "@/i18n/product-names";
 import type { DictKey } from "@/i18n/locales/en";
@@ -28,6 +30,7 @@ const titleKeys: Record<string, DictKey> = {
   "/frozen-produce": "title.frozen",
   "/quality": "title.quality",
   "/global-markets": "title.markets",
+  "/market-intel": "title.marketIntel",
   "/sustainability": "title.sustainability",
   "/contact": "title.contact",
 };
@@ -114,6 +117,9 @@ function Site() {
     case path === "/global-markets":
       view = <GlobalMarketsView />;
       break;
+    case path === "/market-intel":
+      view = <MarketIntelView />;
+      break;
     case path === "/sustainability":
       view = <SustainabilityView />;
       break;
@@ -137,6 +143,7 @@ function Site() {
         {view}
       </main>
       <Footer />
+      <Copilot />
     </div>
   );
 }

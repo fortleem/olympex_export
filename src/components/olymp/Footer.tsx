@@ -54,6 +54,7 @@ export function Footer() {
                   { to: "/about", key: "footer.about" },
                   { to: "/quality", key: "footer.quality" },
                   { to: "/global-markets", key: "footer.markets" },
+                  { to: "/market-intel", key: "footer.marketIntel" },
                   { to: "/sustainability", key: "footer.sustainability" },
                 ] as const
               ).map((l) => (
